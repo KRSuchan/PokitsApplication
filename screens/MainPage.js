@@ -2,8 +2,14 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 
+import SettingListPage from '../screens/SettingListPage';
+
 export default function MainPage({navigation}) {
   const [textHeight, setTextHeight] = useState(0);
+
+  const navigateToSettings = () => {
+    navigation.navigate('SettingList');
+  };
 
   return (
     <View style={styles.container}>
@@ -17,7 +23,7 @@ export default function MainPage({navigation}) {
         >
           Pokit's
         </Text>
-        <TouchableOpacity onPress={() => {console.log('프로필버튼 누름');navigation.navigate('SettingListPage')}}>
+        <TouchableOpacity onPress={() => {console.log('프로필버튼 누름');navigateToSettings();}}>
           <Image 
             source={require('../assets/images/profile.png')} // 여기에 실제 이미지 경로 입력
             style={{ width: textHeight-13, height: textHeight-13 }} // 텍스트 높이만큼 이미지 크기 설정

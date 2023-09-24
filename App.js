@@ -1,22 +1,28 @@
+//일반적인 패키지들
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
 import 'react-native-gesture-handler';
+
+//노치 침범 방지 패키지
 import { SafeAreaProvider,SafeAreaView } from 'react-native-safe-area-context';
 
-// expo-font 라이브러리에서 useFonts 훅을 임포트합니다.
+//폰트 사용을 위한 패키지들
 import { useFonts } from 'expo-font';
-// expo-splash-screen 라이브러리에서 SplashScreen 객체를 임포트합니다.
 import * as SplashScreen from 'expo-splash-screen';
-// React 라이브러리에서 useState, useEffect, useCallback 훅을 임포트합니다.
-import React, { useState, useEffect, useCallback } from 'react';
+
+//화면 불러오기
 import MainPage from './screens/MainPage';
+import SettingListPage from './screens/SettingListPage';
 
 //다른 페이지로 이동하는 패키지
 import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
 
+//네비게이터 사용 
 const Stack = createStackNavigator();
 
-// 앱 시작 시 스플래시 화면이 자동으로 사라지는 것을 방지합니다.
+// 앱 시작 시 스플래시 화면이 자동으로 사라지는 것을 방지
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
@@ -24,7 +30,7 @@ export default function App() {
   const [textHeight, setTextHeight] = useState(0);
 
 
-  // Lobster 폰트를 로드하고 로드 완료 여부를 fontsLoaded 상태에 저장합니다.
+  // Lobster 폰트를 로드하고 로드 완료 여부를 fontsLoaded 상태에 저장
   const [fontsLoaded] = useFonts({
     'Lobster' : require('./assets/fonts/Lobster-Regular.ttf'),
   });
@@ -50,7 +56,12 @@ export default function App() {
    return (
     <SafeAreaProvider> 
         <SafeAreaView style={{flex:1}}>
-          <MainPage/>
+          <NavigationContainer>
+            <Stack.Navigator initialRouteName='Main'>
+              <Stack.Screen name = "Main" component={MainPage}/>
+              <Stack.Screen name = "SettingList" component={SettingListPage}/>
+            </Stack.Navigator>
+          </NavigationContainer>
           <StatusBar style="auto" />
         </SafeAreaView>
      </SafeAreaProvider>
