@@ -1,39 +1,72 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { StyleSheet, View, Text, Button, StyleSheetm, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { Divider } from 'react-native-elements';
 
 // Setting item component
 const SettingItemBig = ({ title, onPress, describe}) => (
-    <Button title={title} onPress={onPress} />
+    <TouchableOpacity style={{width:'100%'}} onPress={onPress}>
+        <View style={styles.itemcontainer}>
+            <View style-={styles.vbox}>
+                <View style={styles.hbox}>
+                    <View style={styles.vbox}>
+                        <Text style={styles.itemtitle}>
+                            {title}
+                        </Text>
+                        <Text style={styles.itemdescribe}>
+                            {describe}
+                        </Text>
+                    </View>
+                </View>
+                <Divider style={styles.dividerstyle} orientation="horizontal" />
+            </View>
+        </View>
+    </TouchableOpacity>
+    
   );
 
-  const SettingItemSmall = ({ title, onPress, describe}) => (
-    <Button title={title} onPress={onPress} />
+  const SettingItemSmall = ({ title, onPress}) => (
+    <TouchableOpacity style={{width:'100%'}} onPress={onPress}>
+        <View style={styles.itemcontainer}>
+            <View style-={styles.vbox}>
+                <View style={styles.hbox}>
+                        <Text style={styles.itemtitle}>
+                            {title}
+                        </Text>
+                </View>
+                <Divider style={styles.dividerstyle} orientation="horizontal" />
+            </View>
+        </View>
+        
+    </TouchableOpacity>
   );
-
 
 export default function SettingListPage({navigation}) {
 
     return (
         <View style={styles.container}>
           <Text style={styles.h1}>설정</Text>
-          <SettingItemBig title="Go Back" onPress={() => navigation.goBack()} />
+          {/* <SettingItemBig title="Go Back" onPress={() => navigation.goBack()} /> */}
           <SettingItemBig 
-            title="선호 정류장" 
+            title="선호 정류장"
+            describe="메인에 보여질 버스 정보"
             onPress={() => navigation.navigate('선호 정류장')}
         />
         <SettingItemBig 
             title="선호 식당" 
+            describe="기숙사생도 사용할 수 있어요"
             onPress={() => navigation.navigate('선호 식당')}
         />
 
         <SettingItemBig 
             title="일정 설정" 
+            describe="D-day기능을 사용해 보세요"
             onPress={() => navigation.navigate('선호 식당')}
         />
 
         <SettingItemBig 
-            title="내 학과 설정" 
+            title="내 학과 설정"
+            describe="내 학과로 바로 갈 수 있어요"
             onPress={() => navigation.navigate('선호 식당')}
         />
 
@@ -66,20 +99,43 @@ const styles = StyleSheet.create({
       
     },
  
-    header: {
-     //flex:1, //부모 크기까지 늘린다. (전체)
-     width:'100%',
-     flexDirection:'row',
-     alignItems:'center',
-     justifyContent:'space-between', //최대한 떨어뜨리기
-    },
- 
     h1: {
         fontWeight: 'bold',
         fontSize: 35,         // 글자 크기를 설정하는 스타일
+        marginBottom: 10,
     },
 
-    bigitem:{
+    // bigitem:{
 
+    // },
+
+    vbox:{
+        flexDirection:'column',
+        verticalAlign:'middle',
+    },
+
+    hbox:{
+        flexDirection:'row',
+    },
+
+    itemcontainer: { //아이템 간의 간격
+        width: '100%', //사실상 작동 안함
+        marginTop: 10,
+        marginBottom: 6,
+    },
+
+    itemtitle: {
+        fontSize: 20,
+        fontWeight:'600',
+    },
+
+    itemdescribe: {
+        fontSize: 17,
+        color:"#8A8A8E",
+        fontWeight:'500',
+    },
+
+    dividerstyle: {
+        marginTop: 10,
     }
  });

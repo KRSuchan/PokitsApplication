@@ -27,9 +27,6 @@ const Stack = createStackNavigator();
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-  //텍스트의 높이는 여기에 저장된다.
-  const [textHeight, setTextHeight] = useState(0);
-
 
   // Lobster 폰트를 로드하고 로드 완료 여부를 fontsLoaded 상태에 저장
   const [fontsLoaded] = useFonts({
