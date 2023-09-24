@@ -5,7 +5,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import 'react-native-gesture-handler';
 
 //노치 침범 방지 패키지
-import { SafeAreaProvider,SafeAreaView } from 'react-native-safe-area-context';
+//최상단에서는 사용하지 않게 됨
+//import { SafeAreaProvider,SafeAreaView } from 'react-native-safe-area-context';
 
 //폰트 사용을 위한 패키지들
 import { useFonts } from 'expo-font';
@@ -54,7 +55,6 @@ export default function App() {
   
    // 폰트가 로드된 경우 아래의 JSX를 반환하여 화면에 출력합니다. 
    return (
-
         <View style={{flex:1}}>
           <NavigationContainer>
             <Stack.Navigator initialRouteName='Main'>
