@@ -9,7 +9,12 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 // React 라이브러리에서 useState, useEffect, useCallback 훅을 임포트합니다.
 import React, { useState, useEffect, useCallback } from 'react';
-import Homepage from './screens/Homepage';
+import MainPage from './screens/MainPage';
+
+//다른 페이지로 이동하는 패키지
+import { createStackNavigator } from '@react-navigation/stack';
+
+const Stack = createStackNavigator();
 
 // 앱 시작 시 스플래시 화면이 자동으로 사라지는 것을 방지합니다.
 SplashScreen.preventAutoHideAsync();
@@ -45,7 +50,7 @@ export default function App() {
    return (
     <SafeAreaProvider> 
         <SafeAreaView style={{flex:1}}>
-          <Homepage/>
+          <MainPage/>
           <StatusBar style="auto" />
         </SafeAreaView>
      </SafeAreaProvider>
