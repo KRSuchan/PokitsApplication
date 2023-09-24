@@ -9,6 +9,7 @@ import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 // React 라이브러리에서 useState, useEffect, useCallback 훅을 임포트합니다.
 import React, { useState, useEffect, useCallback } from 'react';
+import Homepage from './screens/Homepage';
 
 // 앱 시작 시 스플래시 화면이 자동으로 사라지는 것을 방지합니다.
 SplashScreen.preventAutoHideAsync();
@@ -43,25 +44,13 @@ export default function App() {
    // 폰트가 로드된 경우 아래의 JSX를 반환하여 화면에 출력합니다. 
    return (
     <SafeAreaProvider> 
-        <SafeAreaView style={styles.container}>
-          <View style={styles.header}>
-            <Text style={styles.h1}
-            onLayout={(event)=>{
-              const {height} = event.nativeEvent.layout;
-              setTextHeight(height); //텍스트의 높이를 불러온다. 
-            }}
-            >
-              Pokit's</Text>
-            <TouchableOpacity onPress={() => console.log('누름')}>
-              <Image source={require('./assets/images/profile.png')} style={{width:textHeight-13, height:textHeight-13}} />
-            </TouchableOpacity>
-          </View>
-          
+        <SafeAreaView style={{flex:1}}>
+          <Homepage/>
           <StatusBar style="auto" />
         </SafeAreaView>
      </SafeAreaProvider>
    );
-}
+};
 
 const styles = StyleSheet.create({
    container: {
