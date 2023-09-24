@@ -2,16 +2,19 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 
-import SettingListPage from '../screens/SettingListPage';
+//노치 침범 방지 패키지
+import { SafeAreaProvider,SafeAreaView } from 'react-native-safe-area-context';
 
 export default function MainPage({navigation}) {
   const [textHeight, setTextHeight] = useState(0);
 
   const navigateToSettings = () => {
-    navigation.navigate('SettingList');
+    navigation.navigate('설정');
   };
 
   return (
+    <SafeAreaProvider style={{backgroundColor: '#fff'}}>
+    <SafeAreaView style={{flex:1}}>
     <View style={styles.container}>
       <View style={styles.header}>
         <Text 
@@ -31,6 +34,8 @@ export default function MainPage({navigation}) {
         </TouchableOpacity>
       </View>
     </View>
+    </SafeAreaView>
+    </SafeAreaProvider>
   );
 }
 

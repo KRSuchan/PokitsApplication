@@ -54,17 +54,17 @@ export default function App() {
   
    // 폰트가 로드된 경우 아래의 JSX를 반환하여 화면에 출력합니다. 
    return (
-    <SafeAreaProvider> 
-        <SafeAreaView style={{flex:1}}>
+
+        <View style={{flex:1}}>
           <NavigationContainer>
             <Stack.Navigator initialRouteName='Main'>
-              <Stack.Screen name = "Main" component={MainPage}/>
-              <Stack.Screen name = "SettingList" component={SettingListPage}/>
+              <Stack.Screen name = "메인화면" component={MainPage} options={{ headerShown: false }}/>
+              <Stack.Screen name = "설정" component={SettingListPage}/>
             </Stack.Navigator>
           </NavigationContainer>
           <StatusBar style="auto" />
-        </SafeAreaView>
-     </SafeAreaProvider>
+        </View>
+
    );
 };
 
