@@ -115,12 +115,12 @@ const styles = StyleSheet.create({
 
     vbox:{
         flexDirection:'column',
-        verticalAlign:'middle',
     },
 
     hbox:{
         flexDirection:'row',
         justifyContent:'space-between',
+        alignItems:'center',
     },
 
     itemcontainer: { //아이템 간의 간격
