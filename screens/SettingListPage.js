@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, Button, StyleSheetm, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, Button, StyleSheetm, TouchableOpacity, Image } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Divider } from 'react-native-elements';
 
@@ -17,6 +17,10 @@ const SettingItemBig = ({ title, onPress, describe}) => (
                             {describe}
                         </Text>
                     </View>
+                    <Image 
+            source={require('../assets/images/Next.png')} // 여기에 실제 이미지 경로 입력
+            style={{ width: 10, height: 30 }} // 텍스트 높이만큼 이미지 크기 설정
+          />
                 </View>
                 <Divider style={styles.dividerstyle} orientation="horizontal" />
             </View>
@@ -116,6 +120,7 @@ const styles = StyleSheet.create({
 
     hbox:{
         flexDirection:'row',
+        justifyContent:'space-between',
     },
 
     itemcontainer: { //아이템 간의 간격
