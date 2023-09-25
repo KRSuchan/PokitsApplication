@@ -33,7 +33,7 @@ const SettingItemBig = ({ title, onPress, describe}) => (
     <TouchableOpacity style={{width:'100%'}} onPress={onPress}>
         <View style={styles.itemcontainer}>
             <View style-={styles.vbox}>
-                <View style={styles.hbox}>
+                <View style={styles.hbox}> 
                     <View style={styles.hbox}>
                             <Text style={styles.itemtitle}>
                                 {title}

@@ -12,14 +12,17 @@ import 'react-native-gesture-handler';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 
-//화면 불러오기
-import MainPage from './screens/MainPage';
-import SettingListPage from './screens/SettingListPage';
+
 
 //다른 페이지로 이동하는 패키지
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
+
+//화면 불러오기
+import MainPage from './screens/MainPage';
+import SettingListPage from './screens/SettingListPage';
 import BusSettingPage from './screens/BusSettingPage';
+import CafeteriaSettingPage from './screens/CafeteriaSettingPage';
 
 //네비게이터 사용 
 const Stack = createStackNavigator();
@@ -59,6 +62,7 @@ export default function App() {
               <Stack.Screen name = "메인화면" component={MainPage} options={{ headerShown: false }}/>
               <Stack.Screen name = "설정" component={SettingListPage}/>
               <Stack.Screen name = "선호 정류장" component={BusSettingPage}/>
+              <Stack.Screen name = "선호 식당" component={CafeteriaSettingPage}/>
             </Stack.Navigator>
           </NavigationContainer>
           <StatusBar style="auto" />
