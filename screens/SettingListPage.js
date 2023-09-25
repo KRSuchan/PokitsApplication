@@ -57,7 +57,7 @@ export default function SettingListPage({navigation}) {
           <SettingItemBig 
             title="선호 정류장"
             describe="메인에 보여질 버스 정보"
-            onPress={() => navigation.navigate('선호정류장')}
+            onPress={() => navigation.navigate('선호 정류장')}
         />
         <SettingItemBig 
             title="선호 식당" 
