@@ -19,6 +19,7 @@ import SettingListPage from './screens/SettingListPage';
 //다른 페이지로 이동하는 패키지
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
+import BusSettingPage from './screens/BusSettingPage';
 
 //네비게이터 사용 
 const Stack = createStackNavigator();
@@ -57,6 +58,7 @@ export default function App() {
             <Stack.Navigator initialRouteName='Main'>
               <Stack.Screen name = "메인화면" component={MainPage} options={{ headerShown: false }}/>
               <Stack.Screen name = "설정" component={SettingListPage}/>
+              <Stack.Screen name = "선호 정류장" component={BusSettingPage}/>
             </Stack.Navigator>
           </NavigationContainer>
           <StatusBar style="auto" />

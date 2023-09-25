@@ -66,6 +66,6 @@ const styles = StyleSheet.create({
    h1: {
     fontFamily: 'Lobster', 
     //fontSize: "50%",      
-    fontSize: Dimensions.get('window').width > 500? 55 : 40,     
+    fontSize: Dimensions.get('window').width > 500? 55 : 45,     
    }
 });
