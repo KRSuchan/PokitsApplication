@@ -34,10 +34,13 @@ const SettingItemBig = ({ title, onPress, describe}) => (
         <View style={styles.itemcontainer}>
             <View style-={styles.vbox}>
                 <View style={styles.hbox}>
-                        <Text style={styles.itemtitle}>
-                            {title}
-                        </Text>
+                    <View style={styles.hbox}>
+                            <Text style={styles.itemtitle}>
+                                {title}
+                            </Text>
+                    </View>
                 </View>
+                
                 <Divider style={styles.dividerstyle} orientation="horizontal" />
             </View>
         </View>
@@ -121,17 +124,17 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         justifyContent:'space-between',
         alignItems:'center',
+        marginVertical:9,
     },
 
     itemcontainer: { //아이템 간의 간격
-        width: '100%', //사실상 작동 안함
-        marginTop: 10,
-        marginBottom: 6,
+        
     },
 
     itemtitle: {
         fontSize: 20,
         fontWeight:'600',
+        marginBottom:2,
     },
 
     itemdescribe: {
@@ -141,6 +144,5 @@ const styles = StyleSheet.create({
     },
 
     dividerstyle: {
-        marginTop: 10,
     }
  });
