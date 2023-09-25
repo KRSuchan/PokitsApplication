@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text, Button, StyleSheetm, TouchableOpacity, Image } from 'react-native';
 import { Divider } from 'react-native-elements';
 
-const SettingItemBig = ({ title, onPress, describe, isCheck}) => (
+const CheckItemBig = ({ title, onPress, describe}) => (
     <TouchableOpacity style={{width:'100%'}} onPress={onPress}>
         <View style={styles.itemcontainer}>
             <View style-={styles.vbox}>
@@ -17,7 +17,7 @@ const SettingItemBig = ({ title, onPress, describe, isCheck}) => (
                     </View>
                     <Image 
             source={require('../assets/images/Done.png')} // 여기에 실제 이미지 경로 입력
-            style={{ width: 10, height: 30 }} // 텍스트 높이만큼 이미지 크기 설정
+            style={{ width: 30, height: 30 }} // 텍스트 높이만큼 이미지 크기 설정
           />
                 </View>
                 <Divider style={styles.dividerstyle} orientation="horizontal" />
@@ -31,7 +31,16 @@ export default function BusSettingPage({navigation}) {
     return(
         <View style={styles.container}>
             <Text style={styles.h1}>선호 정류장</Text>
-
+            <CheckItemBig
+                title="옥계중학교 방면"
+                describe="옥계, 산동, 인동 방향"
+                onPress
+            />
+            <CheckItemBig
+                title="구미시내 방면"
+                describe="구미역, 버스터미널, 사곡 방향"
+                onPress
+            />
         </View>
     )
 }

@@ -34,7 +34,9 @@ export default function MainPage({navigation}) {
         >
           Pokit's
         </Text>
-        <TouchableOpacity onPress={() => {console.log('프로필버튼 누름');navigateToSettings();}}>
+        <TouchableOpacity onPress={() => {
+          console.log('프로필버튼 누름');
+        navigateToSettings();}}>
           <Image 
             source={require('../assets/images/profile.png')} // 여기에 실제 이미지 경로 입력
             style={{ width: textHeight-10, height: textHeight-10 }} // 텍스트 높이만큼 이미지 크기 설정
