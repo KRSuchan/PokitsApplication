@@ -1,24 +1,38 @@
+//일반적인 패키지들
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
-import 'react-native-gesture-handler';
-import { SafeAreaProvider,SafeAreaView } from 'react-native-safe-area-context';
-
-// expo-font 라이브러리에서 useFonts 훅을 임포트합니다.
-import { useFonts } from 'expo-font';
-// expo-splash-screen 라이브러리에서 SplashScreen 객체를 임포트합니다.
-import * as SplashScreen from 'expo-splash-screen';
-// React 라이브러리에서 useState, useEffect, useCallback 훅을 임포트합니다.
 import React, { useState, useEffect, useCallback } from 'react';
+import 'react-native-gesture-handler';
 
-// 앱 시작 시 스플래시 화면이 자동으로 사라지는 것을 방지합니다.
+//노치 침범 방지 패키
+//최상단에서는 사용하지 않게 됨
+//import { SafeAreaProvider,SafeAreaView } from 'react-native-safe-area-context';
+
+//폰트 사용을 위한 패키지들
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
+
+
+
+//다른 페이지로 이동하는 패키지
+import { createStackNavigator } from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+
+//화면 불러오기
+import MainPage from './screens/MainPage';
+import SettingListPage from './screens/SettingListPage';
+import BusSettingPage from './screens/BusSettingPage';
+import CafeteriaSettingPage from './screens/CafeteriaSettingPage';
+
+//네비게이터 사용 
+const Stack = createStackNavigator();
+
+// 앱 시작 시 스플래시 화면이 자동으로 사라지는 것을 방지
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-  //텍스트의 높이는 여기에 저장된다.
-  const [textHeight, setTextHeight] = useState(0);
 
-
-  // Lobster 폰트를 로드하고 로드 완료 여부를 fontsLoaded 상태에 저장합니다.
+  // Lobster 폰트를 로드하고 로드 완료 여부를 fontsLoaded 상태에 저장
   const [fontsLoaded] = useFonts({
     'Lobster' : require('./assets/fonts/Lobster-Regular.ttf'),
   });
@@ -42,26 +56,20 @@ export default function App() {
   
    // 폰트가 로드된 경우 아래의 JSX를 반환하여 화면에 출력합니다. 
    return (
-    <SafeAreaProvider> 
-        <SafeAreaView style={styles.container}>
-          <View style={styles.header}>
-            <Text style={styles.h1}
-            onLayout={(event)=>{
-              const {height} = event.nativeEvent.layout;
-              setTextHeight(height); //텍스트의 높이를 불러온다. 
-            }}
-            >
-              Pokit's</Text>
-            <TouchableOpacity onPress={() => console.log('누름')}>
-              <Image source={require('./assets/images/profile.png')} style={{width:textHeight-13, height:textHeight-13}} />
-            </TouchableOpacity>
-          </View>
-          
+        <View style={{flex:1}}>
+          <NavigationContainer>
+            <Stack.Navigator initialRouteName='Main'>
+              <Stack.Screen name = "메인화면" component={MainPage} options={{ headerShown: false }}/>
+              <Stack.Screen name = "설정" component={SettingListPage}/>
+              <Stack.Screen name = "선호 정류장" component={BusSettingPage}/>
+              <Stack.Screen name = "선호 식당" component={CafeteriaSettingPage}/>
+            </Stack.Navigator>
+          </NavigationContainer>
           <StatusBar style="auto" />
-        </SafeAreaView>
-     </SafeAreaProvider>
+        </View>
+
    );
-}
+};
 
 const styles = StyleSheet.create({
    container: {
