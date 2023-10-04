@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect, useCallback } from 'react';
 import 'react-native-gesture-handler';
 
-//노치 침범 방지 패키지
+//노치 침범 방지 패키
 //최상단에서는 사용하지 않게 됨
 //import { SafeAreaProvider,SafeAreaView } from 'react-native-safe-area-context';
 
