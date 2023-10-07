@@ -47,7 +47,7 @@ const SettingItemBig = ({ title, onPress, describe}) => (
                         </Text>
                     </View>
                     <ToggleSwitch
-                        isOn = {toggled}
+                        isOn = {toggled!==null?toggled:false}
                         onToggle={onPress}
                     />
                 </View>
@@ -99,7 +99,7 @@ export default function ScheduleSettingPage({navigation}) {
             <SettingItemBig 
                 title="디데이 설정"
                 describe="나만의 디데이를 설정해 보세요"
-                onPress={()=> navigation.navigate('선호 식당')}
+                onPress={()=> navigation.navigate('디데이 설정')}
             />
             <ToggleItemBig
                 title="수업일수 표시"

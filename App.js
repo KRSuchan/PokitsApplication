@@ -24,6 +24,7 @@ import SettingListPage from './screens/SettingListPage';
 import BusSettingPage from './screens/BusSettingPage';
 import CafeteriaSettingPage from './screens/CafeteriaSettingPage';
 import ScheduleSettingPage from './screens/ScheduleSettingPage';
+import DdaySettingPage from './screens/DdaySettingPage';
 
 //네비게이터 사용 
 const Stack = createStackNavigator();
@@ -65,6 +66,7 @@ export default function App() {
               <Stack.Screen name = "선호 정류장" component={BusSettingPage}/>
               <Stack.Screen name = "선호 식당" component={CafeteriaSettingPage}/>
               <Stack.Screen name = "일정 설정" component={ScheduleSettingPage}/>
+              <Stack.Screen name = "디데이 설정" component={DdaySettingPage}/>
             </Stack.Navigator>
           </NavigationContainer>
           <StatusBar style="auto"/>
