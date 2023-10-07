@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect, useCallback } from 'react';
 import 'react-native-gesture-handler';
 
-//노치 침범 방지 패키
+//노치 침범 방지 패키지
 //최상단에서는 사용하지 않게 됨
 //import { SafeAreaProvider,SafeAreaView } from 'react-native-safe-area-context';
 
@@ -23,6 +23,7 @@ import MainPage from './screens/MainPage';
 import SettingListPage from './screens/SettingListPage';
 import BusSettingPage from './screens/BusSettingPage';
 import CafeteriaSettingPage from './screens/CafeteriaSettingPage';
+import ScheduleSettingPage from './screens/ScheduleSettingPage';
 
 //네비게이터 사용 
 const Stack = createStackNavigator();
@@ -63,9 +64,10 @@ export default function App() {
               <Stack.Screen name = "설정" component={SettingListPage}/>
               <Stack.Screen name = "선호 정류장" component={BusSettingPage}/>
               <Stack.Screen name = "선호 식당" component={CafeteriaSettingPage}/>
+              <Stack.Screen name = "일정 설정" component={ScheduleSettingPage}/>
             </Stack.Navigator>
           </NavigationContainer>
-          <StatusBar style="auto" />
+          <StatusBar style="auto"/>
         </View>
 
    );
