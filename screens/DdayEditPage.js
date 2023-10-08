@@ -3,8 +3,11 @@ import React, { useState, useEffect } from 'react';
 //설정 저장을 위해 필요함
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { StyleSheet, View, Text, Button, StyleSheetm, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, View, Text, Button, StyleSheetm, TouchableOpacity, Image, TextInput } from 'react-native';
 import { Divider } from 'react-native-elements';
+
+//날짜 선택을 위한 
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 class Dday{
     constructor(id, ddayName, ddayDate){
@@ -19,6 +22,11 @@ export default function DdayEditPage({navigation}){
     return(
         <View style={styles.container}>
             <Text style={styles.h1}>디데이 수정</Text>
+            <TextInput 
+                style={styles.input}
+                value={'nice to meet you'}
+                placeholder='hello'
+            />
         </View>
     )
 
@@ -61,4 +69,8 @@ const styles = StyleSheet.create({
         color:"#8A8A8E",
         fontWeight:'500',
     },
+
+    input:{
+        height: 40,
+    }
 })
