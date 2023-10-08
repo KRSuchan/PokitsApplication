@@ -6,6 +6,15 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StyleSheet, View, Text, Button, StyleSheetm, TouchableOpacity, Image } from 'react-native';
 import { Divider } from 'react-native-elements';
 
+// Dday 클래스 정의
+class Dday{
+    constructor(id, ddayName, ddayDate){
+        this.id = id;
+        this.ddayName = ddayName;
+        this.ddayDate = ddayDate;
+    }
+}
+
 // Setting item component
 const DdayItemBig = ({ title, onPress, describe}) => (
     <TouchableOpacity style={{width:'100%'}} onPress={onPress}>
@@ -33,14 +42,55 @@ const DdayItemBig = ({ title, onPress, describe}) => (
   );
 
 export default function DdaySettingPage({navigation}){
+    const [ddays, setDdays] = useState([]);
+
+    useEffect(()=>{
+        getData();
+    },[]);
+
+    const getData = async() => {
+        try{
+            const jsonValue = await AsyncStorage.getItem('ddays')
+            let data = jsonValue != null ? JSON.parse(jsonValue) : [];
+            setDdays(data);
+
+        }catch(e){
+            console.log(e)
+        }
+    }
+
+    const addDdays = async() => {
+        let id = Math.random.toString(36).substr(2);
+        let dateObj = new Date();
+        let month = String(dateObj.getMonth()+1).padStart(2,'0');
+        let day = String(dateObj.getDate()).padStart(2,'0');
+        let year = dateObj.getFullYear();
+
+        const newDday = new Dday(id,`${year}-${month}-${day}`, `${year}-${month}-${day}`)
+
+        try{
+            ddays.push(newDday);
+            await AsyncStorage.setItem('ddays',JSON.stringify(ddays));
+            setDdays([...ddays]);
+        }catch(e){
+            console.log(e);
+        }
+    }
 
     return(
         <View style={styles.container}>
             <Text style={styles.h1}>디데이 설정</Text>
             <DdayItemBig
                 title="디데이 추가"
-                describe="나만의 디데이를 추가해 보세요"
+                describe="지금 디데이를 추가해 보세요"
+                onPress={addDdays}
             />
+            {ddays.map(dday =>
+                <DdayItemBig
+                title={dday.ddayName}
+                describe={dday.ddayDate}
+                onPress={()=>navigation.navigate('디데이 수정',dday)}
+            />)}
         </View>
     )
 
