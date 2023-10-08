@@ -68,7 +68,7 @@ export default function SettingListPage({navigation}) {
         <SettingItemBig 
             title="일정 설정" 
             describe="D-day기능을 사용해 보세요"
-            onPress={() => navigation.navigate('선호 식당')}
+            onPress={() => navigation.navigate('일정 설정')}
         />
 
         <SettingItemBig 
