@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React, { useState, useEffect, useCallback } from "react";
 import "react-native-gesture-handler";
 
-//노치 침범 방지 패키
+//노치 침범 방지 패키지
 //최상단에서는 사용하지 않게 됨
 //import { SafeAreaProvider,SafeAreaView } from 'react-native-safe-area-context';
 
@@ -22,6 +22,8 @@ import SettingListPage from "./screens/SettingListPage";
 import BusSettingPage from "./screens/BusSettingPage";
 import CafeteriaSettingPage from "./screens/CafeteriaSettingPage";
 import CafeteriaPage from "./screens/CafeteriaPage";
+import ScheduleSettingPage from './screens/ScheduleSettingPage';
+import DdaySettingPage from './screens/DdaySettingPage';
 
 //네비게이터 사용
 const Stack = createStackNavigator();
@@ -47,6 +49,27 @@ export default function App() {
   useEffect(() => {
     onLayoutRootView();
   }, [onLayoutRootView]);
+
+  
+  if(!fontsLoaded) {
+    return null; // 폰트가 아직 로드되지 않았다면 아무것도 출력하지 않습니다.
+   }
+  
+   // 폰트가 로드된 경우 아래의 JSX를 반환하여 화면에 출력합니다. 
+   return (
+        <View style={{flex:1}}>
+          <NavigationContainer>
+            <Stack.Navigator initialRouteName='Main'>
+              <Stack.Screen name = "메인화면" component={MainPage} options={{ headerShown: false }}/>
+              <Stack.Screen name = "설정" component={SettingListPage}/>
+              <Stack.Screen name = "선호 정류장" component={BusSettingPage}/>
+              <Stack.Screen name = "선호 식당" component={CafeteriaSettingPage}/>
+              <Stack.Screen name = "일정 설정" component={ScheduleSettingPage}/>
+              <Stack.Screen name = "디데이 설정" component={DdaySettingPage}/>
+            </Stack.Navigator>
+          </NavigationContainer>
+          <StatusBar style="auto"/>
+        </View>
 
   if (!fontsLoaded) {
     return null; // 폰트가 아직 로드되지 않았다면 아무것도 출력하지 않습니다.
