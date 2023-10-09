@@ -60,7 +60,7 @@ export default function DdaySettingPage({navigation}){
     }
 
     const addDdays = async() => {
-        let id = Math.random.toString(36).substring(2); //난수를 36진수로 변환후 앞2글자 삭제
+        let id = Math.random().toString(36).substring(2); //난수를 36진수로 변환후 앞2글자 삭제
         let dateObj = new Date();
         let month = String(dateObj.getMonth()+1).padStart(2,'0');  //JS는 0월부터 시작, 문자열 2글자 맞추기
         let day = String(dateObj.getDate()).padStart(2,'0');
@@ -88,7 +88,7 @@ export default function DdaySettingPage({navigation}){
             {ddays.map(dday =>
                 <DdayItemBig
                 title={dday.ddayName}
-                describe={dday.ddayDate}
+                describe={dday.id}
                 onPress={()=>navigation.navigate('디데이 수정',dday)}
             />)}
         </View>
