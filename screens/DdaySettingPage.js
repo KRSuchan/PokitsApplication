@@ -18,6 +18,24 @@ class Dday{
     }
 }
 
+//날짜 데이터를 보기 좋게 변환, 시간 없애는게 목적임
+const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    let month = '' + (date.getMonth() + 1),
+        day = '' + date.getDate(),
+        year = date.getFullYear();
+
+    //두자리수 맞춰줌
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
+
+
 // Setting item component
 const DdayItemBig = ({ title, onPress, describe}) => (
     <TouchableOpacity style={{width:'100%'}} onPress={onPress}>
@@ -107,7 +125,7 @@ export default function DdaySettingPage({navigation}){
                         <DdayItemBig
                             key = {dday.id} //key값도 받음
                             title={dday.ddayName}
-                            describe={dday.ddayDate}
+                            describe={formatDate(dday.ddayDate)}
                             onPress={()=>navigation.navigate('디데이 수정',dday)}
                         />
                     )
