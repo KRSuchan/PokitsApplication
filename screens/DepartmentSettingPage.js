@@ -9,32 +9,6 @@ import { Divider } from 'react-native-elements';
 //학과 정보가 담긴 json파일
 import departments from '../assets/data/departments.json';
 
-const CheckItemBig = ({title, onPress, describe, selected}) => (
-    <TouchableOpacity style={{width:'100%'}} onPress={onPress}>
-        <View style={styles.itemcontainer}>
-            <View style-={styles.vbox}>
-                <View style={styles.hbox}>
-                    <View style={styles.vbox}>
-                        <Text style={styles.itemtitle}>
-                            {title}
-                        </Text>
-                        <Text style={styles.itemdescribe}>
-                            {describe}
-                        </Text>
-                    </View>
-                    {selected && <Image 
-            source={require('../assets/images/Done.png')} 
-            style={{ width: 30, height: 30 }} // 텍스트 높이만큼 이미지 크기 설정
-          />}
-                    
-                </View>
-                <Divider style={styles.dividerstyle} orientation="horizontal" />
-            </View>
-        </View>
-    </TouchableOpacity>
-    
-  );
-
   const CheckItemSmall = ({title, onPress, selected}) => (
     <TouchableOpacity style={{width:'100%'}} onPress={onPress}>
         <View style={styles.itemcontainer}>
@@ -67,6 +41,7 @@ export default function DepartmentSettingPage({navigation}) {
             try{
                 //세팅을 변수에 담음
                 const savedSetting = await AsyncStorage.getItem('departmentSetting');
+                console.log(savedSetting)
                 //비어있지 않다면 state 에 넣을 것임
                 if(savedSetting !== null) setSelectedItem(JSON.stringify(savedSetting));
             } catch (error) {
@@ -90,11 +65,12 @@ export default function DepartmentSettingPage({navigation}) {
     return(
         <View style={styles.container}>
             <Text style={styles.h1}>내 학과 설정</Text>
-                {Object.keys(departments).map((key,value)=>(
+                {Object.keys(departments).map((key)=>(
                     <CheckItemSmall
+                        key={key}
                         title={key}
-                        onPress={()=> saveSetting(value)}
-                        selected = {selectedItem === value}
+                        onPress={()=> saveSetting(key)}
+                        selected = {selectedItem === JSON.stringify(key)}
                 />
             ))}
         </View>
