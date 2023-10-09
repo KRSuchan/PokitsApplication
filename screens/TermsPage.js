@@ -7,9 +7,6 @@ export default function TermsPage ({navigation}) {
     return(
         <View style={styles.container}>
             <Text style={styles.h1}>이용약관</Text>
-            <View style={styles.secondcontaioner}>
-                <Image source={require('../assets/images/devinfo.png')}/>
-            </View>
         </View>
     )
 }
@@ -17,7 +14,7 @@ export default function TermsPage ({navigation}) {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-      backgroundColor: '#000000',
+      backgroundColor: '#fff',
       alignItems: 'flex-start',
       justifyContent: 'flex-start', 
       padding: 20,
@@ -31,7 +28,7 @@ const styles = StyleSheet.create({
     },
 
     h1: {
-        color: "#fff",
+        color: "#000000",
         fontWeight: 'bold',
         fontSize: 35,         // 글자 크기를 설정하는 스타일
         marginBottom: 10,

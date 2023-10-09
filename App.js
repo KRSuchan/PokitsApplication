@@ -27,6 +27,7 @@ import DdaySettingPage from './screens/DdaySettingPage';
 import DdayEditPage from "./screens/DdayEditPage";
 import DepartmentSettingPage from "./screens/DepartmentSettingPage";
 import DevInfoPage from "./screens/DevInfoPage";
+import TermsPage from "./screens/TermsPage";
 
 //네비게이터 사용
 const Stack = createStackNavigator();
@@ -73,6 +74,7 @@ export default function App() {
               <Stack.Screen name = "디데이 수정" component={DdayEditPage}/>
               <Stack.Screen name = "내 학과 설정" component={DepartmentSettingPage}/>
               <Stack.Screen name = "개발팀" component={DevInfoPage}/>
+              <Stack.Screen name = "이용약관" component={TermsPage}/>
               <Stack.Screen 
             name="식당"
             component={CafeteriaPage}

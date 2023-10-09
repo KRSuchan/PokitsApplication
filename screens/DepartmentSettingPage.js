@@ -1,9 +1,10 @@
-//설정 조회를 위해 필요함
+//설정 조회를 위해 필요함, 
+//페이지 스크롤이 필요함. 이 페이지
 import React, { useState, useEffect } from 'react';
 //설정 저장을 위해 필요함
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { StyleSheet, View, Text, Button, StyleSheetm, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, View, Text, Button, StyleSheetm, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { Divider } from 'react-native-elements';
 
 //학과 정보가 담긴 json파일
@@ -65,14 +66,16 @@ export default function DepartmentSettingPage({navigation}) {
     return(
         <View style={styles.container}>
             <Text style={styles.h1}>내 학과 설정</Text>
+            <ScrollView style={width="100%"}>
                 {Object.keys(departments).map((key)=>(
-                    <CheckItemSmall
-                        key={key}
-                        title={key}
-                        onPress={()=> saveSetting(key)}
-                        selected = {selectedItem === JSON.stringify(key)}
-                />
-            ))}
+                        <CheckItemSmall
+                            key={key} //map 을 위한 키임.
+                            title={key} //실제 표시되는 값임
+                            onPress={()=> saveSetting(key)} //눌렀을때 학과명으로 저장할 것임
+                            selected = {selectedItem === JSON.stringify(key)} //저장된 학과명과 지금 이 학과명이 같은가?
+                    />
+                ))}
+            </ScrollView>
         </View>
     )
 }

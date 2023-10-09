@@ -84,12 +84,12 @@ export default function SettingListPage({navigation}) {
 
         <SettingItemSmall 
             title="이용약관" 
-            onPress={() => navigation.navigate('선호 식당')}
+            onPress={() => navigation.navigate('이용약관')}
         />
 
         <SettingItemSmall 
             title="가이드" 
-            onPress={() => navigation.navigate('선호 식당')}
+            onPress={() => navigation.navigate('가이드')}
         />
         </View>
       );
