@@ -40,7 +40,9 @@ export default function DdayEditPage({route, navigation}){
 
     //텍스트 변경
     const onChangeText = (editedText) => {
-        setDday({...dday,ddayName:Text})
+        setDday({...dday,ddayName:editedText || ''})
+        //디데이 객체에서, 이름 부분만 받은 걸로 변경할 것임.
+        //텍스트가 빈값일때 빈 문자열로 설정해둠
     }
 
     //날짜 변경
@@ -72,6 +74,31 @@ export default function DdayEditPage({route, navigation}){
         }
     };
 
+    //디데이를 저장함
+    const saveDdays = async() => {
+        
+        try{
+            console.log(dday)
+            //로컬 디데이 불러옴
+            let jsonValue = await AsyncStorage.getItem('ddays')
+            console.log(jsonValue)
+            //비어있지 않다면 json 파싱
+            let data = jsonValue != null ? JSON.parse(jsonValue) : [];
+
+            //지금 현 디데이 id랑 일치하는 디데이 있는지 찾음, 그리고 업데이트함, 없으면 그냥 아이템만
+            let newData = data.map(item=>{
+                item.id === dday.id?{...item,ddayName: dday.ddayName, ddayDate:date}:item});
+
+            //그걸 로컬 디데이에 넣고
+            await AsyncStorage.setItem('ddays',JSON.stringify(newData));
+            //앞 페이지로 이동
+            navigation.navigate('디데이 설정')
+            
+        }catch(e){
+            console.log(e)
+        }
+    }
+
     return(
         <View style={styles.container}>
             <Text style={styles.h1}>디데이 수정</Text>
@@ -79,7 +106,7 @@ export default function DdayEditPage({route, navigation}){
                 <TextInput 
                     style={styles.itemdescribe}
                     value={dday.ddayName}
-                    placeholder='hello'
+                    placeholder='디데이 이름을 정해 보세요.'
                     onChangeText={onChangeText}
                 />
             </View>
@@ -89,18 +116,18 @@ export default function DdayEditPage({route, navigation}){
             <View style={styles.dateinputbox}>
                 <DateTimePicker
                     testID="dateTimePicker"
-                    value={date}
-                    mode={"date"}
-                    is24Hour={true}
-                    display="default"
+                    value={date} //초기값과 선택값 모두
+                    mode={"date"} //날짜 선택 모드임
+                    is24Hour={true} 
+                    display="default" //안드로이드에서 어떤 모드로 출력할까
                     onChange={onChangeDate} />
             </View>
-            
-            <Button title="삭제" onPress={()=>deleteDdays()}/>
+            <View style={styles.hbox}>
+                <Button title="삭제" onPress={()=>deleteDdays()}/>
+                <Button title="저장" onPress={()=>saveDdays()}/>
+            </View>
         </View>
     )
-
-
 }
 
 const styles = StyleSheet.create({
@@ -150,9 +177,11 @@ const styles = StyleSheet.create({
   },
 
   dateinputbox: {
-    padding: 3,
-    alignItems: "center",
+    padding: 10,
+    alignItems: "flex-end",
     width: "100%",
+    backgroundColor: "#ECEDEE",
+    borderRadius: 15,
   }
 
 });
