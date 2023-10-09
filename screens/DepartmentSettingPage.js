@@ -66,7 +66,7 @@ export default function DepartmentSettingPage({navigation}) {
     return(
         <View style={styles.container}>
             <Text style={styles.h1}>내 학과 설정</Text>
-            <ScrollView style={width="100%"}>
+            <ScrollView style={styles.scrollbox}>
                 {Object.keys(departments).map((key)=>(
                         <CheckItemSmall
                             key={key} //map 을 위한 키임.
@@ -87,6 +87,11 @@ const styles = StyleSheet.create({
       alignItems: 'flex-start',
       justifyContent: 'flex-start', 
       padding: 20,
+    },
+
+    scrollbox:{
+        flex:1,
+        width:'100%',
     },
 
     h1: {
