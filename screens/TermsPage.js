@@ -8,12 +8,9 @@ import { WebView } from 'react-native-webview';
 export default function TermsPage ({navigation}) {
 
     return(
-        <View style={styles.container}>
-            <Text style={styles.h1}>이용약관</Text>
-                <WebView
+                <WebView style={styles.container}
                     source={require('../assets/data/terms.html')}
                     />
-        </View>
     )
 }
 
@@ -28,7 +25,6 @@ const styles = StyleSheet.create({
 
     scrollbox:{
         flex:1,
-        width:'100%',
     },
 
     secondcontaioner: {
