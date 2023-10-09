@@ -6,6 +6,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StyleSheet, View, Text, Button, StyleSheetm, TouchableOpacity, Image } from 'react-native';
 import { Divider } from 'react-native-elements';
 
+import { useFocusEffect } from '@react-navigation/native';
+
+
 // Dday 클래스 정의
 class Dday{
     constructor(id, ddayName, ddayDate){
@@ -44,9 +47,10 @@ const DdayItemBig = ({ title, onPress, describe}) => (
 export default function DdaySettingPage({navigation}){
     const [ddays, setDdays] = useState([]);
 
-    useEffect(()=>{
-        getData();
-    },[]);
+    useFocusEffect( //사용자가 화면을 주목할때마다 
+        React.useCallback(()=>{ //콜백내부함수인
+        getData(); //데이터 불러오기를 실행
+    },[]));
 
     const getData = async() => {
         try{
@@ -87,13 +91,13 @@ export default function DdaySettingPage({navigation}){
             />
             {ddays.map(dday =>
                 <DdayItemBig
+                key = {dday.id} //key값도 받음
                 title={dday.ddayName}
                 describe={dday.id}
                 onPress={()=>navigation.navigate('디데이 수정',dday)}
             />)}
         </View>
     )
-
 }
 
 const styles = StyleSheet.create({
