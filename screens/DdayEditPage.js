@@ -38,6 +38,22 @@ export default function DdayEditPage({route, navigation}){
     //datepicker 에 사용되는 date 스테이트
     const [show, setShow] = useState(false);
 
+    //텍스트 변경
+    const onChangeText = (editedText) => {
+        setDday({...dday,ddayName:Text})
+    }
+
+    //날짜 변경
+    const onChangeDate = (event, selectedDate) => {
+        const currentDate = selectedDate || date;
+        setShow(Platform.OS === 'ios');
+        setDate(currentDate);
+    };
+
+    //datepicker 를 표시함
+    const showMode = (currentMode) => {
+        setShow(true);
+    }
 
     const deleteDdays = async() => {
         try{
@@ -64,13 +80,22 @@ export default function DdayEditPage({route, navigation}){
                     style={styles.itemdescribe}
                     value={dday.ddayName}
                     placeholder='hello'
+                    onChangeText={onChangeText}
                 />
             </View>
-            <TouchableOpacity style={styles.inputbox}>
+            {/* <TouchableOpacity style={styles.inputbox} onPress={showMode}>
                 <Text style={styles.itemdescribe}>{dday.ddayDate}</Text>
-            </TouchableOpacity>
-
-            <DateTimePicker date={date} onDateChange={setDate} />
+            </TouchableOpacity> */}
+            <View style={styles.dateinputbox}>
+                <DateTimePicker
+                    testID="dateTimePicker"
+                    value={date}
+                    mode={"date"}
+                    is24Hour={true}
+                    display="default"
+                    onChange={onChangeDate} />
+            </View>
+            
             <Button title="삭제" onPress={()=>deleteDdays()}/>
         </View>
     )
@@ -83,7 +108,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "flex-start",
-    justifyContent: "flex-start",
+    justifyContent: "flex-start", //세로 정렬
     padding: 20,
   },
 
@@ -122,6 +147,12 @@ const styles = StyleSheet.create({
     width: "100%",
     borderRadius: 10,
     marginBottom: 15,
+  },
+
+  dateinputbox: {
+    padding: 3,
+    alignItems: "center",
+    width: "100%",
   }
 
 });
