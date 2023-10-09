@@ -74,7 +74,7 @@ export default function SettingListPage({navigation}) {
         <SettingItemBig 
             title="내 학과 설정"
             describe="내 학과로 바로 갈 수 있어요"
-            onPress={() => navigation.navigate('선호 식당')}
+            onPress={() => navigation.navigate('내 학과 설정')}
         />
 
         <SettingItemSmall 
