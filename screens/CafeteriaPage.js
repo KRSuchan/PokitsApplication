@@ -1,48 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
   StyleSheet,
   View,
   Text,
-  Button,
   TouchableOpacity,
   Image,
   Dimensions,
-  useWindowDimensions,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { TabBar, TabView, SceneMap } from "react-native-tab-view";
 import { ScrollView } from "react-native-gesture-handler";
+import { getMenu } from "../firebase";
 
 //화면의 높이
 HEIGHT = Dimensions.get("window").height;
 
 //화면의 너비
 WIDTH = Dimensions.get("window").width;
-StudentMorning =
-  "[천원의 아침밥]\n*재학생만 해당\n08:20~09:20\n쌀밥\n순대국\n볶음멸치조림\n병아리콩조림\n미니새송이버섯볶음\n깍두기";
-StudentLunch =
-  "[정식: 3000원]\n11:30~13:30\n쌀밥\n콩나물매운국\n돈까스/소스\n김가루무침\n아삭고추쌈장무침\n맛김치";
 
-ProfLunch =
-  "[정식: 5500원]\n11:30~13:30\n잡곡밥\n들깨미역국\n찹쌀탕수육\n계란장조림\n도라지사과무침\n땅콩우엉조림\n배추김치";
-ProfDinner =
-  "[정식: 5500원]\n17:00~18:30\n김치볶음밥\n두부계란국\n깐풍만두\n맛김구이\n오이피클\n양배추샐러드\n요구르트";
-SnackBar =
-  "[11:00~14:00]\n[16:00~18:30]\n제주흑돼지김치찌개\n제주흑돼지참치김치찌개\n제주흑돼지스팸김치찌개\n고추장불백비빔밥\n라면류\n돈가스류";
-PurmLunch =
-  "중식\n12:00~13:00\n흑미밥\n유부장국\n미트볼케찹조림\n삼치데리야끼구이\n부추양파무침\n맛김치";
-PurmDinner =
-  "석식\n17:00~18:00\n카레라이스\n짬뽕국\n군만두\n단무지부추무침\n깍두기";
-Orm1Lunch =
-  "백미밥\n쇠고기미역국\n닭고기곤약장조림\n만두강정\n미나리무생채\n배추김치\n바나나우유미니";
-Orm1Dinner =
-  "백미밥\n사골우거지국(뚝)\n멘치카츠/소스\n맛살브로컬리볶음\n모듬콩자반\n깍두기";
-Orm3Lunch =
-  "순대국밥\n떡고기산적*데미소스\n부추김가루무침\n핫도그*케찹\n쌀밥/석박지\n아이스초코";
-Orm3Dinner =
-  "토마토스파게티\n치킨덴더\n수제피클\n그린샐러드*허니머스타드D\n쌀밥/미니깍두기\n식혜";
 const renderTabBar = props => (
   <TabBar
     {...props}
@@ -54,7 +31,7 @@ const renderTabBar = props => (
     }}
   />
 );
-const UnivCafeteriaRoute = () => (
+const UnivCafeteriaRoute = ({ menuObject }) => (
   <ScrollView showsHorizontalScrollIndicator={false}>
     <View style={styles.pageViewContainer}>
       <View style={styles.cafeteriaContainer}>
@@ -70,10 +47,10 @@ const UnivCafeteriaRoute = () => (
           pagingEnabled={true}
           showsHorizontalScrollIndicator={true}>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text style={styles.cafeteriaMenu}>{StudentMorning}</Text>
+            <Text>{menuObject.student.breakfast}</Text>
           </View>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text style={styles.cafeteriaMenu}>{StudentLunch}</Text>
+            <Text>{menuObject.student.lunch}</Text>
           </View>
         </ScrollView>
       </View>
@@ -91,10 +68,10 @@ const UnivCafeteriaRoute = () => (
           pagingEnabled={true}
           showsHorizontalScrollIndicator={true}>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text style={styles.cafeteriaMenu}>{ProfLunch}</Text>
+            <Text>{menuObject.faculty.lunch}</Text>
           </View>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text style={styles.cafeteriaMenu}>{ProfDinner}</Text>
+            <Text>{menuObject.faculty.dinner}</Text>
           </View>
         </ScrollView>
       </View>
@@ -112,7 +89,7 @@ const UnivCafeteriaRoute = () => (
           pagingEnabled={true}
           showsHorizontalScrollIndicator={true}>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text style={styles.cafeteriaMenu}>{SnackBar}</Text>
+            <Text>{menuObject.snackbar.breakfast}</Text>
           </View>
         </ScrollView>
       </View>
@@ -120,7 +97,7 @@ const UnivCafeteriaRoute = () => (
   </ScrollView>
 );
 
-const DormiCafeteriaRoute = () => (
+const DormiCafeteriaRoute = ({ menuObject }) => (
   <ScrollView showsHorizontalScrollIndicator={false}>
     <View style={styles.pageViewContainer}>
       <View style={styles.cafeteriaContainer}>
@@ -136,10 +113,10 @@ const DormiCafeteriaRoute = () => (
           pagingEnabled={true}
           showsHorizontalScrollIndicator={true}>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text style={styles.cafeteriaMenu}>{PurmLunch}</Text>
+            <Text>{menuObject.puroom.lunch}</Text>
           </View>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text style={styles.cafeteriaMenu}>{PurmDinner}</Text>
+            <Text>{menuObject.puroom.dinner}</Text>
           </View>
         </ScrollView>
       </View>
@@ -156,10 +133,10 @@ const DormiCafeteriaRoute = () => (
           pagingEnabled={true}
           showsHorizontalScrollIndicator={true}>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text style={styles.cafeteriaMenu}>{Orm1Lunch}</Text>
+            <Text>{menuObject.oreum1.lunch}</Text>
           </View>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text style={styles.cafeteriaMenu}>{Orm1Dinner}</Text>
+            <Text>{menuObject.oreum1.dinner}</Text>
           </View>
         </ScrollView>
       </View>
@@ -176,10 +153,10 @@ const DormiCafeteriaRoute = () => (
           pagingEnabled={true}
           showsHorizontalScrollIndicator={true}>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text style={styles.cafeteriaMenu}>{Orm3Lunch}</Text>
+            <Text>{menuObject.oreum3.lunch}</Text>
           </View>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text style={styles.cafeteriaMenu}>{Orm3Dinner}</Text>
+            <Text>{menuObject.oreum3.dinner}</Text>
           </View>
         </ScrollView>
       </View>
@@ -187,22 +164,61 @@ const DormiCafeteriaRoute = () => (
   </ScrollView>
 );
 
-const renderScene = SceneMap({
-  UnivCafeteria: UnivCafeteriaRoute,
-  DormiCafeteria: DormiCafeteriaRoute,
-});
-
+const menu = {
+  faculty: {
+    breakfast: "Loading..",
+    dinner: "Loading..",
+    lunch: "Loading..",
+  },
+  oreum1: {
+    breakfast: "Loading..",
+    dinner: "Loading..",
+    lunch: "Loading..",
+  },
+  oreum3: {
+    breakfast: "Loading..",
+    dinner: "Loading..",
+    lunch: "Loading..",
+  },
+  puroom: {
+    breakfast: "Loading..",
+    dinner: "Loading..",
+    lunch: "Loading..",
+  },
+  snackbar: {
+    breakfast: "Loading..",
+    dinner: "Loading..",
+    lunch: "Loading..",
+  },
+  student: {
+    breakfast: "Loading..",
+    dinner: "Loading..",
+    lunch: "Loading..",
+  },
+};
 export default function SettingListPage({ navigation }) {
   const [textHeight, setTextHeight] = useState(0);
-  const layout = useWindowDimensions();
-  const [index, setIndex] = React.useState(0);
-  const [routes] = React.useState([
+  const [index, setIndex] = useState(0);
+  const [routes] = useState([
     { key: "UnivCafeteria", title: "교내식당" },
     { key: "DormiCafeteria", title: "기숙사식당" },
   ]);
   const navigateGoHome = () => {
     navigation.navigate("메인화면");
   };
+  const [menuObject, setMenu] = useState(menu);
+  const getMenus = async () => {
+    let menu = await getMenu();
+    setMenu(menu);
+  };
+  useEffect(() => {
+    getMenus();
+  }, []);
+
+  const renderScene = SceneMap({
+    UnivCafeteria: () => <UnivCafeteriaRoute menuObject={menuObject} />,
+    DormiCafeteria: () => <DormiCafeteriaRoute menuObject={menuObject} />,
+  });
   return (
     <SafeAreaProvider style={{ backgroundColor: "black" }}>
       <SafeAreaView style={{ flex: 1 }}>
