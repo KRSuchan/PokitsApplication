@@ -32,11 +32,14 @@ class Dday {
 
 //React navigation 에서 route 랑 navigation 을 인자로 받음
 export default function DdayEditPage({route, navigation}){
+
     const [dday,setDday] = useState(route.params); 
     //이전 페이지에서 ddays를 "객체" 로 전달해 주었으므로, 여기서도 그 객체를 그대로 사용할 것임.
     const [date,setDate] = useState(new Date(dday.ddayDate));
     //datepicker 에 사용되는 date 스테이트
     const [show, setShow] = useState(false);
+
+    // console.log(dday)
 
     //텍스트 변경
     const onChangeText = (editedText) => {
@@ -79,17 +82,17 @@ export default function DdayEditPage({route, navigation}){
     const saveDdays = async() => {
         
         try{
-            console.log(dday)
+            // console.log("DdayEditPage 에서 saveDdays 내부 dday")
+            // console.log(dday)
             //로컬 디데이 불러옴
             let jsonValue = await AsyncStorage.getItem('ddays')
-            console.log(jsonValue)
+            // console.log(jsonValue)
             //비어있지 않다면 json 파싱
             let data = jsonValue != null ? JSON.parse(jsonValue) : [];
-
             //지금 현 디데이 id랑 일치하는 디데이 있는지 찾음, 그리고 업데이트함, 없으면 그냥 아이템만
+            //콜백함수 내에 return 필수...
             let newData = data.map(item=>{
-                item.id === dday.id?{...item,ddayName: dday.ddayName, ddayDate:date}:item});
-
+                return item.id === dday.id?{...item,ddayName: dday.ddayName, ddayDate:date}:item});
             //그걸 로컬 디데이에 넣고
             await AsyncStorage.setItem('ddays',JSON.stringify(newData));
             //앞 페이지로 이동

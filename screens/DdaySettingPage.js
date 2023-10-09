@@ -57,6 +57,8 @@ export default function DdaySettingPage({navigation}){
             const jsonValue = await AsyncStorage.getItem('ddays')
             let data = jsonValue != null ? JSON.parse(jsonValue) : [];
             setDdays(data);
+            console.log("DdaySettingPaged에서 getData함수안")
+            console.log(data)
 
         }catch(e){
             console.log(e)
@@ -81,6 +83,16 @@ export default function DdaySettingPage({navigation}){
         }
     }
 
+    //전체 디데이를 초기화한다.
+    const reset = async() => {
+        try{
+            await AsyncStorage.setItem('ddays',"");
+            setDdays(['']);
+        }catch(e){
+            console.log(e);
+        }
+    }
+
     return(
         <View style={styles.container}>
             <Text style={styles.h1}>디데이 설정</Text>
@@ -95,12 +107,13 @@ export default function DdaySettingPage({navigation}){
                         <DdayItemBig
                             key = {dday.id} //key값도 받음
                             title={dday.ddayName}
-                            describe={dday.id}
+                            describe={dday.ddayDate}
                             onPress={()=>navigation.navigate('디데이 수정',dday)}
                         />
                     )
                 }
                 })}
+            <Button title="초기화" onPress={reset}/>
         </View>
     )
 }
