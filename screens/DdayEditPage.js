@@ -69,6 +69,7 @@ export default function DdayEditPage({route, navigation}){
             await AsyncStorage.setItem('ddays',JSON.stringify(newData));
             //앞 페이지로 이동
             navigation.navigate('디데이 설정')
+            
         }catch(e){
             console.log(e);
         }

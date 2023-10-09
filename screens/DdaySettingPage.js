@@ -89,13 +89,18 @@ export default function DdaySettingPage({navigation}){
                 describe="지금 디데이를 추가해 보세요"
                 onPress={addDdays}
             />
-            {ddays.map(dday =>
-                <DdayItemBig
-                key = {dday.id} //key값도 받음
-                title={dday.ddayName}
-                describe={dday.id}
-                onPress={()=>navigation.navigate('디데이 수정',dday)}
-            />)}
+            {ddays.map((dday) => {
+                if(dday) {
+                    return(
+                        <DdayItemBig
+                            key = {dday.id} //key값도 받음
+                            title={dday.ddayName}
+                            describe={dday.id}
+                            onPress={()=>navigation.navigate('디데이 수정',dday)}
+                        />
+                    )
+                }
+                })}
         </View>
     )
 }
