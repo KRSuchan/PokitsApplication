@@ -6,6 +6,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StyleSheet, View, Text, Button, StyleSheetm, TouchableOpacity, Image } from 'react-native';
 import { Divider } from 'react-native-elements';
 
+import { useFocusEffect } from '@react-navigation/native';
+
+
 // Dday 클래스 정의
 class Dday{
     constructor(id, ddayName, ddayDate){
@@ -14,6 +17,24 @@ class Dday{
         this.ddayDate = ddayDate;
     }
 }
+
+//날짜 데이터를 보기 좋게 변환, 시간 없애는게 목적임
+const formatDate = (dateStr) => {
+    const date = new Date(dateStr);
+    let month = '' + (date.getMonth() + 1),
+        day = '' + date.getDate(),
+        year = date.getFullYear();
+
+    //두자리수 맞춰줌
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
+
 
 // Setting item component
 const DdayItemBig = ({ title, onPress, describe}) => (
@@ -44,15 +65,18 @@ const DdayItemBig = ({ title, onPress, describe}) => (
 export default function DdaySettingPage({navigation}){
     const [ddays, setDdays] = useState([]);
 
-    useEffect(()=>{
-        getData();
-    },[]);
+    useFocusEffect( //사용자가 화면을 주목할때마다 
+        React.useCallback(()=>{ //콜백내부함수인
+        getData(); //데이터 불러오기를 실행
+    },[]));
 
     const getData = async() => {
         try{
             const jsonValue = await AsyncStorage.getItem('ddays')
             let data = jsonValue != null ? JSON.parse(jsonValue) : [];
             setDdays(data);
+            console.log("DdaySettingPaged에서 getData함수안")
+            console.log(data)
 
         }catch(e){
             console.log(e)
@@ -77,6 +101,16 @@ export default function DdaySettingPage({navigation}){
         }
     }
 
+    //전체 디데이를 초기화한다.
+    const reset = async() => {
+        try{
+            await AsyncStorage.setItem('ddays',"");
+            setDdays(['']);
+        }catch(e){
+            console.log(e);
+        }
+    }
+
     return(
         <View style={styles.container}>
             <Text style={styles.h1}>디데이 설정</Text>
@@ -85,15 +119,21 @@ export default function DdaySettingPage({navigation}){
                 describe="지금 디데이를 추가해 보세요"
                 onPress={addDdays}
             />
-            {ddays.map(dday =>
-                <DdayItemBig
-                title={dday.ddayName}
-                describe={dday.id}
-                onPress={()=>navigation.navigate('디데이 수정',dday)}
-            />)}
+            {ddays.map((dday) => {
+                if(dday) {
+                    return(
+                        <DdayItemBig
+                            key = {dday.id} //key값도 받음
+                            title={dday.ddayName}
+                            describe={formatDate(dday.ddayDate)}
+                            onPress={()=>navigation.navigate('디데이 수정',dday)}
+                        />
+                    )
+                }
+                })}
+            <Button title="초기화" onPress={reset}/>
         </View>
     )
-
 }
 
 const styles = StyleSheet.create({

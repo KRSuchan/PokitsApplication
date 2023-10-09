@@ -74,22 +74,22 @@ export default function SettingListPage({navigation}) {
         <SettingItemBig 
             title="내 학과 설정"
             describe="내 학과로 바로 갈 수 있어요"
-            onPress={() => navigation.navigate('선호 식당')}
+            onPress={() => navigation.navigate('내 학과 설정')}
         />
 
         <SettingItemSmall 
             title="개발팀" 
-            onPress={() => navigation.navigate('선호 식당')}
+            onPress={() => navigation.navigate('개발팀')}
         />
 
         <SettingItemSmall 
             title="이용약관" 
-            onPress={() => navigation.navigate('선호 식당')}
+            onPress={() => navigation.navigate('이용약관')}
         />
 
         <SettingItemSmall 
             title="가이드" 
-            onPress={() => navigation.navigate('선호 식당')}
+            onPress={() => navigation.navigate('가이드')}
         />
         </View>
       );

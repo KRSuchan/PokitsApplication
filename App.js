@@ -25,6 +25,10 @@ import CafeteriaPage from "./screens/CafeteriaPage";
 import ScheduleSettingPage from './screens/ScheduleSettingPage';
 import DdaySettingPage from './screens/DdaySettingPage';
 import DdayEditPage from "./screens/DdayEditPage";
+import DepartmentSettingPage from "./screens/DepartmentSettingPage";
+import DevInfoPage from "./screens/DevInfoPage";
+import TermsPage from "./screens/TermsPage";
+import GuidePage from "./screens/GuidePage";
 
 //네비게이터 사용
 const Stack = createStackNavigator();
@@ -61,13 +65,18 @@ export default function App() {
         <View style={{flex:1}}>
           <NavigationContainer>
             <Stack.Navigator initialRouteName='Main'>
-              <Stack.Screen name = "메인화면" component={MainPage} options={{ headerShown: false }}/>
+              <Stack.Screen name = "메인화면" component={MainPage} options={{ headerShown: false }}/> 
+              {/* 이 페이지만 상단 헤더가 안보이게 설정 */}
               <Stack.Screen name = "설정" component={SettingListPage}/>
               <Stack.Screen name = "선호 정류장" component={BusSettingPage}/>
               <Stack.Screen name = "선호 식당" component={CafeteriaSettingPage}/>
               <Stack.Screen name = "일정 설정" component={ScheduleSettingPage}/>
               <Stack.Screen name = "디데이 설정" component={DdaySettingPage}/>
               <Stack.Screen name = "디데이 수정" component={DdayEditPage}/>
+              <Stack.Screen name = "내 학과 설정" component={DepartmentSettingPage}/>
+              <Stack.Screen name = "개발팀" component={DevInfoPage}/>
+              <Stack.Screen name = "이용약관" component={TermsPage}/>
+              <Stack.Screen name = "가이드" component={GuidePage}/>
               <Stack.Screen 
             name="식당"
             component={CafeteriaPage}
@@ -83,7 +92,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#ffffff",
     alignItems: "flex-start",
     justifyContent: "flex-start",
     padding: 20,

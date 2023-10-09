@@ -2,6 +2,10 @@
 import React, { useState, useEffect } from "react";
 //설정 저장을 위해 필요함
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import DateTimePicker from "@react-native-community/datetimepicker";
+//datepicker은 expo 에서 지원하지 않으므로, datetimepicker 을 사용할 것임
+import DateTimePickerModal from "react-native-modal-datetime-picker";
+
 
 import {
   StyleSheet,
@@ -28,9 +32,33 @@ class Dday {
 
 //React navigation 에서 route 랑 navigation 을 인자로 받음
 export default function DdayEditPage({route, navigation}){
+
     const [dday,setDday] = useState(route.params); 
     //이전 페이지에서 ddays를 "객체" 로 전달해 주었으므로, 여기서도 그 객체를 그대로 사용할 것임.
     const [date,setDate] = useState(new Date(dday.ddayDate));
+    //datepicker 에 사용되는 date 스테이트
+    const [show, setShow] = useState(false);
+
+    // console.log(dday)
+
+    //텍스트 변경
+    const onChangeText = (editedText) => {
+        setDday({...dday,ddayName:editedText || ''})
+        //디데이 객체에서, 이름 부분만 받은 걸로 변경할 것임.
+        //텍스트가 빈값일때 빈 문자열로 설정해둠
+    }
+
+    //날짜 변경
+    const onChangeDate = (event, selectedDate) => {
+        const currentDate = selectedDate || date;
+        setShow(Platform.OS === 'ios');
+        setDate(currentDate);
+    };
+
+    //datepicker 를 표시함
+    const showMode = (currentMode) => {
+        setShow(true);
+    }
 
     const deleteDdays = async() => {
         try{
@@ -43,26 +71,67 @@ export default function DdayEditPage({route, navigation}){
             //그걸 로컬 디데이에 넣고
             await AsyncStorage.setItem('ddays',JSON.stringify(newData));
             //앞 페이지로 이동
-            navigation.goBack();
+            navigation.navigate('디데이 설정')
+            
         }catch(e){
             console.log(e);
         }
     };
 
+    //디데이를 저장함
+    const saveDdays = async() => {
+        
+        try{
+            // console.log("DdayEditPage 에서 saveDdays 내부 dday")
+            // console.log(dday)
+            //로컬 디데이 불러옴
+            let jsonValue = await AsyncStorage.getItem('ddays')
+            // console.log(jsonValue)
+            //비어있지 않다면 json 파싱
+            let data = jsonValue != null ? JSON.parse(jsonValue) : [];
+            //지금 현 디데이 id랑 일치하는 디데이 있는지 찾음, 그리고 업데이트함, 없으면 그냥 아이템만
+            //콜백함수 내에 return 필수...
+            let newData = data.map(item=>{
+                return item.id === dday.id?{...item,ddayName: dday.ddayName, ddayDate:date}:item});
+            //그걸 로컬 디데이에 넣고
+            await AsyncStorage.setItem('ddays',JSON.stringify(newData));
+            //앞 페이지로 이동
+            navigation.navigate('디데이 설정')
+            
+        }catch(e){
+            console.log(e)
+        }
+    }
 
     return(
         <View style={styles.container}>
             <Text style={styles.h1}>디데이 수정</Text>
-            <TextInput 
-                style={styles.input}
-                value={'nice to meet you'}
-                placeholder='hello'
-            />
-            <Button title="삭제" onPress={()=>deleteDdays()}/>
+            <View style={styles.inputbox}>
+                <TextInput 
+                    style={styles.itemdescribe}
+                    value={dday.ddayName}
+                    placeholder='디데이 이름을 정해 보세요.'
+                    onChangeText={onChangeText}
+                />
+            </View>
+            {/* <TouchableOpacity style={styles.inputbox} onPress={showMode}>
+                <Text style={styles.itemdescribe}>{dday.ddayDate}</Text>
+            </TouchableOpacity> */}
+            <View style={styles.dateinputbox}>
+                <DateTimePicker
+                    testID="dateTimePicker"
+                    value={date} //초기값과 선택값 모두
+                    mode={"date"} //날짜 선택 모드임
+                    is24Hour={true} 
+                    display="default" //안드로이드에서 어떤 모드로 출력할까
+                    onChange={onChangeDate} />
+            </View>
+            <View style={styles.hbox}>
+                <Button title="삭제" onPress={()=>deleteDdays()}/>
+                <Button title="저장" onPress={()=>saveDdays()}/>
+            </View>
         </View>
     )
-
-
 }
 
 const styles = StyleSheet.create({
@@ -70,7 +139,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "flex-start",
-    justifyContent: "flex-start",
+    justifyContent: "flex-start", //세로 정렬
     padding: 20,
   },
 
@@ -103,7 +172,20 @@ const styles = StyleSheet.create({
     fontWeight: "500",
   },
 
-  input: {
-    height: 40,
+  inputbox: {
+    padding: 10,
+    backgroundColor: "#E5E5EA",
+    width: "100%",
+    borderRadius: 10,
+    marginBottom: 15,
   },
+
+  dateinputbox: {
+    padding: 10,
+    alignItems: "flex-end",
+    width: "100%",
+    backgroundColor: "#ECEDEE",
+    borderRadius: 15,
+  }
+
 });
