@@ -79,7 +79,7 @@ export default function SettingListPage({navigation}) {
 
         <SettingItemSmall 
             title="개발팀" 
-            onPress={() => navigation.navigate('선호 식당')}
+            onPress={() => navigation.navigate('개발팀')}
         />
 
         <SettingItemSmall 
