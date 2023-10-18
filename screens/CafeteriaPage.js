@@ -12,7 +12,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { TabBar, TabView, SceneMap } from "react-native-tab-view";
 import { ScrollView } from "react-native-gesture-handler";
-import { getMenu } from "../firebase";
+import { getFbMenu } from "../firebase";
 
 //화면의 높이
 HEIGHT = Dimensions.get("window").height;
@@ -208,8 +208,22 @@ export default function SettingListPage({ navigation }) {
   };
   const [menuObject, setMenu] = useState(menu);
   const getMenus = async () => {
-    let menu = await getMenu();
-    setMenu(menu);
+    try {
+      let url = `https://pokits-diet-default-rtdb.firebaseio.com/Diet/body.json`;
+      let response = await fetch(url);
+      if (response.ok) {
+        let menu = await response.json();
+        setMenu(menu);
+      } else {
+        console.error(
+          "Network request failed:",
+          response.status,
+          response.statusText
+        );
+      }
+    } catch (error) {
+      console.error("An error occurred while fetching data:", error);
+    }
   };
   useEffect(() => {
     getMenus();
