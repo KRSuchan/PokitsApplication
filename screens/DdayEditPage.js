@@ -117,7 +117,9 @@ export default function DdayEditPage({route, navigation}){
             {/* <TouchableOpacity style={styles.inputbox} onPress={showMode}>
                 <Text style={styles.itemdescribe}>{dday.ddayDate}</Text>
             </TouchableOpacity> */}
-            <View style={styles.dateinputbox}>
+            
+            <TouchableOpacity style={styles.dateinputbox} onPress={showMode}>
+                
                 <DateTimePicker
                     testID="dateTimePicker"
                     value={date} //초기값과 선택값 모두
@@ -125,7 +127,7 @@ export default function DdayEditPage({route, navigation}){
                     is24Hour={true} 
                     display="default" //안드로이드에서 어떤 모드로 출력할까
                     onChange={onChangeDate} />
-            </View>
+            </TouchableOpacity>
             <View style={styles.hbox}>
                 <Button title="삭제" onPress={()=>deleteDdays()}/>
                 <Button title="저장" onPress={()=>saveDdays()}/>
