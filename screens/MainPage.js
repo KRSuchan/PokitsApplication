@@ -4,48 +4,22 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 
 //노치 침범 방지 패키지
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Dimensions } from "react-native";
+import { getOnlyMenu, menuLiner } from "../controller/CafeteriaService";
 
 //화면의 높이
 HEIGHT = Dimensions.get("window").height;
 
 //화면의 너비
 WIDTH = Dimensions.get("window").width;
-const menu = {
-  faculty: {
-    breakfast: "Loading..",
-    dinner: "Loading..",
-    lunch: "Loading..",
-  },
-  oreum1: {
-    breakfast: "Loading..",
-    dinner: "Loading..",
-    lunch: "Loading..",
-  },
-  oreum3: {
-    breakfast: "Loading..",
-    dinner: "Loading..",
-    lunch: "Loading..",
-  },
-  puroom: {
-    breakfast: "Loading..",
-    dinner: "Loading..",
-    lunch: "Loading..",
-  },
-  snackbar: {
-    breakfast: "Loading..",
-    dinner: "Loading..",
-    lunch: "Loading..",
-  },
-  student: {
-    breakfast: "Loading..",
-    dinner: "Loading..",
-    lunch: "Loading..",
-  },
-};
+
+const menu = ["Loading..."];
+
 export default function MainPage({ navigation }) {
   const [textHeight, setTextHeight] = useState(0);
+  // 설정 불러오기
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const navigateToSettings = () => {
     navigation.navigate("설정");
@@ -53,28 +27,116 @@ export default function MainPage({ navigation }) {
   const navigateToCafeteria = () => {
     navigation.navigate("식당");
   };
-  const [menuObject, setMenu] = useState(menu);
-  const getMenus = async () => {
-    try {
-      let url = `https://pokits-diet-default-rtdb.firebaseio.com/Diet/body.json`;
-      let response = await fetch(url);
-      if (response.ok) {
-        let menu = await response.json();
-        setMenu(menu);
-      } else {
-        console.error(
-          "Network request failed:",
-          response.status,
-          response.statusText
+  // 설정에 따른 output component switch 함수
+  function cafeteriaComponent(selectedItem) {
+    switch (selectedItem) {
+      case "학생및교직원":
+        return (
+          <View style={styles.dietMainMenu}>
+            <View style={styles.dietMenuOut}>
+              <Text style={styles.dietCafName}>학생식당</Text>
+              <View style={styles.dietMenu}>
+                <Text style={styles.MenuText}>{studnetCaf}</Text>
+              </View>
+            </View>
+            <View style={styles.dietMenuOut}>
+              <Text style={styles.dietCafName}>교직원식당</Text>
+              <View style={styles.dietMenu}>
+                <Text style={styles.MenuText}>{facultyCaf}</Text>
+              </View>
+            </View>
+          </View>
         );
-      }
-    } catch (error) {
-      console.error("An error occurred while fetching data:", error);
+      case "오름관1동":
+        return (
+          <View style={styles.dietMainMenu}>
+            <View style={styles.dietMenuOut}>
+              <Text style={styles.dietCafName}>오름1동</Text>
+              <View style={styles.dietMenu}>
+                <Text style={styles.MenuText}>{oreum1Caf}</Text>
+              </View>
+            </View>
+          </View>
+        );
+      case "오름관3동":
+        return (
+          <View style={styles.dietMainMenu}>
+            <View style={styles.dietMenuOut}>
+              <Text style={styles.dietCafName}>오름3동</Text>
+              <View style={styles.dietMenu}>
+                <Text style={styles.MenuText}>{oreum3Caf}</Text>
+              </View>
+            </View>
+          </View>
+        );
+      case "푸름관":
+        return (
+          <View style={styles.dietMainMenu}>
+            <View style={styles.dietMenuOut}>
+              <Text style={styles.dietCafName}>푸름관</Text>
+              <View style={styles.dietMenu}>
+                <Text style={styles.MenuText}>{puroomCaf}</Text>
+              </View>
+            </View>
+          </View>
+        );
+    }
+  }
+  let day = new Date();
+  let hours = day.getHours();
+  // 각 식당 메뉴별 useState
+  const [studnetCaf, setStudentCaf] = useState(menu);
+  const [facultyCaf, setFacultyCaf] = useState(menu);
+  const [puroomCaf, setPuroomCaf] = useState(menu);
+  const [oreum1Caf, setOreum1Caf] = useState(menu);
+  const [oreum3Caf, setOreum3Caf] = useState(menu);
+
+  // FB로부터 Menu 전체 긁어오기
+  const getMenus = async () => {
+    let menu = JSON.parse(JSON.stringify(await getOnlyMenu()));
+    console.log("get from getonlymenu and Im mainpage getmenus");
+    // 10시 전 : 아침, 10시 ~ 14시 : 점심, 14시 후 : 저녁
+    if (hours < 10) {
+      setStudentCaf(menuLiner(menu.student.breakfast));
+      setFacultyCaf(menuLiner(menu.faculty.breakfast));
+      setPuroomCaf(menuLiner(menu.puroom.breakfast));
+      setOreum1Caf(menuLiner(menu.oreum1.breakfast));
+      setOreum3Caf(menuLiner(menu.oreum3.breakfast));
+    } else if (hours >= 10 && hours <= 13) {
+      setStudentCaf(menuLiner(menu.student.lunch));
+      setFacultyCaf(menuLiner(menu.faculty.lunch));
+      setPuroomCaf(menuLiner(menu.puroom.lunch));
+      setOreum1Caf(menuLiner(menu.oreum1.lunch));
+      setOreum3Caf(menuLiner(menu.oreum3.lunch));
+    } else if (hours > 14) {
+      setStudentCaf(menuLiner(menu.student.dinner));
+      setFacultyCaf(menuLiner(menu.faculty.dinner));
+      setPuroomCaf(menuLiner(menu.puroom.dinner));
+      setOreum1Caf(menuLiner(menu.oreum1.dinner));
+      setOreum3Caf(menuLiner(menu.oreum3.dinner));
     }
   };
+
   useEffect(() => {
+    // menu 불러오는거에 대한 useEffect
     getMenus();
+
+    //설정 불러오기
+    const loadSettings = async () => {
+      try {
+        //세팅을 변수에 담음
+        const savedSetting = await AsyncStorage.getItem("cafeteriaSetting");
+        //비어있지 않다면 state 에 넣을 것임
+        if (savedSetting !== null)
+          setSelectedItem(JSON.parse(JSON.stringify(savedSetting)));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    loadSettings(); //이걸 해줘야 실제로 작동한다.
   }, []);
+  console.log("selected Setting : " + selectedItem);
   return (
     <SafeAreaProvider style={{ backgroundColor: "#fff" }}>
       <SafeAreaView style={{ flex: 1 }}>
@@ -106,25 +168,15 @@ export default function MainPage({ navigation }) {
                   console.log("식당 페이지 이동");
                   navigateToCafeteria();
                 }}>
-                <Text style={styles.componentName}>학식</Text>
-                <View style={styles.dietMainMenu}>
-                  <View style={styles.dietMenuOut}>
-                    <Text style={styles.dietCafName}>학생식당</Text>
-                    <View style={styles.dietMenu}>
-                      <Text style={styles.MenuText}>
-                        {menuObject.student.lunch}
-                      </Text>
-                    </View>
-                  </View>
-                  <View style={styles.dietMenuOut}>
-                    <Text style={styles.dietCafName}>교직원식당</Text>
-                    <View style={styles.dietMenu}>
-                      <Text style={styles.MenuText}>
-                        {menuObject.faculty.lunch}
-                      </Text>
-                    </View>
-                  </View>
+                <View style={styles.componentTitle}>
+                  <Image
+                    source={require("../assets/images/haksicBlack.png")} // 여기에 실제 이미지 경로 입력
+                    style={{ width: 23, height: 26.3 }} // 텍스트 높이만큼 이미지 크기 설정
+                  />
+                  <Text style={styles.componentName}>학식</Text>
                 </View>
+
+                {cafeteriaComponent(selectedItem)}
               </TouchableOpacity>
             </View>
           </View>
@@ -160,14 +212,18 @@ const styles = StyleSheet.create({
     marginTop: (WIDTH / 100) * 5,
     backgroundColor: "#F5F5F5",
   },
+  componentTitle: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingLeft: 10,
+  },
   componentName: {
-    fontSize: 25,
-    width: "100%",
-    fontWeight: "600",
+    fontSize: 20,
+    fontWeight: "800",
     margin: 5,
   },
   dietMainAria: {
-    flex: 0.33,
+    flex: 0.3,
     width: (WIDTH / 100) * 90,
     alignItems: "center",
     padding: 10,
@@ -180,22 +236,28 @@ const styles = StyleSheet.create({
     width: (WIDTH / 100) * 90,
   },
   dietMenuOut: {
-    width: (WIDTH / 100) * 40,
-    flex: 0.5,
+    flex: 1,
     margin: 5,
     borderRadius: 10,
-    backgroundColor: "#DB141E",
+    backgroundColor: "#DA121D",
   },
   dietCafName: {
     color: "#fff",
+    fontWeight: "800",
     margin: 5,
   },
   dietMenu: {
     flex: 1,
+    padding: 5,
     backgroundColor: "#fff",
+    borderBottomRightRadius: 10,
+    borderBottomLeftRadius: 10,
+    justifyContent: "center",
   },
   MenuText: {
+    fontSize: 12,
     fontWeight: "500",
-    color: "#DB141E",
+
+    color: "#B8131C",
   },
 });
