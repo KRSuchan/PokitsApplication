@@ -12,7 +12,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { TabBar, TabView, SceneMap } from "react-native-tab-view";
 import { ScrollView } from "react-native-gesture-handler";
-import { getFbMenu } from "../firebase";
+import { getCtrlMenu, menuLiner } from "../controller/CafeteriaService";
 
 //화면의 높이
 HEIGHT = Dimensions.get("window").height;
@@ -57,10 +57,10 @@ const UnivCafeteriaRoute = ({
           pagingEnabled={true}
           showsHorizontalScrollIndicator={true}>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text>{studentBf}</Text>
+            <Text style={styles.cafeteriaMenuText}>{studentBf}</Text>
           </View>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text>{studentLunch}</Text>
+            <Text style={styles.cafeteriaMenuText}>{studentLunch}</Text>
           </View>
         </ScrollView>
       </View>
@@ -79,10 +79,10 @@ const UnivCafeteriaRoute = ({
           pagingEnabled={true}
           showsHorizontalScrollIndicator={true}>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text>{facultyLunch}</Text>
+            <Text style={styles.cafeteriaMenuText}>{facultyLunch}</Text>
           </View>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text>{facultyDinner}</Text>
+            <Text style={styles.cafeteriaMenuText}>{facultyDinner}</Text>
           </View>
         </ScrollView>
       </View>
@@ -101,7 +101,7 @@ const UnivCafeteriaRoute = ({
           pagingEnabled={true}
           showsHorizontalScrollIndicator={true}>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text>{snackbarMenu}</Text>
+            <Text style={styles.cafeteriaMenuText}>{snackbarMenu}</Text>
           </View>
         </ScrollView>
       </View>
@@ -133,10 +133,10 @@ const DormiCafeteriaRoute = ({
           pagingEnabled={true}
           showsHorizontalScrollIndicator={true}>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text>{puroomLunch}</Text>
+            <Text style={styles.cafeteriaMenuText}>{puroomLunch}</Text>
           </View>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text>{puroomDinner}</Text>
+            <Text style={styles.cafeteriaMenuText}>{puroomDinner}</Text>
           </View>
         </ScrollView>
       </View>
@@ -154,10 +154,10 @@ const DormiCafeteriaRoute = ({
           pagingEnabled={true}
           showsHorizontalScrollIndicator={true}>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text>{oreum1Lunch}</Text>
+            <Text style={styles.cafeteriaMenuText}>{oreum1Lunch}</Text>
           </View>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text>{oreum1Dinner}</Text>
+            <Text style={styles.cafeteriaMenuText}>{oreum1Dinner}</Text>
           </View>
         </ScrollView>
       </View>
@@ -175,10 +175,10 @@ const DormiCafeteriaRoute = ({
           pagingEnabled={true}
           showsHorizontalScrollIndicator={true}>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text>{oreum3Lunch}</Text>
+            <Text style={styles.cafeteriaMenuText}>{oreum3Lunch}</Text>
           </View>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text>{oreum3Dinner}</Text>
+            <Text style={styles.cafeteriaMenuText}>{oreum3Dinner}</Text>
           </View>
         </ScrollView>
       </View>
@@ -188,20 +188,6 @@ const DormiCafeteriaRoute = ({
 
 const menu = ["Loading..."];
 
-// 메뉴에 대한 (줄바꿈, empty 데이터, string타입) 처리
-function menuLiner(array) {
-  var linedMenu = "";
-  if (typeof array == "object") {
-    for (let i = 0; i < array.length; i++) {
-      linedMenu += array[i] + "\n";
-    }
-  } else if (typeof array == "string") {
-    linedMenu = array;
-  } else {
-    linedMenu = "데이터 없음";
-  }
-  return linedMenu;
-}
 export default function SettingListPage({ navigation }) {
   const [textHeight, setTextHeight] = useState(0);
   const [index, setIndex] = useState(0);
@@ -227,35 +213,18 @@ export default function SettingListPage({ navigation }) {
 
   // FB로부터 Menu 전체 긁어오기
   const getMenus = async () => {
-    try {
-      let url = `https://pokits-diet-default-rtdb.firebaseio.com/Diet/body.json`;
-      let response = await fetch(url);
-      if (response.ok) {
-        // if 모든게 정상이면
-        let menu = await response.json();
-        setStudentBf(menuLiner(menu.student.breakfast));
-        setStudentLunch(menuLiner(menu.student.lunch));
-        setFacultyLunch(menuLiner(menu.faculty.lunch));
-        setFacultyDinner(menuLiner(menu.faculty.dinner));
-        setSnackbarMenu(menuLiner(menu.snackbar.breakfast));
-        setPuroomLunch(menuLiner(menu.puroom.lunch));
-        setPuroomDinner(menuLiner(menu.puroom.dinner));
-        setOreum1Lunch(menuLiner(menu.oreum1.lunch));
-        setOreum1Dinner(menuLiner(menu.oreum1.dinner));
-        setOreum3Lunch(menuLiner(menu.oreum3.lunch));
-        setOreum3Dinner(menuLiner(menu.oreum3.dinner));
-      } else {
-        // 네트워크 오류가 있으면
-        console.error(
-          "Network request failed:",
-          response.status,
-          response.statusText
-        );
-      }
-    } catch (error) {
-      // FB에 접근 못하면
-      console.error("An error occurred while fetching data:", error);
-    }
+    let menu = JSON.parse(JSON.stringify(await getCtrlMenu()));
+    setStudentBf(menuLiner(menu.student.breakfast));
+    setStudentLunch(menuLiner(menu.student.lunch));
+    setFacultyLunch(menuLiner(menu.faculty.lunch));
+    setFacultyDinner(menuLiner(menu.faculty.dinner));
+    setSnackbarMenu(menuLiner(menu.snackbar.breakfast));
+    setPuroomLunch(menuLiner(menu.puroom.lunch));
+    setPuroomDinner(menuLiner(menu.puroom.dinner));
+    setOreum1Lunch(menuLiner(menu.oreum1.lunch));
+    setOreum1Dinner(menuLiner(menu.oreum1.dinner));
+    setOreum3Lunch(menuLiner(menu.oreum3.lunch));
+    setOreum3Dinner(menuLiner(menu.oreum3.dinner));
   };
   // menu 불러오는거에 대한 useEffect
   useEffect(() => {
@@ -367,7 +336,7 @@ const styles = StyleSheet.create({
   },
   cafeteriaContainer: {
     marginBottom: 20,
-    height: 240,
+    height: 250,
     flexDirection: "row",
     backgroundColor: "#FFFFFF",
     borderRadius: 10,
@@ -396,6 +365,10 @@ const styles = StyleSheet.create({
   },
   cafeteriaMenu: {
     fontWeight: "600",
+    textAlign: "center",
+  },
+  cafeteriaMenuText: {
+    fontWeight: "500",
     textAlign: "center",
   },
 });

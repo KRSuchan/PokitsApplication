@@ -1,3 +1,4 @@
+// firebase 연결 func (미완)
 async function fbConnection(url) {
   // let valid = await fbValidate(url);
   let valid = true;
@@ -9,6 +10,7 @@ async function fbConnection(url) {
   } else {
   }
 }
+// firebase 유효 체크 (미완성)
 async function fbValidate(url) {
   url += "header/validDataCheck/.json";
   let response = await fetch(url);
@@ -19,15 +21,35 @@ async function fbValidate(url) {
     return false;
   }
 }
+
 export function getFbSchedule() {}
 export function getFbBus() {}
 export async function getFbMenu() {
-  let url = `http://pokits-diet-default-rtdb.firebaseio.com/Diet/.json`;
-  // json = await fbConnection(
-  //   `http://pokits-diet-default-rtdb.firebaseio.com/Diet/`
-  // );
-  let response = await fetch(url);
-  let json = await response.json();
-  // console.log(JSON.stringify(json.body));
-  return json.body;
+  try {
+    let url = `https://pokits-diet-default-rtdb.firebaseio.com/Diet/body.json`;
+    let response = await fetch(url);
+    if (response.ok) {
+      // if 모든게 정상이면
+      let menu = await response.json();
+      console.log("get menu from firebase");
+      return menu;
+    } else {
+      // 네트워크 오류가 있으면
+      console.error(
+        "Network request failed:",
+        response.status,
+        response.statusText
+      );
+      let error =
+        "Network request failed : " +
+        response.status +
+        " " +
+        response.statusText;
+      return error;
+    }
+  } catch (error) {
+    // FB에 접근 못하면
+    console.error("An error occurred while fetching data:", error);
+    return error;
+  }
 }
