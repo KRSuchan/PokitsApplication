@@ -20,6 +20,7 @@ HEIGHT = Dimensions.get("window").height;
 //화면의 너비
 WIDTH = Dimensions.get("window").width;
 
+// 교내식당, 기숙사식당 탭 타이틀
 const renderTabBar = props => (
   <TabBar
     {...props}
@@ -31,9 +32,18 @@ const renderTabBar = props => (
     }}
   />
 );
-const UnivCafeteriaRoute = ({ menuObject }) => (
+
+// 교내식당 탭 내용
+const UnivCafeteriaRoute = ({
+  studentBf = { studentBf },
+  studentLunch = { studentLunch },
+  facultyLunch = { facultyLunch },
+  facultyDinner = { facultyDinner },
+  snackbarMenu = { snackbarMenu },
+}) => (
   <ScrollView showsHorizontalScrollIndicator={false}>
     <View style={styles.pageViewContainer}>
+      {/* 학생식당 컨테이너 */}
       <View style={styles.cafeteriaContainer}>
         <View style={styles.cafeteriaType}>
           <Image
@@ -47,14 +57,15 @@ const UnivCafeteriaRoute = ({ menuObject }) => (
           pagingEnabled={true}
           showsHorizontalScrollIndicator={true}>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text>{menuObject.student.breakfast}</Text>
+            <Text>{studentBf}</Text>
           </View>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text>{menuObject.student.lunch}</Text>
+            <Text>{studentLunch}</Text>
           </View>
         </ScrollView>
       </View>
 
+      {/* 교직원식당 컨테이너 */}
       <View style={styles.cafeteriaContainer}>
         <View style={styles.cafeteriaType}>
           <Image
@@ -68,14 +79,15 @@ const UnivCafeteriaRoute = ({ menuObject }) => (
           pagingEnabled={true}
           showsHorizontalScrollIndicator={true}>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text>{menuObject.faculty.lunch}</Text>
+            <Text>{facultyLunch}</Text>
           </View>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text>{menuObject.faculty.dinner}</Text>
+            <Text>{facultyDinner}</Text>
           </View>
         </ScrollView>
       </View>
 
+      {/* 분식당 컨테이너 */}
       <View style={styles.cafeteriaContainer}>
         <View style={styles.cafeteriaType}>
           <Image
@@ -89,7 +101,7 @@ const UnivCafeteriaRoute = ({ menuObject }) => (
           pagingEnabled={true}
           showsHorizontalScrollIndicator={true}>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text>{menuObject.snackbar.breakfast}</Text>
+            <Text>{snackbarMenu}</Text>
           </View>
         </ScrollView>
       </View>
@@ -97,9 +109,17 @@ const UnivCafeteriaRoute = ({ menuObject }) => (
   </ScrollView>
 );
 
-const DormiCafeteriaRoute = ({ menuObject }) => (
+const DormiCafeteriaRoute = ({
+  puroomLunch = { puroomLunch },
+  puroomDinner = { puroomDinner },
+  oreum1Lunch = { oreum1Lunch },
+  oreum1Dinner = { oreum1Dinner },
+  oreum3Lunch = { oreum3Lunch },
+  oreum3Dinner = { oreum3Dinner },
+}) => (
   <ScrollView showsHorizontalScrollIndicator={false}>
     <View style={styles.pageViewContainer}>
+      {/* 푸름관 컨테이너 */}
       <View style={styles.cafeteriaContainer}>
         <View style={styles.cafeteriaType}>
           <Image
@@ -113,13 +133,14 @@ const DormiCafeteriaRoute = ({ menuObject }) => (
           pagingEnabled={true}
           showsHorizontalScrollIndicator={true}>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text>{menuObject.puroom.lunch}</Text>
+            <Text>{puroomLunch}</Text>
           </View>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text>{menuObject.puroom.dinner}</Text>
+            <Text>{puroomDinner}</Text>
           </View>
         </ScrollView>
       </View>
+      {/* 오름1 컨테이너 */}
       <View style={styles.cafeteriaContainer}>
         <View style={styles.cafeteriaType}>
           <Image
@@ -133,13 +154,14 @@ const DormiCafeteriaRoute = ({ menuObject }) => (
           pagingEnabled={true}
           showsHorizontalScrollIndicator={true}>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text>{menuObject.oreum1.lunch}</Text>
+            <Text>{oreum1Lunch}</Text>
           </View>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text>{menuObject.oreum1.dinner}</Text>
+            <Text>{oreum1Dinner}</Text>
           </View>
         </ScrollView>
       </View>
+      {/* 오름3 컨테이너 */}
       <View style={styles.cafeteriaContainer}>
         <View style={styles.cafeteriaType}>
           <Image
@@ -153,10 +175,10 @@ const DormiCafeteriaRoute = ({ menuObject }) => (
           pagingEnabled={true}
           showsHorizontalScrollIndicator={true}>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text>{menuObject.oreum3.lunch}</Text>
+            <Text>{oreum3Lunch}</Text>
           </View>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text>{menuObject.oreum3.dinner}</Text>
+            <Text>{oreum3Dinner}</Text>
           </View>
         </ScrollView>
       </View>
@@ -164,38 +186,22 @@ const DormiCafeteriaRoute = ({ menuObject }) => (
   </ScrollView>
 );
 
-const menu = {
-  faculty: {
-    breakfast: "Loading..",
-    dinner: "Loading..",
-    lunch: "Loading..",
-  },
-  oreum1: {
-    breakfast: "Loading..",
-    dinner: "Loading..",
-    lunch: "Loading..",
-  },
-  oreum3: {
-    breakfast: "Loading..",
-    dinner: "Loading..",
-    lunch: "Loading..",
-  },
-  puroom: {
-    breakfast: "Loading..",
-    dinner: "Loading..",
-    lunch: "Loading..",
-  },
-  snackbar: {
-    breakfast: "Loading..",
-    dinner: "Loading..",
-    lunch: "Loading..",
-  },
-  student: {
-    breakfast: "Loading..",
-    dinner: "Loading..",
-    lunch: "Loading..",
-  },
-};
+const menu = ["Loading..."];
+
+// 메뉴에 대한 (줄바꿈, empty 데이터, string타입) 처리
+function menuLiner(array) {
+  var linedMenu = "";
+  if (typeof array == "object") {
+    for (let i = 0; i < array.length; i++) {
+      linedMenu += array[i] + "\n";
+    }
+  } else if (typeof array == "string") {
+    linedMenu = array;
+  } else {
+    linedMenu = "데이터 없음";
+  }
+  return linedMenu;
+}
 export default function SettingListPage({ navigation }) {
   const [textHeight, setTextHeight] = useState(0);
   const [index, setIndex] = useState(0);
@@ -206,15 +212,40 @@ export default function SettingListPage({ navigation }) {
   const navigateGoHome = () => {
     navigation.navigate("메인화면");
   };
-  const [menuObject, setMenu] = useState(menu);
+  // 각 식당 메뉴별 useState
+  const [studentBf, setStudentBf] = useState(menu);
+  const [studentLunch, setStudentLunch] = useState(menu);
+  const [facultyLunch, setFacultyLunch] = useState(menu);
+  const [facultyDinner, setFacultyDinner] = useState(menu);
+  const [snackbarMenu, setSnackbarMenu] = useState(menu);
+  const [puroomLunch, setPuroomLunch] = useState(menu);
+  const [puroomDinner, setPuroomDinner] = useState(menu);
+  const [oreum1Lunch, setOreum1Lunch] = useState(menu);
+  const [oreum1Dinner, setOreum1Dinner] = useState(menu);
+  const [oreum3Lunch, setOreum3Lunch] = useState(menu);
+  const [oreum3Dinner, setOreum3Dinner] = useState(menu);
+
+  // FB로부터 Menu 전체 긁어오기
   const getMenus = async () => {
     try {
       let url = `https://pokits-diet-default-rtdb.firebaseio.com/Diet/body.json`;
       let response = await fetch(url);
       if (response.ok) {
+        // if 모든게 정상이면
         let menu = await response.json();
-        setMenu(menu);
+        setStudentBf(menuLiner(menu.student.breakfast));
+        setStudentLunch(menuLiner(menu.student.lunch));
+        setFacultyLunch(menuLiner(menu.faculty.lunch));
+        setFacultyDinner(menuLiner(menu.faculty.dinner));
+        setSnackbarMenu(menuLiner(menu.snackbar.breakfast));
+        setPuroomLunch(menuLiner(menu.puroom.lunch));
+        setPuroomDinner(menuLiner(menu.puroom.dinner));
+        setOreum1Lunch(menuLiner(menu.oreum1.lunch));
+        setOreum1Dinner(menuLiner(menu.oreum1.dinner));
+        setOreum3Lunch(menuLiner(menu.oreum3.lunch));
+        setOreum3Dinner(menuLiner(menu.oreum3.dinner));
       } else {
+        // 네트워크 오류가 있으면
         console.error(
           "Network request failed:",
           response.status,
@@ -222,17 +253,39 @@ export default function SettingListPage({ navigation }) {
         );
       }
     } catch (error) {
+      // FB에 접근 못하면
       console.error("An error occurred while fetching data:", error);
     }
   };
+  // menu 불러오는거에 대한 useEffect
   useEffect(() => {
     getMenus();
   }, []);
 
+  // 교내식당, 기숙사식당 탭타이틀과 탭내용 매핑
   const renderScene = SceneMap({
-    UnivCafeteria: () => <UnivCafeteriaRoute menuObject={menuObject} />,
-    DormiCafeteria: () => <DormiCafeteriaRoute menuObject={menuObject} />,
+    UnivCafeteria: () => (
+      <UnivCafeteriaRoute
+        studentBf={studentBf}
+        studentLunch={studentLunch}
+        facultyLunch={facultyLunch}
+        facultyDinner={facultyDinner}
+        snackbarMenu={snackbarMenu}
+      />
+    ),
+    DormiCafeteria: () => (
+      <DormiCafeteriaRoute
+        puroomLunch={puroomLunch}
+        puroomDinner={puroomDinner}
+        oreum1Lunch={oreum1Lunch}
+        oreum1Dinner={oreum1Dinner}
+        oreum3Lunch={oreum3Lunch}
+        oreum3Dinner={oreum3Dinner}
+      />
+    ),
   });
+
+  // 식당페이지 리턴
   return (
     <SafeAreaProvider style={{ backgroundColor: "black" }}>
       <SafeAreaView style={{ flex: 1 }}>
@@ -243,9 +296,10 @@ export default function SettingListPage({ navigation }) {
           colors={["#DA121D", "#FF6725"]}>
           <StatusBar style="light" />
           <View style={styles.header}>
+            {/* 메인페이지로 가는 Pokit's*/}
             <TouchableOpacity
               onPress={() => {
-                console.log("프로필버튼 누름");
+                console.log("메인페이지 버튼 누름");
                 navigateGoHome();
               }}>
               <Text
@@ -258,6 +312,7 @@ export default function SettingListPage({ navigation }) {
               </Text>
             </TouchableOpacity>
           </View>
+          {/* 탭뷰 */}
           <TabView
             renderTabBar={renderTabBar}
             navigationState={{ index, routes }}
@@ -272,6 +327,7 @@ export default function SettingListPage({ navigation }) {
   );
 }
 
+// 식당 페이지 CSS
 const styles = StyleSheet.create({
   container: {
     flex: 1,
