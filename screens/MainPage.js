@@ -28,6 +28,9 @@ export default function MainPage({ navigation }) {
   const navigateToCafeteria = () => {
     navigation.navigate("식당");
   };
+  const navigateToBus = () => {
+    navigation.navigate("버스");
+  };
   // 설정에 따른 output component switch 함수
   function cafeteriaComponent(selectedItem) {
     switch (selectedItem) {
@@ -170,6 +173,18 @@ export default function MainPage({ navigation }) {
             </TouchableOpacity>
           </View>
           <View style={styles.componentAria}>
+            {/* 입벌려, 버스 들어간다 */}
+            <View style={styles.busMainAria}>
+              <TouchableOpacity
+                onPress={() => {
+                  console.log("버스사진 누름");
+                  navigateToBus();
+                }}>
+                <Image
+                  source={require("../assets/images/busimsi.jpeg")} // 여기에 실제 이미지 경로 입력
+                />
+              </TouchableOpacity>
+            </View>
             <View style={styles.dietMainAria}>
               <TouchableOpacity
                 onPress={() => {
@@ -268,4 +283,7 @@ const styles = StyleSheet.create({
 
     color: "#B8131C",
   },
+  busMainAria: {
+    width: "100%",
+  }
 });
