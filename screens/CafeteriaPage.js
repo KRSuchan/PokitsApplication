@@ -109,6 +109,7 @@ const UnivCafeteriaRoute = ({
   </ScrollView>
 );
 
+// 교내식당 탭 내용
 const DormiCafeteriaRoute = ({
   puroomLunch = { puroomLunch },
   puroomDinner = { puroomDinner },

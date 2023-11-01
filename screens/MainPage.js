@@ -20,7 +20,8 @@ export default function MainPage({ navigation }) {
   const [textHeight, setTextHeight] = useState(0);
   // 설정 불러오기
   const [selectedItem, setSelectedItem] = useState(null);
-
+  // 시간 파악
+  const [time, setTime] = useState(new Date());
   const navigateToSettings = () => {
     navigation.navigate("설정");
   };
@@ -82,8 +83,6 @@ export default function MainPage({ navigation }) {
         );
     }
   }
-  let day = new Date();
-  let hours = day.getHours();
   // 각 식당 메뉴별 useState
   const [studnetCaf, setStudentCaf] = useState(menu);
   const [facultyCaf, setFacultyCaf] = useState(menu);
@@ -92,9 +91,8 @@ export default function MainPage({ navigation }) {
   const [oreum3Caf, setOreum3Caf] = useState(menu);
 
   // FB로부터 Menu 전체 긁어오기
-  const getMenus = async () => {
+  const getMenus = async hours => {
     let menu = JSON.parse(JSON.stringify(await getOnlyMenu()));
-    console.log("get from getonlymenu and Im mainpage getmenus");
     // 10시 전 : 아침, 10시 ~ 14시 : 점심, 14시 후 : 저녁
     if (hours < 10) {
       setStudentCaf(menuLiner(menu.student.breakfast));
@@ -102,13 +100,13 @@ export default function MainPage({ navigation }) {
       setPuroomCaf(menuLiner(menu.puroom.breakfast));
       setOreum1Caf(menuLiner(menu.oreum1.breakfast));
       setOreum3Caf(menuLiner(menu.oreum3.breakfast));
-    } else if (hours >= 10 && hours <= 13) {
+    } else if (hours >= 10 && hours < 14) {
       setStudentCaf(menuLiner(menu.student.lunch));
       setFacultyCaf(menuLiner(menu.faculty.lunch));
       setPuroomCaf(menuLiner(menu.puroom.lunch));
       setOreum1Caf(menuLiner(menu.oreum1.lunch));
       setOreum3Caf(menuLiner(menu.oreum3.lunch));
-    } else if (hours > 14) {
+    } else if (hours >= 14) {
       setStudentCaf(menuLiner(menu.student.dinner));
       setFacultyCaf(menuLiner(menu.faculty.dinner));
       setPuroomCaf(menuLiner(menu.puroom.dinner));
@@ -116,11 +114,11 @@ export default function MainPage({ navigation }) {
       setOreum3Caf(menuLiner(menu.oreum3.dinner));
     }
   };
-
+  // 1초마다 시간을 업데이트하는 함수
+  function updateTime() {
+    setTime(new Date());
+  }
   useEffect(() => {
-    // menu 불러오는거에 대한 useEffect
-    getMenus();
-
     //설정 불러오기
     const loadSettings = async () => {
       try {
@@ -134,9 +132,19 @@ export default function MainPage({ navigation }) {
       }
     };
 
-    loadSettings(); //이걸 해줘야 실제로 작동한다.
+    updateTime(); // 초기 시간 설정
+    let timer = setInterval(() => {
+      updateTime();
+      // 초기 설정 및 1초마다 시간을 업데이트
+      loadSettings();
+    }, 1000);
   }, []);
-  console.log("selected Setting : " + selectedItem);
+
+  useEffect(() => {
+    // 시간이 변경될 때마다 메뉴 갱신
+    getMenus(time.getHours());
+  }, [time]);
+
   return (
     <SafeAreaProvider style={{ backgroundColor: "#fff" }}>
       <SafeAreaView style={{ flex: 1 }}>
