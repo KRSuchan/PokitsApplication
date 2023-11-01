@@ -3,6 +3,8 @@ import { StyleSheet, View, Text, Button, StyleSheetm, TouchableOpacity, Image } 
 import { createStackNavigator } from '@react-navigation/stack';
 import { Divider } from 'react-native-elements';
 import { LinearGradient } from "expo-linear-gradient";
+import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+
 
 
 export default function BusPage({navigation}){
@@ -13,9 +15,6 @@ export default function BusPage({navigation}){
                     Pokit's
                 </Text>
             </LinearGradient>
-            <View style={styles.topView}>
-                
-            </View>
              <View style={styles.container}>
                 
             </View>
