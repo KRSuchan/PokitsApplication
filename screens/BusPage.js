@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Text, Button, StyleSheetm, TouchableOpacity, Image } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Divider } from 'react-native-elements';
@@ -11,9 +11,22 @@ const Tab = createMaterialTopTabNavigator();
 
 const FirstRoute = () => (
   <View style={[styles.scene]}>
-    <Text>
-        안녕
-    </Text>
+    <BusItemBox
+        title={"버스라운지 시내행"}
+        buses = {buses}
+    />
+    <BusItemBox
+        title={"버스라운지 옥계행"}
+        buses = {buses}
+    />
+    <BusItemBox
+        title={"구미역"}
+        buses = {buses}
+    />
+    <BusItemBox
+        title={"옥계중학교"}
+        buses = {buses}
+    />
   </View>
   
 );
@@ -68,12 +81,44 @@ const TabMyTab1 = () => (
     </Tab.Navigator>
   );
   
+class Bus{
+    constructor(){
 
+    }
+}
+
+const BusItemBox = ({title,buses}) => (
+    <View style={styles.busboxstyle}>
+        <View>
+        </View>
+    </View>
+);
 
 
 export default function BusPage({navigation}){
 
     const insets = useSafeAreaInsets(); //어디까지 안전해?
+
+    const [buses,setBuses] = useState([]);
+
+    useEffect(()=>{
+        const fetchData = async() => {
+            try{
+                const response = await fetch('https://pokits-bus-default-rtdb.firebaseio.com/BusToKit/.json');
+                const data = await response.json();
+                setBuses(data.Bus.Body.items.bus);
+                console.log("버스데이터 정상적으로 불러옴"+buses);
+            } catch(error){
+                console.error(error);
+            }
+        };
+        fetchData();
+
+        const intervalId = setInterval(fetchData, 10000);
+        return () => {
+            clearInterval(intervalId);
+        };
+    },[]);
 
     return(
         <View style={styles.fullcontainer}>
@@ -131,5 +176,11 @@ const styles = StyleSheet.create({
       },
       tabbarmystyle: {
         backgroundColor: 'transparent',
+      },
+
+      busboxstyle:{
+        width: "100%",
+        backgroundColor: '#fff',
+        padding: 10,
       }
 })
