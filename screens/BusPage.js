@@ -9,26 +9,35 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 const Tab = createMaterialTopTabNavigator();
 
 const FirstRoute = () => (
-  <View style={[styles.scene, { backgroundColor: '#ff4081' }]} />
+  <View style={[styles.scene, { backgroundColor: '#ff4081' }]}>
+    <Text>
+        안녕
+    </Text>
+  </View>
+  
 );
 
 const SecondRoute = () => (
   <View style={[styles.scene, { backgroundColor: '#673ab7' }]} />
 );
 
+const LogoGradient = ({}) => (
+    <LinearGradient colors={['#018242', '#00D26A']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.topView}>
+        <Text style={styles.h1}>
+            Pokit's
+        </Text>
+    </LinearGradient>
+);
+
 export default function BusPage({navigation}){
     return(
-        <View style={styles.vbox}> 
-            <LinearGradient colors={['#018242', '#00D26A']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.topView}>
-                <Text style={styles.h1}>
-                    Pokit's
-                </Text>
-            </LinearGradient>
-             <View>
+        <View style={styles.fullcontainer}> 
+            <LogoGradient></LogoGradient>
+            <View style={{flex: 1}}>
                 <Tab.Navigator
-                    tabBar={props => (
-                        <View>
-                        <LinearGradient colors={['#018242', '#00D26A']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={{flex: 1}}>
+                    tabBar = {props => (
+                    <View>
+                        <LinearGradient colors={['#018242', '#00D26A']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} >
                             <TabBar {...props} style={{backgroundColor: 'transparent'}} />
                         </LinearGradient>
                         </View>
@@ -67,7 +76,8 @@ const styles = StyleSheet.create({
         color: "#fff",
       },
       scene: {
-        
+        padding:20,
+        flex:1,
       },
       vbox: {
         flexDirection: "column",
