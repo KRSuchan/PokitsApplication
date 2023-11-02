@@ -32,15 +32,13 @@ const LogoGradient = ({}) => (
 const TabMyTab = ({}) => (
     <Tab.Navigator
         tabBar = {props => (
-        <View>
             <LinearGradient colors={['#018242', '#00D26A']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} >
-                <TabBar {...props} style={styles.tabbarmystyle}/>
+                <TabBar {...props} style={{backgroundColor: 'transparent'}} indicatorStyle={{ backgroundColor: 'white' }} />
             </LinearGradient>
-            </View>
         )}
         >
-        <Tab.Screen name="전체 정류장" component={FirstRoute} titleStyle={{color: 'white'}}/>
-        <Tab.Screen name="옥계 정류장" component={SecondRoute} titleStyle={{color: 'white'}}/>
+        <Tab.Screen name="전체 정류장" component={FirstRoute} />
+        <Tab.Screen name="옥계 정류장" component={SecondRoute} />
     </Tab.Navigator>
 );
 
