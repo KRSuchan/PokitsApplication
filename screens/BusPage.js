@@ -9,7 +9,7 @@ import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-
 
 const Tab = createMaterialTopTabNavigator();
 
-const FirstRoute = () => (
+const FirstRoute = ({buses}) => (
   <View style={[styles.scene]}>
     <BusItemBox
         title={"버스라운지 시내행"}
@@ -35,11 +35,14 @@ const SecondRoute = () => (
   <View style={[styles.scene, { backgroundColor: '#673ab7' }]} />
 );
 
-const LogoGradient = ({}) => (
+const LogoGradient = ({navigation}) => (
     <LinearGradient colors={['#018242', '#00D26A']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.topView}>
+      <TouchableOpacity onPress={()=> navigation.navigate("메인화면")} >
         <Text style={styles.h1}>
             Pokit's
         </Text>
+      </TouchableOpacity>
+        
     </LinearGradient>
 );
 
@@ -87,18 +90,40 @@ class Bus{
     }
 }
 
-const BusItemBox = ({title,buses}) => (
+const BusItemBox = ({title,buses = []}) => (
     <View style={styles.busboxstyle}>
-        <View>
+        <View style={styles.vbox}>
+          <View style={styles.busboxtitle}>
+            <Text style={{fontSize:18,fontWeight:'900',color:"white"}}>
+              {title}
+            </Text>
+          </View>
+            {buses.map((bus) => {
+              if(bus) {
+                return(
+                  <BusItem
+                    bus = {bus}
+                  >
+                  </BusItem>
+                )
+              }
+            })}
         </View>
     </View>
+);
+
+const BusItem = ({bus}) => (
+  <View styles={styles.hbox}>
+    <Text>
+      {bus.busNum}
+    </Text>
+  </View>
 );
 
 
 export default function BusPage({navigation}){
 
     const insets = useSafeAreaInsets(); //어디까지 안전해?
-
     const [buses,setBuses] = useState([]);
 
     useEffect(()=>{
@@ -128,9 +153,9 @@ export default function BusPage({navigation}){
                 start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}  
             />
             <View style={styles.fullcontainer}> 
-                <LogoGradient></LogoGradient>
+                <LogoGradient navigation={navigation}></LogoGradient>
                     <View style={{flex: 1}}>
-                        <TabMyTab1></TabMyTab1>
+                        <TabMyTab1 buses = {buses}></TabMyTab1>
                     </View>
             </View>
         </View>
@@ -182,5 +207,18 @@ const styles = StyleSheet.create({
         width: "100%",
         backgroundColor: '#fff',
         padding: 10,
+        marginBottom: 20,
+        borderRadius: 10,
+      },
+
+      busboxtitle:{
+        width: "100%",
+        borderRadius: 7,
+        padding: 15,
+        backgroundColor: 'black',
+        alignItems: "center",
+        marginBottom: 15,
       }
+      
+      
 })
