@@ -29,26 +29,27 @@ const LogoGradient = ({}) => (
     </LinearGradient>
 );
 
+const TabMyTab = ({}) => (
+    <Tab.Navigator
+        tabBar = {props => (
+        <View>
+            <LinearGradient colors={['#018242', '#00D26A']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} >
+                <TabBar {...props} style={styles.tabbarmystyle}/>
+            </LinearGradient>
+            </View>
+        )}
+        >
+        <Tab.Screen name="전체 정류장" component={FirstRoute} titleStyle={{color: 'white'}}/>
+        <Tab.Screen name="옥계 정류장" component={SecondRoute} titleStyle={{color: 'white'}}/>
+    </Tab.Navigator>
+);
+
 export default function BusPage({navigation}){
     return(
         <View style={styles.fullcontainer}> 
             <LogoGradient></LogoGradient>
             <View style={{flex: 1}}>
-                <Tab.Navigator
-                    tabBar = {props => (
-                    <View>
-                        <LinearGradient colors={['#018242', '#00D26A']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} >
-                            <TabBar {...props} style={{backgroundColor: 'transparent'}} />
-                        </LinearGradient>
-                        </View>
-                    )}
-                    tabBarOptions={{
-                        indicatorStyle: { backgroundColor: 'white' },
-                    }}
-                    >
-                    <Tab.Screen name="전체 정류장" component={FirstRoute} />
-                    <Tab.Screen name="옥계 정류장" component={SecondRoute} />
-                </Tab.Navigator>
+                <TabMyTab></TabMyTab>
             </View>
         </View>
     );
@@ -89,4 +90,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         marginVertical: 9,
       },
+      tabbarmystyle: {
+        backgroundColor: 'transparent',
+      }
 })
