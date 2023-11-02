@@ -56,12 +56,14 @@ const TabMyTab = ({}) => ( //탭바 함수 내부에서 탭바 컴포넌트 사�
             </LinearGradient>
         )}
         >
-        <Tab.Screen name="전체 정류장" component={FirstRoute} />
+        <Tab.Screen name="전체 정류장">
+          {props => <FirstRoute {...props} buses={buses} />}
+        </Tab.Screen>
         <Tab.Screen name="옥계 정류장" component={SecondRoute} />
     </Tab.Navigator>
 );
 
-const TabMyTab1 = () => (
+const TabMyTab1 = ({buses}) => (
     <Tab.Navigator
       tabBar={(props) => ( //커스텀 탭바 = props
         <LinearGradient colors={['#018242', '#00D26A']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={{ flexDirection: 'row',paddingLeft: 20,paddingTop: 10}}>
@@ -79,7 +81,9 @@ const TabMyTab1 = () => (
         </LinearGradient>
       )}
     >
-      <Tab.Screen name="전체 정류장" component={FirstRoute} />
+        <Tab.Screen name="전체 정류장">
+          {props => <FirstRoute {...props} buses={buses} />}
+        </Tab.Screen>
       <Tab.Screen name="옥계 정류장" component={SecondRoute} />
     </Tab.Navigator>
   );
@@ -98,10 +102,11 @@ const BusItemBox = ({title,buses = []}) => (
               {title}
             </Text>
           </View>
-            {buses.map((bus) => {
+            {buses.map((bus, index) => {
               if(bus) {
                 return(
                   <BusItem
+                    key = {index}
                     bus = {bus}
                   >
                   </BusItem>
@@ -113,10 +118,17 @@ const BusItemBox = ({title,buses = []}) => (
 );
 
 const BusItem = ({bus}) => (
-  <View styles={styles.hbox}>
-    <Text>
-      {bus.busNum}
-    </Text>
+  <View style={styles.hbox}>
+    <View style={styles.busitemhbox}>
+      <Text style={styles.busitemtext}>
+        {bus.busNum}
+      </Text>
+    </View>
+    <View style={styles.busitemhbox}>
+      <Text style={styles.busitemtext}>
+        {bus.prevStationCnt}
+      </Text>
+    </View>
   </View>
 );
 
@@ -195,14 +207,16 @@ const styles = StyleSheet.create({
     
       hbox: {
         flexDirection: "row",
-        justifyContent: "space-between",
+        justifyContent: "space-evenly",
         alignItems: "center",
-        marginVertical: 9,
+        marginVertical: 3,
+      },
+      busitemhbox: {
+
       },
       tabbarmystyle: {
         backgroundColor: 'transparent',
       },
-
       busboxstyle:{
         width: "100%",
         backgroundColor: '#fff',
@@ -210,7 +224,6 @@ const styles = StyleSheet.create({
         marginBottom: 20,
         borderRadius: 10,
       },
-
       busboxtitle:{
         width: "100%",
         borderRadius: 7,
@@ -218,6 +231,11 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
         alignItems: "center",
         marginBottom: 15,
+      },
+      busitemtext:{
+        fontSize:15,
+        fontWeight:'800',
+        color:"black",
       }
       
       
