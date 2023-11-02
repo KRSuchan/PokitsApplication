@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, Button, StyleSheetm, TouchableOpacity, Image } from 'react-native';
+import { ScrollView, StyleSheet, View, Text, Button, StyleSheetm, TouchableOpacity, Image } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Divider } from 'react-native-elements';
 import { LinearGradient } from "expo-linear-gradient";
@@ -10,24 +10,24 @@ import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-
 const Tab = createMaterialTopTabNavigator();
 
 const FirstRoute = ({buses}) => (
-  <View style={[styles.scene]}>
+  <ScrollView style={styles.scrollbox}>
+    <View style={[styles.scene]}>
     <BusItemBox
         title={"버스라운지 시내행"}
         buses = {buses}
     />
     <BusItemBox
         title={"버스라운지 옥계행"}
-        buses = {buses}
     />
     <BusItemBox
         title={"구미역"}
-        buses = {buses}
     />
     <BusItemBox
         title={"옥계중학교"}
-        buses = {buses}
     />
-  </View>
+    </View>
+  </ScrollView>
+  
   
 );
 
@@ -73,7 +73,7 @@ const TabMyTab1 = ({buses}) => (
               onPress={() => props.navigation.navigate(route.name)} //클릭시 이동
               style={{ alignItems: 'center', paddingRight: 15 }}
             >
-              <Text style={{ color: 'white',fontSize: '22tx', fontWeight: 'bold' ,paddingBottom:10}}>{route.name}</Text>
+              <Text style={{ color: 'white',fontSize: 22, fontWeight: 'bold' ,paddingBottom:10}}>{route.name}</Text>
               {/* 텍스트 뿌리고 인디케이터 뿌릴게 */}
               {props.state.index === index && <View style={{ width: '100%', height: 4, backgroundColor: 'white' }} />} 
             </TouchableOpacity>
@@ -119,14 +119,19 @@ const BusItemBox = ({title,buses = []}) => (
 
 const BusItem = ({bus}) => (
   <View style={styles.hbox}>
-    <View style={styles.busitemhbox}>
-      <Text style={styles.busitemtext}>
-        {bus.busNum}
+    <View style={styles.busitemhbox2}>
+      <Text style={styles.busitemlefttext}>
+        {"🚌 " + bus.busNum}
       </Text>
     </View>
+    { <View style={styles.busitemhbox}>
+      <Text style={styles.busitemtext}>
+        {Math.floor(bus.leftSecs/60)+" 🕑"}
+      </Text>
+    </View> }
     <View style={styles.busitemhbox}>
       <Text style={styles.busitemtext}>
-        {bus.prevStationCnt}
+        { bus.prevStationCnt+" 📍"}
       </Text>
     </View>
   </View>
@@ -143,6 +148,7 @@ export default function BusPage({navigation}){
             try{
                 const response = await fetch('https://pokits-bus-default-rtdb.firebaseio.com/BusToKit/.json');
                 const data = await response.json();
+                data.Bus.Body.items.bus.sort((a, b) => a.leftSecs - b.leftSecs); //버스 시간순 정렬
                 setBuses(data.Bus.Body.items.bus);
                 console.log("버스데이터 정상적으로 불러옴"+buses);
             } catch(error){
@@ -204,7 +210,6 @@ const styles = StyleSheet.create({
       vbox: {
         flexDirection: "column",
       },
-    
       hbox: {
         flexDirection: "row",
         justifyContent: "space-evenly",
@@ -212,7 +217,10 @@ const styles = StyleSheet.create({
         marginVertical: 3,
       },
       busitemhbox: {
-
+        flex:1,
+      },
+      busitemhbox2: {
+        flex:2,
       },
       tabbarmystyle: {
         backgroundColor: 'transparent',
@@ -228,15 +236,22 @@ const styles = StyleSheet.create({
         width: "100%",
         borderRadius: 7,
         padding: 15,
-        backgroundColor: 'black',
+        backgroundColor: '#018242',
         alignItems: "center",
         marginBottom: 15,
       },
       busitemtext:{
-        fontSize:15,
+        fontSize:18,
         fontWeight:'800',
         color:"black",
-      }
+        textAlign:"right",
+      },
+      busitemlefttext:{
+        fontSize:18,
+        fontWeight:'800',
+        color:"black",
+        
+      },
       
       
 })
