@@ -4,19 +4,42 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { Divider } from 'react-native-elements';
 import { LinearGradient } from "expo-linear-gradient";
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
+const Tab = createMaterialTopTabNavigator();
 
+const FirstRoute = () => (
+  <View style={[styles.scene, { backgroundColor: '#ff4081' }]} />
+);
+
+const SecondRoute = () => (
+  <View style={[styles.scene, { backgroundColor: '#673ab7' }]} />
+);
 
 export default function BusPage({navigation}){
     return(
-        <View style={styles.fullcontainer}> 
+        <View style={styles.vbox}> 
             <LinearGradient colors={['#018242', '#00D26A']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.topView}>
                 <Text style={styles.h1}>
                     Pokit's
                 </Text>
             </LinearGradient>
-             <View style={styles.container}>
-                
+             <View>
+                <Tab.Navigator
+                    tabBar={props => (
+                        <View>
+                        <LinearGradient colors={['#018242', '#00D26A']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={{flex: 1}}>
+                            <TabBar {...props} style={{backgroundColor: 'transparent'}} />
+                        </LinearGradient>
+                        </View>
+                    )}
+                    tabBarOptions={{
+                        indicatorStyle: { backgroundColor: 'white' },
+                    }}
+                    >
+                    <Tab.Screen name="전체 정류장" component={FirstRoute} />
+                    <Tab.Screen name="옥계 정류장" component={SecondRoute} />
+                </Tab.Navigator>
             </View>
         </View>
     );
@@ -31,7 +54,7 @@ const styles = StyleSheet.create({
       padding: 20,
     },
     topView:{
-        // flex: 1,꽉채우면 안됨 컨테이너도 1이니까
+        // flex: 1,
         padding: 20,
     },
     fullcontainer:{
@@ -42,5 +65,18 @@ const styles = StyleSheet.create({
         fontFamily: "Lobster",
         fontSize: 40,
         color: "#fff",
+      },
+      scene: {
+        
+      },
+      vbox: {
+        flexDirection: "column",
+      },
+    
+      hbox: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginVertical: 9,
       },
 })
