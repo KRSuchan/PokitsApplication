@@ -78,7 +78,7 @@ export default function App() {
               <Stack.Screen name = "개발팀" component={DevInfoPage}/>
               <Stack.Screen name = "이용약관" component={TermsPage}/>
               <Stack.Screen name = "가이드" component={GuidePage}/>
-              <Stack.Screen name = "버스" component={BusPage}/>
+              <Stack.Screen name = "버스" component={BusPage} options={{ headerShown: false }}/>
               <Stack.Screen 
             name="식당"
             component={CafeteriaPage}

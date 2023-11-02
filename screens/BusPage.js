@@ -5,6 +5,7 @@ import { Divider } from 'react-native-elements';
 import { LinearGradient } from "expo-linear-gradient";
 import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -71,12 +72,22 @@ const TabMyTab1 = () => (
 
 
 export default function BusPage({navigation}){
+
+    const insets = useSafeAreaInsets(); //어디까지 안전해?
+
     return(
-        <View style={styles.fullcontainer}> 
-            <LogoGradient></LogoGradient>
-            <View style={{flex: 1}}>
-                <TabMyTab1></TabMyTab1>
-            </View>
+        <View style={styles.fullcontainer}>
+            <LinearGradient
+                colors={['#018242', '#00D26A']}
+                style={{ height: insets.top }}
+                start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}  
+            />
+                <View style={styles.fullcontainer}> 
+                    <LogoGradient></LogoGradient>
+                        <View style={{flex: 1}}>
+                            <TabMyTab1></TabMyTab1>
+                        </View>
+                    </View>
         </View>
     );
 }
@@ -91,7 +102,7 @@ const styles = StyleSheet.create({
     },
     topView:{
         // flex: 1,
-        paddingTop: 20,
+        paddingTop: 0,
         paddingHorizontal: 20,
     },
     fullcontainer:{
