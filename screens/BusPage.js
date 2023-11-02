@@ -82,12 +82,12 @@ export default function BusPage({navigation}){
                 style={{ height: insets.top }}
                 start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}  
             />
-                <View style={styles.fullcontainer}> 
-                    <LogoGradient></LogoGradient>
-                        <View style={{flex: 1}}>
-                            <TabMyTab1></TabMyTab1>
-                        </View>
+            <View style={styles.fullcontainer}> 
+                <LogoGradient></LogoGradient>
+                    <View style={{flex: 1}}>
+                        <TabMyTab1></TabMyTab1>
                     </View>
+            </View>
         </View>
     );
 }
