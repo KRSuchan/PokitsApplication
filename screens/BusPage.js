@@ -29,7 +29,7 @@ const LogoGradient = ({}) => (
     </LinearGradient>
 );
 
-const TabMyTab = ({}) => (
+const TabMyTab = ({}) => ( //탭바 함수 내부에서 탭바 컴포넌트 사용 = 오류 = 글자안보임
     <Tab.Navigator
         tabBar = {props => (
             <LinearGradient colors={['#018242', '#00D26A']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} >
@@ -44,18 +44,28 @@ const TabMyTab = ({}) => (
     </Tab.Navigator>
 );
 
-const TabMyTab1 = ({}) => (
+const TabMyTab1 = () => (
     <Tab.Navigator
-        tabBarOptions={{
-            style: { backgroundColor: '#018242' },
-            indicatorStyle: { backgroundColor: 'white' },
-            labelStyle: { color: 'white' },
-        }}
+      tabBar={(props) => ( //커스텀 탭바 = props
+        <LinearGradient colors={['#018242', '#00D26A']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={{ flexDirection: 'row' }}>
+          {props.state.routes.map((route, index) => ( //각 탭을 흩뿌리기
+            <TouchableOpacity
+              key={route.key} //탭에 고유한 id
+              onPress={() => props.navigation.navigate(route.name)} //클릭시 이동
+              style={{ flex: 1, alignItems: 'center', padding: 10 }}
+            >
+              <Text style={{ color: 'white' }}>{route.name}</Text>
+              {props.state.index === index && <View style={{ width: '100%', height: 2, backgroundColor: 'white' }} />}
+            </TouchableOpacity>
+          ))}
+        </LinearGradient>
+      )}
     >
-        <Tab.Screen name="전체 정류장" component={FirstRoute} />
-        <Tab.Screen name="옥계 정류장" component={SecondRoute} />
+      <Tab.Screen name="전체 정류장" component={FirstRoute} />
+      <Tab.Screen name="옥계 정류장" component={SecondRoute} />
     </Tab.Navigator>
-);
+  );
+  
 
 
 
