@@ -33,7 +33,9 @@ const TabMyTab = ({}) => (
     <Tab.Navigator
         tabBar = {props => (
             <LinearGradient colors={['#018242', '#00D26A']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} >
-                <TabBar {...props} style={{backgroundColor: 'transparent'}} indicatorStyle={{ backgroundColor: 'white' }} />
+                <View>
+                    <TabBar {...props} style={{backgroundColor: 'transparent',shadowColor:'#000'}} indicatorStyle={{ backgroundColor: 'white' }} labelStyle={{color:'white'}} />
+                </View>
             </LinearGradient>
         )}
         >
@@ -42,12 +44,27 @@ const TabMyTab = ({}) => (
     </Tab.Navigator>
 );
 
+const TabMyTab1 = ({}) => (
+    <Tab.Navigator
+        tabBarOptions={{
+            style: { backgroundColor: '#018242' },
+            indicatorStyle: { backgroundColor: 'white' },
+            labelStyle: { color: 'white' },
+        }}
+    >
+        <Tab.Screen name="전체 정류장" component={FirstRoute} />
+        <Tab.Screen name="옥계 정류장" component={SecondRoute} />
+    </Tab.Navigator>
+);
+
+
+
 export default function BusPage({navigation}){
     return(
         <View style={styles.fullcontainer}> 
             <LogoGradient></LogoGradient>
             <View style={{flex: 1}}>
-                <TabMyTab></TabMyTab>
+                <TabMyTab1></TabMyTab1>
             </View>
         </View>
     );
