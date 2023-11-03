@@ -22,13 +22,14 @@ import SettingListPage from "./screens/SettingListPage";
 import BusSettingPage from "./screens/BusSettingPage";
 import CafeteriaSettingPage from "./screens/CafeteriaSettingPage";
 import CafeteriaPage from "./screens/CafeteriaPage";
-import ScheduleSettingPage from './screens/ScheduleSettingPage';
-import DdaySettingPage from './screens/DdaySettingPage';
+import ScheduleSettingPage from "./screens/ScheduleSettingPage";
+import DdaySettingPage from "./screens/DdaySettingPage";
 import DdayEditPage from "./screens/DdayEditPage";
 import DepartmentSettingPage from "./screens/DepartmentSettingPage";
 import DevInfoPage from "./screens/DevInfoPage";
 import TermsPage from "./screens/TermsPage";
 import GuidePage from "./screens/GuidePage";
+import CalendarPage from "./screens/CalendarPage";
 
 //네비게이터 사용
 const Stack = createStackNavigator();
@@ -55,38 +56,46 @@ export default function App() {
     onLayoutRootView();
   }, [onLayoutRootView]);
 
-  
-  if(!fontsLoaded) {
+  if (!fontsLoaded) {
     return null; // 폰트가 아직 로드되지 않았다면 아무것도 출력하지 않습니다.
-   }
-  
-   // 폰트가 로드된 경우 아래의 JSX를 반환하여 화면에 출력합니다. 
-   return (
-        <View style={{flex:1}}>
-          <NavigationContainer>
-            <Stack.Navigator initialRouteName='Main'>
-              <Stack.Screen name = "메인화면" component={MainPage} options={{ headerShown: false }}/> 
-              {/* 이 페이지만 상단 헤더가 안보이게 설정 */}
-              <Stack.Screen name = "설정" component={SettingListPage}/>
-              <Stack.Screen name = "선호 정류장" component={BusSettingPage}/>
-              <Stack.Screen name = "선호 식당" component={CafeteriaSettingPage}/>
-              <Stack.Screen name = "일정 설정" component={ScheduleSettingPage}/>
-              <Stack.Screen name = "디데이 설정" component={DdaySettingPage}/>
-              <Stack.Screen name = "디데이 수정" component={DdayEditPage}/>
-              <Stack.Screen name = "내 학과 설정" component={DepartmentSettingPage}/>
-              <Stack.Screen name = "개발팀" component={DevInfoPage}/>
-              <Stack.Screen name = "이용약관" component={TermsPage}/>
-              <Stack.Screen name = "가이드" component={GuidePage}/>
-              <Stack.Screen 
+  }
+
+  // 폰트가 로드된 경우 아래의 JSX를 반환하여 화면에 출력합니다.
+  return (
+    <View style={{ flex: 1 }}>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Main">
+          <Stack.Screen
+            name="메인화면"
+            component={MainPage}
+            options={{ headerShown: false }}
+          />
+          {/* 이 페이지만 상단 헤더가 안보이게 설정 */}
+          <Stack.Screen name="설정" component={SettingListPage} />
+          <Stack.Screen name="선호 정류장" component={BusSettingPage} />
+          <Stack.Screen name="선호 식당" component={CafeteriaSettingPage} />
+          <Stack.Screen name="일정 설정" component={ScheduleSettingPage} />
+          <Stack.Screen name="디데이 설정" component={DdaySettingPage} />
+          <Stack.Screen name="디데이 수정" component={DdayEditPage} />
+          <Stack.Screen name="내 학과 설정" component={DepartmentSettingPage} />
+          <Stack.Screen name="개발팀" component={DevInfoPage} />
+          <Stack.Screen name="이용약관" component={TermsPage} />
+          <Stack.Screen name="가이드" component={GuidePage} />
+          <Stack.Screen
             name="식당"
             component={CafeteriaPage}
             options={{ headerShown: false }}
           />
-            </Stack.Navigator>
-          </NavigationContainer>
-          <StatusBar style="auto"/>
-        </View>
-   );
+          <Stack.Screen
+            name="일정"
+            component={CalendarPage}
+            options={{ headerShown: false }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+      <StatusBar style="auto" />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
