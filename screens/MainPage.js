@@ -189,6 +189,7 @@ export default function MainPage({ navigation }) {
                 resizeMode="cover"
                 shouldPlay
                 isLooping
+                autoPlay
             />
             </TouchableOpacity>
           </View>
