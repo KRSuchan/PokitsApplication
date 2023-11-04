@@ -9,32 +9,32 @@ import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-
 
 const Tab = createMaterialTopTabNavigator();
 
-const FirstRoute = ({buses,buses2,buses3,buses4,buses5,buses6}) => (
+const FirstRoute = ({buses}) => (
   <ScrollView style={styles.scrollbox}>
     <View style={[styles.scene]}>
     <BusItemBox
         title={"버스라운지 시내행"}
-        buses = {buses}
+        buses = {buses.buses1}
     />
     <BusItemBox
         title={"버스라운지 옥계행"}
-        buses = {buses2}
+        buses = {buses.buses2}
     />
     <BusItemBox
         title={"블랙홀 시내행"}
-        buses = {buses3}
+        buses = {buses.buses3}
     />
     <BusItemBox
         title={"블랙홀 옥계행"}
-        buses = {buses4}
+        buses = {buses.buses4}
     />
     <BusItemBox
         title={"구미역"}
-        buses = {buses5}
+        buses = {buses.buses5}
     />
     <BusItemBox
         title={"옥계중학교"}
-        buses = {buses6}
+        buses = {buses.buses6}
     />
     </View>
   </ScrollView>
@@ -74,7 +74,7 @@ const TabMyTab = ({}) => ( //탭바 함수 내부에서 탭바 컴포넌트 사�
     </Tab.Navigator>
 );
 
-const TabMyTab1 = ({buses,buses2,buses3,buses4,buses5,buses6}) => (
+const TabMyTab1 = ({buses}) => (
     <Tab.Navigator
       tabBar={(props) => ( //커스텀 탭바 = props
         <LinearGradient colors={['#018242', '#00D26A']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={{ flexDirection: 'row',paddingLeft: 20,paddingTop: 10}}>
@@ -93,7 +93,7 @@ const TabMyTab1 = ({buses,buses2,buses3,buses4,buses5,buses6}) => (
       )}
     >
         <Tab.Screen name="전체 정류장">
-          {props => <FirstRoute {...props} buses = {buses} buses2 = {buses2} buses3 = {buses3} buses4 = {buses4} buses5 = {buses5} buses6 = {buses6} />}
+          {props => <FirstRoute {...props} buses = {buses}/>}
         </Tab.Screen>
       <Tab.Screen name="옥계 정류장" component={SecondRoute} />
     </Tab.Navigator>
@@ -152,26 +152,28 @@ const BusItem = ({bus}) => (
 export default function BusPage({navigation}){
 
     const insets = useSafeAreaInsets(); //어디까지 안전해?
-    const [buses,setBuses] = useState([]);
-    const [buses2,setBuses2] = useState([]);
-    const [buses3,setBuses3] = useState([]);
-    const [buses4,setBuses4] = useState([]);
-    const [buses5,setBuses5] = useState([]);
-    const [buses6,setBuses6] = useState([]);
+    const [buses, setBuses] = useState({
+      buses1: [],
+      buses2: [],
+      buses3: [],
+      buses4: [],
+      buses5: [],
+      buses6: []
+  });
 
 
     useEffect(()=>{
-        const fetchData = async(url,stateSetter) => {
+        const fetchData = async(url,key) => {
             try{
                 const response = await fetch('https://pokits-bus-default-rtdb.firebaseio.com/'+url+'/.json');
                 const data = await response.json();
                 if (data && data.Bus && data.Bus.Body && data.Bus.Body.items && data.Bus.Body.items.bus) {
                   data.Bus.Body.items.bus.sort((a, b) => a.leftSecs - b.leftSecs); //버스 시간순 정렬
-                  stateSetter(data.Bus.Body.items.bus);
+                  setBuses(prevBuses => ({ ...prevBuses, [key]: data.Bus.Body.items.bus }));
                   console.log("버스데이터 정상적으로 불러옴");
               } else {
                   console.log('버스데이터에 Body가 없음 '+url);
-                  stateSetter([]);
+                  setBuses(prevBuses => ({ ...prevBuses, [key]: [] }));
               }
                 
             } catch(error){
@@ -180,13 +182,14 @@ export default function BusPage({navigation}){
         };
 
         const fetchAllData = async () => {
-          fetchData('GumiStation', setBuses);
-          fetchData('BusToKit', setBuses2); 
-          fetchData('BusToKit', setBuses3);
-          fetchData('BusToKit', setBuses4); 
-          fetchData('BusToKit', setBuses5);
-          fetchData('BusToKit', setBuses6);  
+          fetchData('GumiStation', 'buses1');
+          fetchData('BusToKit', 'buses2'); 
+          fetchData('BusToKit', 'buses3');
+          fetchData('BusToKit', 'buses4'); 
+          fetchData('BusToKit', 'buses5');
+          fetchData('BusToKit', 'buses6');  
       };
+      
         fetchAllData();
 
         const intervalId = setInterval(fetchAllData, 10000);
@@ -205,7 +208,7 @@ export default function BusPage({navigation}){
             <View style={styles.fullcontainer}> 
                 <LogoGradient navigation={navigation}></LogoGradient>
                     <View style={{flex: 1}}>
-                        <TabMyTab1 buses = {buses} buses2 = {buses2} buses3 = {buses3} buses4 = {buses4} buses5 = {buses5} buses6 = {buses6}>
+                        <TabMyTab1 buses = {buses}>
 
                         </TabMyTab1>
                     </View>
