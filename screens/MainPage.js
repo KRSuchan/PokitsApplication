@@ -7,6 +7,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Dimensions } from "react-native";
 import { getOnlyMenu, menuLiner } from "../controller/CafeteriaService";
+import Video from "react-native-video";
 
 //화면의 높이
 HEIGHT = Dimensions.get("window").height;
@@ -156,14 +157,26 @@ export default function MainPage({ navigation }) {
       <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.container}>
           <View style={styles.header}>
-            <Text
-              style={styles.h1}
-              onLayout={event => {
-                const { height } = event.nativeEvent.layout;
-                setTextHeight(height);
-              }}>
-              Pokit's
-            </Text>
+            <View>
+              <Text
+                style={styles.h1}
+                onLayout={event => {
+                  const { height } = event.nativeEvent.layout;
+                  setTextHeight(height);
+                }}>
+                Pokit's
+              </Text>
+              <Video
+                source={require('../assets/video/logovideo.mp4')}   // 로컬에 저장된 비디오의 경로를 입력하세요.
+                style={{height: textHeight}}
+                resizeMode="cover"                              // 비디오의 크기 조절 방식을 설정합니다.
+                repeat={true}                                   // 이 부분이 비디오를 반복 재생하는 옵션입니다.
+                playInBackground={false}                        // 앱이 백그라운드에 있을 때 비디오를 계속 재생할지 여부를 설정합니다.
+                playWhenInactive={false}                        // 앱이 비활성화되어 있을 때 비디오를 계속 재생할지 여부를 설정합니다.
+            />
+
+            </View>
+            
             <TouchableOpacity
               onPress={() => {
                 console.log("프로필버튼 누름");
