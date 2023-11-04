@@ -12,23 +12,7 @@ let calendar = {
   Aug: [],
   Sep: [],
   Oct: [],
-  Nov: [
-    {
-      contents: "공학제",
-      endDay: "11.02(목)",
-      startDay: "10.31(화)",
-    },
-    {
-      contents: "수업일수 10주차",
-      endDay: "11.03(금)",
-      startDay: "11.03(금)",
-    },
-    {
-      contents: "공학교육인증․복수전공․부전공․연계전공․융합전공 이수포기 신청",
-      endDay: "11.14(화)",
-      startDay: "11.16(목)",
-    },
-  ],
+  Nov: [],
   Dec: [],
 };
 let thisMonth = new Date().getMonth();

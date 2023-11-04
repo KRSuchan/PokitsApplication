@@ -13,6 +13,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { TabBar, TabView, SceneMap } from "react-native-tab-view";
 import { ScrollView } from "react-native-gesture-handler";
 import { getCalendar } from "../controller/CalendarService";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //화면의 높이
 HEIGHT = Dimensions.get("window").height;
@@ -35,6 +36,9 @@ const renderTabBar = props => (
 
 // 학사일정 탭 내용
 const UnivCalendarRoute = ({ calendar, month, onMonthChange }) => {
+  let time = new Date();
+  let today = time.getDate();
+  let thisMonth = time.getMonth();
   const increaseMonth = () => {
     onMonthChange(month + 1);
   };
@@ -42,29 +46,93 @@ const UnivCalendarRoute = ({ calendar, month, onMonthChange }) => {
   const decreaseMonth = () => {
     onMonthChange(month - 1);
   };
-
+  function popDate(string) {
+    return string.split("(")[0].split(".")[1];
+  }
+  function univCalDday(calData) {
+    let start = Number(popDate(calData.startDay));
+    let end = Number(popDate(calData.endDay));
+    if (month != thisMonth) {
+      return (
+        <>
+          <View style={styles.calendarContents}>
+            <Text style={styles.univContents}>{calData.contents}</Text>
+            <View>
+              <Text style={styles.calDays}>
+                {calData.startDay} ~ {calData.endDay}
+              </Text>
+            </View>
+          </View>
+          <View></View>
+        </>
+      );
+    }
+    if (today > end) {
+      return (
+        <>
+          <View style={styles.calendarContents}>
+            <Text style={styles.afterUnivContents}>{calData.contents}</Text>
+            <View>
+              <Text style={styles.calDays}>
+                {calData.startDay} ~ {calData.endDay}
+              </Text>
+            </View>
+          </View>
+          <View>
+            <Text style={styles.afterDday}>{today - end}일 지남</Text>
+          </View>
+        </>
+      );
+    } else if (today >= start) {
+      return (
+        <>
+          <View style={styles.calendarContents}>
+            <Text style={styles.nowUnivContents}>{calData.contents}</Text>
+            <View>
+              <Text style={styles.calDays}>
+                {calData.startDay} ~ {calData.endDay}
+              </Text>
+            </View>
+          </View>
+          <View>
+            <Text style={styles.nowDday}>진행중</Text>
+          </View>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <View style={styles.calendarContents}>
+            <Text style={styles.beforeUnivContents}>{calData.contents}</Text>
+            <View>
+              <Text style={styles.calDays}>
+                {calData.startDay} ~ {calData.endDay}
+              </Text>
+            </View>
+          </View>
+          <View>
+            <Text style={styles.beforeDday}>{start - today}일 남음</Text>
+          </View>
+        </>
+      );
+    }
+  }
   const makeScheduleComponents = () => {
     // calendar 데이터를 이용하여 <View> 컴포넌트들을 생성
     if (!calendar || calendar.length === 0) {
       console.log("calendar2 : " + JSON.stringify(calendar));
       // calendar 데이터가 없거나 빈 경우에 대한 처리
-      return <Text>일정이 없습니다.</Text>;
+      return (
+        <View style={styles.calendarNoScheduleContainer}>
+          <Text>일정이 없습니다.</Text>
+        </View>
+      );
     }
 
     return calendar.map((event, index) => {
       return (
         <View key={index} style={styles.calendarScheduleContainer}>
-          <View>
-            <Text>{event.contents}</Text>
-            <View>
-              <Text>
-                {event.startDay} ~ {event.endDay}
-              </Text>
-            </View>
-          </View>
-          <View>
-            <Text>3일 전</Text>
-          </View>
+          {univCalDday(event)}
         </View>
       );
     });
@@ -128,6 +196,7 @@ export default function CalendarPage({ navigation }) {
   };
   const [calendar, setCalendar] = useState([]);
   const [month, setMonth] = useState(new Date().getMonth());
+
   const getMonthCalendar = async month => {
     let calendar = JSON.parse(JSON.stringify(await getCalendar(month)));
     setCalendar(calendar);
@@ -249,7 +318,9 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   calendarMonthContainer: {
-    flex: 0.1,
+    // flex: 0.1,
+    height: "auto",
+    minHeight: "10%",
     flexDirection: "row",
     backgroundColor: "#F5F5F5",
     paddingHorizontal: (WIDTH / 100) * 2,
@@ -259,7 +330,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   calendarScheduleContainer: {
-    flex: 0.1,
+    minHeight: "10%",
     flexDirection: "row",
     paddingHorizontal: 20,
     width: "100%",
@@ -269,9 +340,37 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0.5,
     borderStyle: "solid",
   },
+  calendarNoScheduleContainer: {
+    flex: 1,
+    flexDirection: "row",
+    paddingHorizontal: 20,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    textAlign: "center",
+  },
   monthText: {
     color: "#FFF",
     fontWeight: "700",
     fontSize: 30,
   },
+  calendarContents: { height: "auto" },
+  univContents: { flexWrap: "wrap", maxWidth: "85%" },
+  afterUnivContents: {
+    flexWrap: "wrap",
+    maxWidth: "85%",
+    color: "#8A8A8E",
+    fontWeight: "800",
+  },
+  nowUnivContents: {
+    flexWrap: "wrap",
+    maxWidth: "85%",
+    color: "#182A76",
+    fontWeight: "800",
+  },
+  beforeUnivContents: { flexWrap: "wrap", maxWidth: "85%", fontWeight: "800" },
+  beforeDday: { fontWeight: "800" },
+  afterDday: { color: "#8A8A8E" },
+  nowDday: { color: "#182A76", fontWeight: "800" },
+  calDays: { color: "#8A8A8E" },
 });
