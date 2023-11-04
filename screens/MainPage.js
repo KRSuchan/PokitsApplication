@@ -28,6 +28,9 @@ export default function MainPage({ navigation }) {
   const navigateToCafeteria = () => {
     navigation.navigate("식당");
   };
+  const navigateToBus = () => {
+    navigation.navigate("버스");
+  };
   const navigateToCalendar = () => {
     navigation.navigate("일정");
   };
@@ -174,6 +177,18 @@ export default function MainPage({ navigation }) {
           </View>
           {/* 학식 컴포넌트 */}
           <View style={styles.componentAria}>
+            {/* 입벌려, 버스 들어간다 */}
+            <View style={styles.busMainAria}>
+              <TouchableOpacity
+                onPress={() => {
+                  console.log("버스사진 누름");
+                  navigateToBus();
+                }}>
+                <Image
+                  source={require("../assets/images/busimsi.jpeg")} // 여기에 실제 이미지 경로 입력
+                />
+              </TouchableOpacity>
+            </View>
             <View style={styles.dietMainAria}>
               <TouchableOpacity
                 onPress={() => {
@@ -281,5 +296,8 @@ const styles = StyleSheet.create({
     fontWeight: "500",
 
     color: "#B8131C",
+  },
+  busMainAria: {
+    width: "100%",
   },
 });

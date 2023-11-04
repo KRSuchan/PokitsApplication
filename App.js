@@ -29,6 +29,7 @@ import DepartmentSettingPage from "./screens/DepartmentSettingPage";
 import DevInfoPage from "./screens/DevInfoPage";
 import TermsPage from "./screens/TermsPage";
 import GuidePage from "./screens/GuidePage";
+import BusPage from "./screens/BusPage";
 import CalendarPage from "./screens/CalendarPage";
 
 //네비게이터 사용
@@ -81,6 +82,11 @@ export default function App() {
           <Stack.Screen name="개발팀" component={DevInfoPage} />
           <Stack.Screen name="이용약관" component={TermsPage} />
           <Stack.Screen name="가이드" component={GuidePage} />
+          <Stack.Screen
+            name="버스"
+            component={BusPage}
+            options={{ headerShown: false }}
+          />
           <Stack.Screen
             name="식당"
             component={CafeteriaPage}

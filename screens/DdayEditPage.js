@@ -38,6 +38,7 @@ export default function DdayEditPage({route, navigation}){
     const [date,setDate] = useState(new Date(dday.ddayDate));
     //datepicker 에 사용되는 date 스테이트
     const [show, setShow] = useState(false);
+    //피커를 보이게할까? 안드로이드에서 필요한 함수임
 
     // console.log(dday)
 
@@ -53,10 +54,11 @@ export default function DdayEditPage({route, navigation}){
         const currentDate = selectedDate || date;
         setShow(Platform.OS === 'ios');
         setDate(currentDate);
+        setDday({...dday, ddayDate: currentDate});
     };
 
     //datepicker 를 표시함
-    const showMode = (currentMode) => {
+    const showDatepicker = () => {
         setShow(true);
     }
 
@@ -118,15 +120,17 @@ export default function DdayEditPage({route, navigation}){
                 <Text style={styles.itemdescribe}>{dday.ddayDate}</Text>
             </TouchableOpacity> */}
             
-            <TouchableOpacity style={styles.dateinputbox} onPress={showMode}>
-                
-                <DateTimePicker
-                    testID="dateTimePicker"
-                    value={date} //초기값과 선택값 모두
-                    mode={"date"} //날짜 선택 모드임
-                    is24Hour={true} 
-                    display="default" //안드로이드에서 어떤 모드로 출력할까
-                    onChange={onChangeDate} />
+            <TouchableOpacity style={styles.dateinputbox} onPress={showDatepicker}>
+              <View style={styles.hbox_nomargin}>
+                <Text style={styles.itemdescribe}>{`${new Date(dday.ddayDate).getFullYear() + 1}년${new Date(dday.ddayDate).getMonth() + 1}월${new Date(dday.ddayDate).getDate()}일`}</Text> 
+                {show && (<DateTimePicker
+                      testID="dateTimePicker"
+                      value={date} //초기값과 선택값 모두
+                      mode={"date"} //날짜 선택 모드임
+                      is24Hour={true} 
+                      display="default" //안드로이드에서 어떤 모드로 출력할까
+                      onChange={onChangeDate} />)}
+              </View>
             </TouchableOpacity>
             <View style={styles.hbox}>
                 <Button title="삭제" onPress={()=>deleteDdays()}/>
@@ -160,6 +164,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginVertical: 9,
+  },
+
+  hbox_nomargin: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
 
   itemtitle: {
