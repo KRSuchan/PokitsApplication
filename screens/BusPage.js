@@ -9,7 +9,7 @@ import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-
 
 const Tab = createMaterialTopTabNavigator();
 
-const FirstRoute = ({buses}) => (
+const FirstRoute = ({buses,buses2,buses3,buses4,buses5,buses6}) => (
   <ScrollView style={styles.scrollbox}>
     <View style={[styles.scene]}>
     <BusItemBox
@@ -18,12 +18,23 @@ const FirstRoute = ({buses}) => (
     />
     <BusItemBox
         title={"버스라운지 옥계행"}
+        buses = {buses2}
+    />
+    <BusItemBox
+        title={"블랙홀 시내행"}
+        buses = {buses3}
+    />
+    <BusItemBox
+        title={"블랙홀 옥계행"}
+        buses = {buses4}
     />
     <BusItemBox
         title={"구미역"}
+        buses = {buses5}
     />
     <BusItemBox
         title={"옥계중학교"}
+        buses = {buses6}
     />
     </View>
   </ScrollView>
@@ -63,7 +74,7 @@ const TabMyTab = ({}) => ( //탭바 함수 내부에서 탭바 컴포넌트 사�
     </Tab.Navigator>
 );
 
-const TabMyTab1 = ({buses}) => (
+const TabMyTab1 = ({buses,buses2,buses3,buses4,buses5,buses6}) => (
     <Tab.Navigator
       tabBar={(props) => ( //커스텀 탭바 = props
         <LinearGradient colors={['#018242', '#00D26A']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={{ flexDirection: 'row',paddingLeft: 20,paddingTop: 10}}>
@@ -82,7 +93,7 @@ const TabMyTab1 = ({buses}) => (
       )}
     >
         <Tab.Screen name="전체 정류장">
-          {props => <FirstRoute {...props} buses={buses} />}
+          {props => <FirstRoute {...props} buses = {buses} buses2 = {buses2} buses3 = {buses3} buses4 = {buses4} buses5 = {buses5} buses6 = {buses6} />}
         </Tab.Screen>
       <Tab.Screen name="옥계 정류장" component={SecondRoute} />
     </Tab.Navigator>
@@ -142,22 +153,43 @@ export default function BusPage({navigation}){
 
     const insets = useSafeAreaInsets(); //어디까지 안전해?
     const [buses,setBuses] = useState([]);
+    const [buses2,setBuses2] = useState([]);
+    const [buses3,setBuses3] = useState([]);
+    const [buses4,setBuses4] = useState([]);
+    const [buses5,setBuses5] = useState([]);
+    const [buses6,setBuses6] = useState([]);
+
 
     useEffect(()=>{
-        const fetchData = async() => {
+        const fetchData = async(url,stateSetter) => {
             try{
-                const response = await fetch('https://pokits-bus-default-rtdb.firebaseio.com/BusToKit/.json');
+                const response = await fetch('https://pokits-bus-default-rtdb.firebaseio.com/'+url+'/.json');
                 const data = await response.json();
-                data.Bus.Body.items.bus.sort((a, b) => a.leftSecs - b.leftSecs); //버스 시간순 정렬
-                setBuses(data.Bus.Body.items.bus);
-                console.log("버스데이터 정상적으로 불러옴"+buses);
+                if (data && data.Bus && data.Bus.Body && data.Bus.Body.items && data.Bus.Body.items.bus) {
+                  data.Bus.Body.items.bus.sort((a, b) => a.leftSecs - b.leftSecs); //버스 시간순 정렬
+                  stateSetter(data.Bus.Body.items.bus);
+                  console.log("버스데이터 정상적으로 불러옴");
+              } else {
+                  console.log('버스데이터에 Body가 없음 '+url);
+                  stateSetter([]);
+              }
+                
             } catch(error){
                 console.error(error);
             }
         };
-        fetchData();
 
-        const intervalId = setInterval(fetchData, 10000);
+        const fetchAllData = async () => {
+          fetchData('GumiStation', setBuses);
+          fetchData('BusToKit', setBuses2); 
+          fetchData('BusToKit', setBuses3);
+          fetchData('BusToKit', setBuses4); 
+          fetchData('BusToKit', setBuses5);
+          fetchData('BusToKit', setBuses6);  
+      };
+        fetchAllData();
+
+        const intervalId = setInterval(fetchAllData, 10000);
         return () => {
             clearInterval(intervalId);
         };
@@ -173,7 +205,9 @@ export default function BusPage({navigation}){
             <View style={styles.fullcontainer}> 
                 <LogoGradient navigation={navigation}></LogoGradient>
                     <View style={{flex: 1}}>
-                        <TabMyTab1 buses = {buses}></TabMyTab1>
+                        <TabMyTab1 buses = {buses} buses2 = {buses2} buses3 = {buses3} buses4 = {buses4} buses5 = {buses5} buses6 = {buses6}>
+
+                        </TabMyTab1>
                     </View>
             </View>
         </View>

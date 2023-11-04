@@ -7,7 +7,9 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Dimensions } from "react-native";
 import { getOnlyMenu, menuLiner } from "../controller/CafeteriaService";
-import Video from "react-native-video";
+import { Video } from 'expo-av';
+
+
 
 //화면의 높이
 HEIGHT = Dimensions.get("window").height;
@@ -153,11 +155,11 @@ export default function MainPage({ navigation }) {
   }, [time]);
 
   return (
-    <SafeAreaProvider style={{ backgroundColor: "#fff" }}>
+    <SafeAreaProvider style={{ backgroundColor: "#F5F5F5" }}>
       <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.container}>
           <View style={styles.header}>
-            <View>
+            <View style={{flexDirection:"row"}}>
               <Text
                 style={styles.h1}
                 onLayout={event => {
@@ -166,14 +168,6 @@ export default function MainPage({ navigation }) {
                 }}>
                 Pokit's
               </Text>
-              <Video
-                source={require('../assets/video/logovideo.mp4')}   // 로컬에 저장된 비디오의 경로를 입력하세요.
-                style={{height: textHeight}}
-                resizeMode="cover"                              // 비디오의 크기 조절 방식을 설정합니다.
-                repeat={true}                                   // 이 부분이 비디오를 반복 재생하는 옵션입니다.
-                playInBackground={false}                        // 앱이 백그라운드에 있을 때 비디오를 계속 재생할지 여부를 설정합니다.
-                playWhenInactive={false}                        // 앱이 비활성화되어 있을 때 비디오를 계속 재생할지 여부를 설정합니다.
-            />
 
             </View>
             
@@ -182,10 +176,20 @@ export default function MainPage({ navigation }) {
                 console.log("프로필버튼 누름");
                 navigateToSettings();
               }}>
-              <Image
+              {/* <Image
                 source={require("../assets/images/profile.png")} // 여기에 실제 이미지 경로 입력
                 style={{ width: textHeight - 10, height: textHeight - 10 }} // 텍스트 높이만큼 이미지 크기 설정
-              />
+              /> */}
+              <Video
+                source={require('../assets/video/logovideo.mp4')}
+                style={{height: textHeight, width: textHeight, marginRight:5}}
+                rate={1.0}
+                volume={1.0}
+                isMuted={true}
+                resizeMode="cover"
+                shouldPlay
+                isLooping
+            />
             </TouchableOpacity>
           </View>
           {/* 학식 컴포넌트 */}
@@ -239,7 +243,7 @@ export default function MainPage({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#F5F5F5",
     alignItems: "center",
     justifyContent: "flex-start",
     padding: 20,
