@@ -31,6 +31,9 @@ export default function MainPage({ navigation }) {
   const navigateToBus = () => {
     navigation.navigate("버스");
   };
+  const navigateToCalendar = () => {
+    navigation.navigate("일정");
+  };
   // 설정에 따른 output component switch 함수
   function cafeteriaComponent(selectedItem) {
     switch (selectedItem) {
@@ -172,6 +175,7 @@ export default function MainPage({ navigation }) {
               />
             </TouchableOpacity>
           </View>
+          {/* 학식 컴포넌트 */}
           <View style={styles.componentAria}>
             {/* 입벌려, 버스 들어간다 */}
             <View style={styles.busMainAria}>
@@ -198,11 +202,21 @@ export default function MainPage({ navigation }) {
                   />
                   <Text style={styles.componentName}>학식</Text>
                 </View>
-
                 {cafeteriaComponent(selectedItem)}
               </TouchableOpacity>
             </View>
           </View>
+          {/* 일정 컴포넌트 */}
+          <TouchableOpacity
+            onPress={() => {
+              console.log("일정 페이지 이동");
+              navigateToCalendar();
+            }}>
+            <Image
+              source={require("../assets/images/calendar.jpg")} // 여기에 실제 이미지 경로 입력
+              style={{ width: textHeight - 10, height: textHeight - 10 }} // 텍스트 높이만큼 이미지 크기 설정
+            />
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </SafeAreaProvider>
@@ -285,5 +299,5 @@ const styles = StyleSheet.create({
   },
   busMainAria: {
     width: "100%",
-  }
+  },
 });

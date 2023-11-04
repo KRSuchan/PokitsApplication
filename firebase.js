@@ -22,7 +22,36 @@ async function fbValidate(url) {
   }
 }
 
-export function getFbSchedule() {}
+export async function getFbCalendar(month) {
+  try {
+    let url = `https://pokits-scheduler-default-rtdb.firebaseio.com/YearSchedule/body/${month}.json`;
+    let response = await fetch(url);
+    if (response.ok) {
+      // if 모든게 정상이면
+      let calendar = await response.json();
+      console.log("get UnivSchedule from firebase");
+      console.log(calendar);
+      return calendar;
+    } else {
+      // 네트워크 오류가 있으면
+      console.error(
+        "Network request failed:",
+        response.status,
+        response.statusText
+      );
+      let error =
+        "Network request failed : " +
+        response.status +
+        " " +
+        response.statusText;
+      return error;
+    }
+  } catch (error) {
+    // FB에 접근 못하면
+    console.error("An error occurred while fetching data:", error);
+    return error;
+  }
+}
 export function getFbBus() {}
 export async function getFbMenu() {
   try {
