@@ -132,7 +132,7 @@ const BusItem = ({bus}) => (
   <View style={styles.hbox}>
     <View style={styles.busitemhbox2}>
       <Text style={styles.busitemlefttext}>
-        {"🚌 " + bus.busNum}
+        {bus.busType === "좌석버스"? "🚎 " + bus.busNum : "🚌 " + bus.busNum}
       </Text>
     </View>
      <View style={styles.busitemhbox}>

@@ -154,6 +154,30 @@ export default function MainPage({ navigation }) {
     getMenus(time.getHours());
   }, [time]);
 
+  // 버스 설정 상태 
+const [busSetting, setBusSetting] = useState(null);
+const [buses,setBuses] = useState([]);
+
+// 버스 데이터를 불러옴
+const getBusData = async (url) => {
+    try {
+        const response = await fetch('https://pokits-bus-default-rtdb.firebaseio.com/' + url + '/.json');
+        const data = await response.json();
+        if (data && data.Bus && data.Bus.Body && data.Bus.Body.items && data.Bus.Body.items.bus) {
+            data.Bus.Body.items.bus.sort((a, b) => a.leftSecs - b.leftSecs); //버스 시간순 정렬
+            setBuses(prevBuses => ({ ...prevBuses, [key]: data.Bus.Body.items.bus }));
+            console.log("버스데이터 정상적으로 불러옴");
+        } else {
+            console.log('버스데이터에 Body가 없음 ' + url);
+            setBuses(prevBuses => ({ ...prevBuses, [key]: [] }));
+        }
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+
+
   return (
     <SafeAreaProvider style={{ backgroundColor: "#F5F5F5" }}>
       <SafeAreaView style={{ flex: 1 }}>
@@ -317,5 +341,7 @@ const styles = StyleSheet.create({
   },
   busMainAria: {
     width: "100%",
+    backgroundColor: "#fff",
+
   },
 });
