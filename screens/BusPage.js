@@ -57,7 +57,7 @@ const LogoGradient = ({navigation}) => (
     </LinearGradient>
 );
 
-const TabMyTab = ({}) => ( //탭바 함수 내부에서 탭바 컴포넌트 사용 = 오류 = 글자안보임
+const TabMyTab = ({}) => ( //탭바 함수 내부에서 탭바 컴포넌트 사용 = 오류 = 글자안보임 = 대신 TabMyTab1을 사용할것
     <Tab.Navigator
         tabBar = {props => (
             <LinearGradient colors={['#018242', '#00D26A']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} >
@@ -182,12 +182,12 @@ export default function BusPage({navigation}){
         };
 
         const fetchAllData = async () => {
-          fetchData('GumiStation', 'buses1');
-          fetchData('BusToKit', 'buses2'); 
-          fetchData('BusToKit', 'buses3');
-          fetchData('BusToKit', 'buses4'); 
-          fetchData('BusToKit', 'buses5');
-          fetchData('BusToKit', 'buses6');  
+          fetchData('LoungeToGumi', 'buses1');
+          fetchData('LoungeToOk', 'buses2'); 
+          fetchData('LoungeToGumi1', 'buses3');
+          fetchData('LoungeToOk1', 'buses4'); 
+          fetchData('GumiStation', 'buses5');
+          fetchData('OkSchool', 'buses6');  
       };
       
         fetchAllData();
