@@ -105,7 +105,7 @@ export default function DdaySettingPage({navigation}){
     const reset = async() => {
         try{
             await AsyncStorage.setItem('ddays',"");
-            setDdays(['']);
+            setDdays([]);
         }catch(e){
             console.log(e);
         }
