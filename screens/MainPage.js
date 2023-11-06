@@ -189,11 +189,12 @@ const [buses,setBuses] = useState([]);
 // 버스 데이터를 불러옴
 const getBusData = async (bussetting) => {
   let url = ""
+  print("getbusdata시작"+bussetting);
     try {
         switch(bussetting) {
-          case "옥계중학교 방면": url = "LoungeToOk"; break;
-          case "구미시내 방면":url = "LoungeToGumi"; break;
-          case null:url = "LoungeToGumi"; break;
+          case "옥계중학교방면": url = "LoungeToOk"; break;
+          case "구미시내방면":url = "LoungeToGumi"; break;
+          case "":url = "LoungeToGumi"; break;
         }
         const response = await fetch('https://pokits-bus-default-rtdb.firebaseio.com/' + url + '/.json');
         console.log("메인에서 "+url)
@@ -209,6 +210,32 @@ const getBusData = async (bussetting) => {
         console.error(error);
     }
 };
+
+const BusBox = ({buses}) => (
+  <View style={styles.busboxstyle}>
+    {buses.length === 0 && <Text>버스 없음</Text>}
+    {buses.length > 0 && <BusMiniBoxTrue busNum={buses[0].busNum} leftTime={buses[0].leftSecs} leftStation={buses[0].prevStationCnt}/>}
+    {buses.length > 1 && <BusMiniBoxTrue busNum={buses[1].busNum} leftTime={buses[1].leftSecs} leftStation={buses[1].prevStationCnt}/>}
+  </View>
+);
+
+const BusMiniBoxTrue = ({busNum,leftTime,leftStation}) => (
+  <View style={{flexDirection:"row",justifyContent:"space-between",width:"100%", padding:5}}>
+    <View style={{flexDirection:"column"}}> 
+      <Text style={styles.itemtitle}>
+        {busNum+"번 버스"}
+      </Text>
+      <Text style={styles.itemtitle2}>
+        {leftStation+"정거장 전"}
+      </Text>
+    </View>
+    <View style={{height:"100%", flexDirection:"row",alignItems:"center"}}>
+      <Text style={styles.itemtitle}>
+        {Math.floor(leftTime/60)+"분"}
+      </Text>
+    </View>
+  </View>
+)
 
 
 
@@ -255,15 +282,20 @@ const getBusData = async (bussetting) => {
           <View style={styles.componentAria}>
             {/* 입벌려, 버스 들어간다 */}
             <View style={styles.busMainAria}>
+            <View style={styles.componentTitle}>
+                  <Image
+                    source={require("../assets/images/haksicBlack.png")} // 여기에 실제 이미지 경로 입력
+                    style={{ width: 23, height: 26.3 }} // 텍스트 높이만큼 이미지 크기 설정
+                  />
+                  <Text style={styles.componentName}>버스</Text>
+                </View>
               
               <TouchableOpacity
                 onPress={() => {
                   console.log("버스사진 누름");
                   navigateToBus();
                 }}>
-                <Image
-                  source={require("../assets/images/busimsi.jpeg")} // 여기에 실제 이미지 경로 입력
-                />
+                <BusBox buses = {buses}/>
               </TouchableOpacity>
             </View>
             <View style={styles.dietMainAria}>
@@ -325,6 +357,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: (WIDTH / 100) * 5,
     backgroundColor: "#F5F5F5",
+    width: "100%",
   },
   componentTitle: {
     flexDirection: "row",
@@ -376,7 +409,24 @@ const styles = StyleSheet.create({
   },
   busMainAria: {
     width: "100%",
+  },
+  busboxstyle:{
+    borderRadius:20,
     backgroundColor: "#fff",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
 
   },
+  itemtitle: {
+    fontSize: 19,
+    fontWeight:'800',
+    marginBottom:4,
+},
+
+itemtitle2: {
+  fontSize: 17,
+  fontWeight:'700',
+  marginBottom:2,
+  color:"#7D7D7D",
+},
 });
