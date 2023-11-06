@@ -129,12 +129,12 @@ const BusItem = ({bus}) => (
     </View>
      <View style={styles.busitemhbox}>
       <Text style={styles.busitemtext}>
-        {Math.floor(bus.leftSecs/60)+" 🕑"}
+        {bus.prevStationCnt>1?Math.floor(bus.leftSecs/60)+" 🕑":""}
       </Text>
     </View> 
     <View style={styles.busitemhbox}>
       <Text style={styles.busitemtext}>
-        { bus.prevStationCnt+" 📍"}
+        {bus.prevStationCnt>1?bus.prevStationCnt+" 📍":"곧도착 📍"}
       </Text>
     </View>
   </View>

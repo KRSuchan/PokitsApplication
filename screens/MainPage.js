@@ -230,16 +230,16 @@ const BusBox = ({buses}) => (
 const BusMiniBoxTrue = ({busNum,leftTime,leftStation}) => (
   <View style={{flexDirection:"row",justifyContent:"space-between",width:"100%", padding:5}}>
     <View style={{flexDirection:"column"}}> 
-      <Text style={[styles.itemtitle, leftTime <= 180 && {color: '#018242'}]}>
+      <Text style={[styles.itemtitle, leftStation <= 1 && {color: '#018242'}]}>
         {busNum+"번 버스"}
       </Text>
-      <Text style={[styles.itemtitle2, leftTime <= 180 && {color: '#018242'}]}>
+      <Text style={[styles.itemtitle2, leftStation <= 1 && {color: '#018242'}]}>
         {leftStation+"정거장 전"}
       </Text>
     </View>
     <View style={{height:"100%", flexDirection:"row",alignItems:"center"}}>
-      <Text style={[styles.itemtitle, leftTime <= 180 && {color: '#018242'}]}>
-        {Math.floor(leftTime/60)+"분"}
+      <Text style={[styles.itemtitle, leftStation <= 1 && {color: '#018242'}]}>
+        {leftStation > 1 ? Math.floor(leftTime/60)+"분" : "곧도착"}
       </Text>
     </View>
   </View>
@@ -302,8 +302,8 @@ useFocusEffect( //사용자가 이 페이지를 주목할때 실행하는 모든
             <View style={styles.busMainAria}>
             <View style={styles.componentTitle}>
                   <Image
-                    source={require("../assets/images/haksicBlack.png")} // 여기에 실제 이미지 경로 입력
-                    style={{ width: 23, height: 26.3 }} // 텍스트 높이만큼 이미지 크기 설정
+                    source={require("../assets/images/busBlack.png")} // 여기에 실제 이미지 경로 입력
+                    style={{ width: 20, height: 23 }} // 텍스트 높이만큼 이미지 크기 설정
                   />
                   <Text style={styles.componentName}>버스</Text>
                 </View>
@@ -386,6 +386,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "800",
     margin: 5,
+    fontFamily:"NotoSansBlack"
   },
   dietMainAria: {
     flex: 0.3,
