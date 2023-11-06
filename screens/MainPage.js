@@ -421,6 +421,7 @@ const styles = StyleSheet.create({
     fontSize: 19,
     fontWeight:'800',
     marginBottom:4,
+    fontFamily:"NotoSansB",
 },
 
 itemtitle2: {
@@ -428,5 +429,6 @@ itemtitle2: {
   fontWeight:'700',
   marginBottom:2,
   color:"#7D7D7D",
+  fontFamily:"NotoSansR",
 },
 });

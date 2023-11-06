@@ -42,6 +42,8 @@ export default function App() {
   // Lobster 폰트를 로드하고 로드 완료 여부를 fontsLoaded 상태에 저장
   const [fontsLoaded] = useFonts({
     Lobster: require("./assets/fonts/Lobster-Regular.ttf"),
+    NotoSansR: require("./assets/fonts/NotoSansKR-Bold.ttf"),
+    NotoSansB: require("./assets/fonts/NotoSansKR-Regular.ttf"),
   });
 
   // 폰트가 로드된 후에 스플래시 화면을 숨기는 함수입니다.
