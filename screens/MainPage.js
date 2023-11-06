@@ -127,6 +127,11 @@ export default function MainPage({ navigation }) {
   function updateTime() {
     setTime(new Date());
   }
+
+    // 버스 설정 상태 
+const [busSetting, setBusSetting] = useState(null);
+const [buses,setBuses] = useState([]);
+
   useEffect(() => {
     //설정 불러오기
     const loadSettings = async () => {
@@ -141,12 +146,37 @@ export default function MainPage({ navigation }) {
       }
     };
 
+    const loadBusSettings = async () => {
+      try {
+        //세팅을 변수에 담음
+        const savedBusSetting = await AsyncStorage.getItem("busSetting");
+        console.log(savedBusSetting)
+        //비어있지 않다면 state 에 넣을 것임
+        if (savedBusSetting !== null)
+          setBusSetting(JSON.parse(JSON.stringify(savedBusSetting)));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    
+
     updateTime(); // 초기 시간 설정
     let timer = setInterval(() => {
       updateTime();
       // 초기 설정 및 1초마다 시간을 업데이트
       loadSettings();
     }, 1000);
+
+    let timer2 = setInterval(() => {
+      loadBusSettings();
+      getBusData(busSetting);
+    },10000);
+
+    return () => {
+      clearInterval(timer);
+      clearInterval(timer2); // 두 번째 타이머도 해제
+    };
+
   }, []);
 
   useEffect(() => {
@@ -154,22 +184,26 @@ export default function MainPage({ navigation }) {
     getMenus(time.getHours());
   }, [time]);
 
-  // 버스 설정 상태 
-const [busSetting, setBusSetting] = useState(null);
-const [buses,setBuses] = useState([]);
+
 
 // 버스 데이터를 불러옴
-const getBusData = async (url) => {
+const getBusData = async (bussetting) => {
+  let url = ""
     try {
+        switch(bussetting) {
+          case "옥계중학교 방면": url = "LoungeToOk"; break;
+          case "구미시내 방면":url = "LoungeToGumi"; break;
+          case null:url = "LoungeToGumi"; break;
+        }
         const response = await fetch('https://pokits-bus-default-rtdb.firebaseio.com/' + url + '/.json');
+        console.log("메인에서 "+url)
         const data = await response.json();
         if (data && data.Bus && data.Bus.Body && data.Bus.Body.items && data.Bus.Body.items.bus) {
             data.Bus.Body.items.bus.sort((a, b) => a.leftSecs - b.leftSecs); //버스 시간순 정렬
-            setBuses(prevBuses => ({ ...prevBuses, [key]: data.Bus.Body.items.bus }));
-            console.log("버스데이터 정상적으로 불러옴");
+            setBuses(data.Bus.Body.items.bus);            console.log("버스데이터 정상적으로 불러옴");
         } else {
             console.log('버스데이터에 Body가 없음 ' + url);
-            setBuses(prevBuses => ({ ...prevBuses, [key]: [] }));
+            setBuses([]);
         }
     } catch (error) {
         console.error(error);
@@ -221,6 +255,7 @@ const getBusData = async (url) => {
           <View style={styles.componentAria}>
             {/* 입벌려, 버스 들어간다 */}
             <View style={styles.busMainAria}>
+              
               <TouchableOpacity
                 onPress={() => {
                   console.log("버스사진 누름");
