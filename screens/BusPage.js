@@ -21,14 +21,6 @@ const FirstRoute = ({buses}) => (
         buses = {buses.buses2}
     />
     <BusItemBox
-        title={"블랙홀 시내행"}
-        buses = {buses.buses3}
-    />
-    <BusItemBox
-        title={"블랙홀 옥계행"}
-        buses = {buses.buses4}
-    />
-    <BusItemBox
         title={"구미역"}
         buses = {buses.buses5}
     />
@@ -184,8 +176,6 @@ export default function BusPage({navigation}){
         const fetchAllData = async () => {
           fetchData('LoungeToGumi', 'buses1');
           fetchData('LoungeToOk', 'buses2'); 
-          fetchData('LoungeToGumi1', 'buses3');
-          fetchData('LoungeToOk1', 'buses4'); 
           fetchData('GumiStation', 'buses5');
           fetchData('OkSchool', 'buses6');  
       };
