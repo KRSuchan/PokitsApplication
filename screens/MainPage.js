@@ -1,5 +1,5 @@
 // Homepage.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 
 //노치 침범 방지 패키지
@@ -9,6 +9,8 @@ import { Dimensions } from "react-native";
 import { getOnlyMenu, menuLiner } from "../controller/CafeteriaService";
 import { Video } from 'expo-av';
 
+import { Divider } from 'react-native-elements';
+import { useFocusEffect } from "@react-navigation/native";
 
 
 //화면의 높이
@@ -133,6 +135,7 @@ const [busSetting, setBusSetting] = useState(null);
 const [buses,setBuses] = useState([]);
 
   useEffect(() => {
+    
     //설정 불러오기
     const loadSettings = async () => {
       try {
@@ -154,11 +157,13 @@ const [buses,setBuses] = useState([]);
         //비어있지 않다면 state 에 넣을 것임
         if (savedBusSetting !== null)
           setBusSetting(JSON.parse(JSON.stringify(savedBusSetting)));
+          getBusData(JSON.parse(JSON.stringify(savedBusSetting)));
       } catch (error) {
         console.error(error);
       }
     };
     
+    loadBusSettings();
 
     updateTime(); // 초기 시간 설정
     let timer = setInterval(() => {
@@ -169,7 +174,6 @@ const [buses,setBuses] = useState([]);
 
     let timer2 = setInterval(() => {
       loadBusSettings();
-      getBusData(busSetting);
     },10000);
 
     return () => {
@@ -213,30 +217,43 @@ const getBusData = async (bussetting) => {
 
 const BusBox = ({buses}) => (
   <View style={styles.busboxstyle}>
-    {buses.length === 0 && <Text>버스 없음</Text>}
+    {buses.length === 0 && <Text styles={styles.itemtitle}>버스 없음</Text>}
     {buses.length > 0 && <BusMiniBoxTrue busNum={buses[0].busNum} leftTime={buses[0].leftSecs} leftStation={buses[0].prevStationCnt}/>}
-    {buses.length > 1 && <BusMiniBoxTrue busNum={buses[1].busNum} leftTime={buses[1].leftSecs} leftStation={buses[1].prevStationCnt}/>}
+    {buses.length > 1 && 
+    <View>
+      <Divider style={styles.dividerstyle} orientation="horizontal" />
+      <BusMiniBoxTrue busNum={buses[1].busNum} leftTime={buses[1].leftSecs} leftStation={buses[1].prevStationCnt}/>
+      </View>}
   </View>
 );
 
 const BusMiniBoxTrue = ({busNum,leftTime,leftStation}) => (
   <View style={{flexDirection:"row",justifyContent:"space-between",width:"100%", padding:5}}>
     <View style={{flexDirection:"column"}}> 
-      <Text style={styles.itemtitle}>
+      <Text style={[styles.itemtitle, leftTime <= 180 && {color: '#018242'}]}>
         {busNum+"번 버스"}
       </Text>
-      <Text style={styles.itemtitle2}>
+      <Text style={[styles.itemtitle2, leftTime <= 180 && {color: '#018242'}]}>
         {leftStation+"정거장 전"}
       </Text>
     </View>
     <View style={{height:"100%", flexDirection:"row",alignItems:"center"}}>
-      <Text style={styles.itemtitle}>
+      <Text style={[styles.itemtitle, leftTime <= 180 && {color: '#018242'}]}>
         {Math.floor(leftTime/60)+"분"}
       </Text>
     </View>
   </View>
 )
 
+const videoRef = useRef(null);
+
+useFocusEffect( //사용자가 이 페이지를 주목할때 실행하는 모든 것들.
+  React.useCallback(() => { 
+    if(videoRef.current){ //일단 비디오부터 재생되게 할거임. 로고부분임
+      videoRef.current.playAsync();
+    }
+  },[])
+);
 
 
   return (
@@ -266,6 +283,7 @@ const BusMiniBoxTrue = ({busNum,leftTime,leftStation}) => (
                 style={{ width: textHeight - 10, height: textHeight - 10 }} // 텍스트 높이만큼 이미지 크기 설정
               /> */}
               <Video
+                ref={videoRef}
                 source={require('../assets/video/logovideo.mp4')}
                 style={{height: textHeight, width: textHeight, marginRight:5}}
                 rate={1.0}
@@ -411,24 +429,25 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   busboxstyle:{
-    borderRadius:20,
+    borderRadius:10,
     backgroundColor: "#fff",
     paddingHorizontal: 20,
     paddingVertical: 10,
 
   },
   itemtitle: {
-    fontSize: 19,
+    fontSize: 18,
     fontWeight:'800',
-    marginBottom:4,
-    fontFamily:"NotoSansB",
+    fontFamily:"NotoSansBlack",
 },
 
 itemtitle2: {
-  fontSize: 17,
-  fontWeight:'700',
-  marginBottom:2,
+  fontSize: 18,
+  fontWeight:'600',
   color:"#7D7D7D",
-  fontFamily:"NotoSansR",
+  fontFamily:"NotoSansBlack",
 },
+dividerstyle: {
+  marginVertical: 10,
+}
 });
