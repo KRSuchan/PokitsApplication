@@ -1,5 +1,5 @@
 // Homepage.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 
 //노치 침범 방지 패키지
@@ -7,7 +7,11 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Dimensions } from "react-native";
 import { getOnlyMenu, menuLiner } from "../controller/CafeteriaService";
-import Video from "react-native-video";
+import { Video } from 'expo-av';
+
+import { Divider } from 'react-native-elements';
+import { useFocusEffect } from "@react-navigation/native";
+
 
 //화면의 높이
 HEIGHT = Dimensions.get("window").height;
@@ -125,7 +129,13 @@ export default function MainPage({ navigation }) {
   function updateTime() {
     setTime(new Date());
   }
+
+    // 버스 설정 상태 
+const [busSetting, setBusSetting] = useState(null);
+const [buses,setBuses] = useState([]);
+
   useEffect(() => {
+    
     //설정 불러오기
     const loadSettings = async () => {
       try {
@@ -139,12 +149,38 @@ export default function MainPage({ navigation }) {
       }
     };
 
+    const loadBusSettings = async () => {
+      try {
+        //세팅을 변수에 담음
+        const savedBusSetting = await AsyncStorage.getItem("busSetting");
+        console.log(savedBusSetting)
+        //비어있지 않다면 state 에 넣을 것임
+        if (savedBusSetting !== null)
+          setBusSetting(JSON.parse(JSON.stringify(savedBusSetting)));
+          getBusData(JSON.parse(JSON.stringify(savedBusSetting)));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    
+    loadBusSettings();
+
     updateTime(); // 초기 시간 설정
     let timer = setInterval(() => {
       updateTime();
       // 초기 설정 및 1초마다 시간을 업데이트
       loadSettings();
     }, 1000);
+
+    let timer2 = setInterval(() => {
+      loadBusSettings();
+    },10000);
+
+    return () => {
+      clearInterval(timer);
+      clearInterval(timer2); // 두 번째 타이머도 해제
+    };
+
   }, []);
 
   useEffect(() => {
@@ -152,12 +188,80 @@ export default function MainPage({ navigation }) {
     getMenus(time.getHours());
   }, [time]);
 
+
+
+// 버스 데이터를 불러옴
+const getBusData = async (bussetting) => {
+  let url = ""
+  print("getbusdata시작"+bussetting);
+    try {
+        switch(bussetting) {
+          case "옥계중학교방면": url = "LoungeToOk"; break;
+          case "구미시내방면":url = "LoungeToGumi"; break;
+          case "":url = "LoungeToGumi"; break;
+        }
+        const response = await fetch('https://pokits-bus-default-rtdb.firebaseio.com/' + url + '/.json');
+        console.log("메인에서 "+url)
+        const data = await response.json();
+        if (data && data.Bus && data.Bus.Body && data.Bus.Body.items && data.Bus.Body.items.bus) {
+            data.Bus.Body.items.bus.sort((a, b) => a.leftSecs - b.leftSecs); //버스 시간순 정렬
+            setBuses(data.Bus.Body.items.bus);            console.log("버스데이터 정상적으로 불러옴");
+        } else {
+            console.log('버스데이터에 Body가 없음 ' + url);
+            setBuses([]);
+        }
+    } catch (error) {
+        console.error(error);
+    }
+};
+
+const BusBox = ({buses}) => (
+  <View style={styles.busboxstyle}>
+    {buses.length === 0 && <Text styles={styles.itemtitle}>버스 없음</Text>}
+    {buses.length > 0 && <BusMiniBoxTrue busNum={buses[0].busNum} leftTime={buses[0].leftSecs} leftStation={buses[0].prevStationCnt}/>}
+    {buses.length > 1 && 
+    <View>
+      <Divider style={styles.dividerstyle} orientation="horizontal" />
+      <BusMiniBoxTrue busNum={buses[1].busNum} leftTime={buses[1].leftSecs} leftStation={buses[1].prevStationCnt}/>
+      </View>}
+  </View>
+);
+
+const BusMiniBoxTrue = ({busNum,leftTime,leftStation}) => (
+  <View style={{flexDirection:"row",justifyContent:"space-between",width:"100%", padding:5}}>
+    <View style={{flexDirection:"column"}}> 
+      <Text style={[styles.itemtitle, leftStation <= 1 && {color: '#018242'}]}>
+        {busNum+"번 버스"}
+      </Text>
+      <Text style={[styles.itemtitle2, leftStation <= 1 && {color: '#018242'}]}>
+        {leftStation+"정거장 전"}
+      </Text>
+    </View>
+    <View style={{height:"100%", flexDirection:"row",alignItems:"center"}}>
+      <Text style={[styles.itemtitle, leftStation <= 1 && {color: '#018242'}]}>
+        {leftStation > 1 ? Math.floor(leftTime/60)+"분" : "곧도착"}
+      </Text>
+    </View>
+  </View>
+)
+
+const videoRef = useRef(null);
+
+useFocusEffect( //사용자가 이 페이지를 주목할때 실행하는 모든 것들.
+  React.useCallback(() => { 
+    if(videoRef.current){ //일단 비디오부터 재생되게 할거임. 로고부분임
+      videoRef.current.playAsync();
+    }
+  },[])
+);
+
+
   return (
-    <SafeAreaProvider style={{ backgroundColor: "#fff" }}>
+    <SafeAreaProvider style={{ backgroundColor: "#F5F5F5" }}>
       <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.container}>
           <View style={styles.header}>
-            <View>
+            <View style={{flexDirection:"row"}}>
               <Text
                 style={styles.h1}
                 onLayout={event => {
@@ -166,14 +270,6 @@ export default function MainPage({ navigation }) {
                 }}>
                 Pokit's
               </Text>
-              <Video
-                source={require('../assets/video/logovideo.mp4')}   // 로컬에 저장된 비디오의 경로를 입력하세요.
-                style={{height: textHeight}}
-                resizeMode="cover"                              // 비디오의 크기 조절 방식을 설정합니다.
-                repeat={true}                                   // 이 부분이 비디오를 반복 재생하는 옵션입니다.
-                playInBackground={false}                        // 앱이 백그라운드에 있을 때 비디오를 계속 재생할지 여부를 설정합니다.
-                playWhenInactive={false}                        // 앱이 비활성화되어 있을 때 비디오를 계속 재생할지 여부를 설정합니다.
-            />
 
             </View>
             
@@ -182,24 +278,42 @@ export default function MainPage({ navigation }) {
                 console.log("프로필버튼 누름");
                 navigateToSettings();
               }}>
-              <Image
+              {/* <Image
                 source={require("../assets/images/profile.png")} // 여기에 실제 이미지 경로 입력
                 style={{ width: textHeight - 10, height: textHeight - 10 }} // 텍스트 높이만큼 이미지 크기 설정
-              />
+              /> */}
+              <Video
+                ref={videoRef}
+                source={require('../assets/video/logovideo.mp4')}
+                style={{height: textHeight, width: textHeight, marginRight:5}}
+                rate={1.0}
+                volume={1.0}
+                isMuted={true}
+                resizeMode="cover"
+                shouldPlay
+                isLooping
+                autoPlay
+            />
             </TouchableOpacity>
           </View>
           {/* 학식 컴포넌트 */}
           <View style={styles.componentAria}>
             {/* 입벌려, 버스 들어간다 */}
             <View style={styles.busMainAria}>
+            <View style={styles.componentTitle}>
+                  <Image
+                    source={require("../assets/images/busBlack.png")} // 여기에 실제 이미지 경로 입력
+                    style={{ width: 20, height: 23 }} // 텍스트 높이만큼 이미지 크기 설정
+                  />
+                  <Text style={styles.componentName}>버스</Text>
+                </View>
+              
               <TouchableOpacity
                 onPress={() => {
                   console.log("버스사진 누름");
                   navigateToBus();
                 }}>
-                <Image
-                  source={require("../assets/images/busimsi.jpeg")} // 여기에 실제 이미지 경로 입력
-                />
+                <BusBox buses = {buses}/>
               </TouchableOpacity>
             </View>
             <View style={styles.dietMainAria}>
@@ -239,7 +353,7 @@ export default function MainPage({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: "#F5F5F5",
     alignItems: "center",
     justifyContent: "flex-start",
     padding: 20,
@@ -261,6 +375,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: (WIDTH / 100) * 5,
     backgroundColor: "#F5F5F5",
+    width: "100%",
   },
   componentTitle: {
     flexDirection: "row",
@@ -271,6 +386,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "800",
     margin: 5,
+    fontFamily:"NotoSansBlack"
   },
   dietMainAria: {
     flex: 0.3,
@@ -313,4 +429,26 @@ const styles = StyleSheet.create({
   busMainAria: {
     width: "100%",
   },
+  busboxstyle:{
+    borderRadius:10,
+    backgroundColor: "#fff",
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+
+  },
+  itemtitle: {
+    fontSize: 18,
+    fontWeight:'800',
+    fontFamily:"NotoSansBlack",
+},
+
+itemtitle2: {
+  fontSize: 18,
+  fontWeight:'600',
+  color:"#7D7D7D",
+  fontFamily:"NotoSansBlack",
+},
+dividerstyle: {
+  marginVertical: 10,
+}
 });

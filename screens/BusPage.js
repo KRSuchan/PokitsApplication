@@ -14,16 +14,19 @@ const FirstRoute = ({buses}) => (
     <View style={[styles.scene]}>
     <BusItemBox
         title={"버스라운지 시내행"}
-        buses = {buses}
+        buses = {buses.buses1}
     />
     <BusItemBox
         title={"버스라운지 옥계행"}
+        buses = {buses.buses2}
     />
     <BusItemBox
         title={"구미역"}
+        buses = {buses.buses5}
     />
     <BusItemBox
         title={"옥계중학교"}
+        buses = {buses.buses6}
     />
     </View>
   </ScrollView>
@@ -46,7 +49,7 @@ const LogoGradient = ({navigation}) => (
     </LinearGradient>
 );
 
-const TabMyTab = ({}) => ( //탭바 함수 내부에서 탭바 컴포넌트 사용 = 오류 = 글자안보임
+const TabMyTab = ({}) => ( //탭바 함수 내부에서 탭바 컴포넌트 사용 = 오류 = 글자안보임 = 대신 TabMyTab1을 사용할것
     <Tab.Navigator
         tabBar = {props => (
             <LinearGradient colors={['#018242', '#00D26A']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} >
@@ -82,7 +85,7 @@ const TabMyTab1 = ({buses}) => (
       )}
     >
         <Tab.Screen name="전체 정류장">
-          {props => <FirstRoute {...props} buses={buses} />}
+          {props => <FirstRoute {...props} buses = {buses}/>}
         </Tab.Screen>
       <Tab.Screen name="옥계 정류장" component={SecondRoute} />
     </Tab.Navigator>
@@ -121,17 +124,17 @@ const BusItem = ({bus}) => (
   <View style={styles.hbox}>
     <View style={styles.busitemhbox2}>
       <Text style={styles.busitemlefttext}>
-        {"🚌 " + bus.busNum}
+        {bus.busType === "좌석버스"? "🚎 " + bus.busNum : "🚌 " + bus.busNum}
       </Text>
     </View>
-     {/* <View style={styles.busitemhbox}>
+     <View style={styles.busitemhbox}>
       <Text style={styles.busitemtext}>
-        {Math.floor(bus.leftSecs/60)+" 🕑"}
+        {bus.prevStationCnt>1?Math.floor(bus.leftSecs/60)+" 🕑":""}
       </Text>
-    </View>  */}
+    </View> 
     <View style={styles.busitemhbox}>
       <Text style={styles.busitemtext}>
-        { bus.prevStationCnt+" 📍"}
+        {bus.prevStationCnt>1?bus.prevStationCnt+" 📍":"곧도착 📍"}
       </Text>
     </View>
   </View>
@@ -141,23 +144,45 @@ const BusItem = ({bus}) => (
 export default function BusPage({navigation}){
 
     const insets = useSafeAreaInsets(); //어디까지 안전해?
-    const [buses,setBuses] = useState([]);
+    const [buses, setBuses] = useState({
+      buses1: [],
+      buses2: [],
+      buses3: [],
+      buses4: [],
+      buses5: [],
+      buses6: []
+  });
+
 
     useEffect(()=>{
-        const fetchData = async() => {
+        const fetchData = async(url,key) => {
             try{
-                const response = await fetch('https://pokits-bus-default-rtdb.firebaseio.com/BusToKit/.json');
+                const response = await fetch('https://pokits-bus-default-rtdb.firebaseio.com/'+url+'/.json');
                 const data = await response.json();
-                data.Bus.Body.items.bus.sort((a, b) => a.leftSecs - b.leftSecs); //버스 시간순 정렬
-                setBuses(data.Bus.Body.items.bus);
-                console.log("버스데이터 정상적으로 불러옴"+buses);
+                if (data && data.Bus && data.Bus.Body && data.Bus.Body.items && data.Bus.Body.items.bus) {
+                  data.Bus.Body.items.bus.sort((a, b) => a.leftSecs - b.leftSecs); //버스 시간순 정렬
+                  setBuses(prevBuses => ({ ...prevBuses, [key]: data.Bus.Body.items.bus }));
+                  console.log("버스데이터 정상적으로 불러옴");
+              } else {
+                  console.log('버스데이터에 Body가 없음 '+url);
+                  setBuses(prevBuses => ({ ...prevBuses, [key]: [] }));
+              }
+                
             } catch(error){
                 console.error(error);
             }
         };
-        fetchData();
 
-        const intervalId = setInterval(fetchData, 10000);
+        const fetchAllData = async () => {
+          fetchData('LoungeToGumi', 'buses1');
+          fetchData('LoungeToOk', 'buses2'); 
+          fetchData('GumiStation', 'buses5');
+          fetchData('OkSchool', 'buses6');  
+      };
+      
+        fetchAllData();
+
+        const intervalId = setInterval(fetchAllData, 10000);
         return () => {
             clearInterval(intervalId);
         };
@@ -173,7 +198,9 @@ export default function BusPage({navigation}){
             <View style={styles.fullcontainer}> 
                 <LogoGradient navigation={navigation}></LogoGradient>
                     <View style={{flex: 1}}>
-                        <TabMyTab1 buses = {buses}></TabMyTab1>
+                        <TabMyTab1 buses = {buses}>
+
+                        </TabMyTab1>
                     </View>
             </View>
         </View>

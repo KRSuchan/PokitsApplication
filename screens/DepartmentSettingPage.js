@@ -44,7 +44,7 @@ export default function DepartmentSettingPage({navigation}) {
                 const savedSetting = await AsyncStorage.getItem('departmentSetting');
                 console.log(savedSetting)
                 //비어있지 않다면 state 에 넣을 것임
-                if(savedSetting !== null) setSelectedItem(JSON.stringify(savedSetting));
+                if(savedSetting !== null) setSelectedItem(savedSetting);
             } catch (error) {
                 console.error(error);
             }
