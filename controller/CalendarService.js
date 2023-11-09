@@ -102,6 +102,7 @@ function getParsedMonthCalendar(month) {
   }
   return null;
 }
+
 function hasMonthCalendar(month) {
   let param = getParsedMonthCalendar(month);
   if (!param || param.length === 0) {
@@ -111,6 +112,13 @@ function hasMonthCalendar(month) {
     console.log("calendar not null");
     return true;
   }
+}
+
+export function ddayCaculator(day) {
+  const time = new Date();
+  const endday = new Date(day);
+  const diff = endday - time;
+  return Math.floor(diff / (1000 * 60 * 60 * 24) + 1);
 }
 export async function getCalendar(month) {
   console.log(month);

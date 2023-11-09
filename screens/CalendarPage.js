@@ -12,7 +12,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { TabBar, TabView, SceneMap } from "react-native-tab-view";
 import { ScrollView } from "react-native-gesture-handler";
-import { getCalendar } from "../controller/CalendarService";
+import { getCalendar, ddayCaculator } from "../controller/CalendarService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //화면의 높이
@@ -20,7 +20,6 @@ HEIGHT = Dimensions.get("window").height;
 // expo start --tunnel
 //화면의 너비
 WIDTH = Dimensions.get("window").width;
-
 // 학사일정, 디데이 탭 타이틀
 const renderTabBar = props => (
   <TabBar
@@ -39,6 +38,12 @@ const UnivCalendarRoute = ({ calendar, month, onMonthChange }) => {
   let time = new Date();
   let today = time.getDate();
   let thisMonth = time.getMonth();
+  function popDate(string) {
+    return string.split("(")[0].split(".")[1];
+  }
+  function popMonth(string) {
+    return string.split(".")[0];
+  }
   const increaseMonth = () => {
     onMonthChange(month + 1);
   };
@@ -46,60 +51,19 @@ const UnivCalendarRoute = ({ calendar, month, onMonthChange }) => {
   const decreaseMonth = () => {
     onMonthChange(month - 1);
   };
-  function popDate(string) {
-    return string.split("(")[0].split(".")[1];
-  }
+
   function univCalDday(calData) {
-    let start = Number(popDate(calData.startDay));
-    let end = Number(popDate(calData.endDay));
-    if (month != thisMonth) {
-      return (
-        <>
-          <View style={styles.calendarContents}>
-            <Text style={styles.univContents}>{calData.contents}</Text>
-            <View>
-              <Text style={styles.calDays}>
-                {calData.startDay} ~ {calData.endDay}
-              </Text>
-            </View>
-          </View>
-          <View></View>
-        </>
-      );
-    }
-    if (today > end) {
-      return (
-        <>
-          <View style={styles.calendarContents}>
-            <Text style={styles.afterUnivContents}>{calData.contents}</Text>
-            <View>
-              <Text style={styles.calDays}>
-                {calData.startDay} ~ {calData.endDay}
-              </Text>
-            </View>
-          </View>
-          <View>
-            <Text style={styles.afterDday}>{today - end}일 지남</Text>
-          </View>
-        </>
-      );
-    } else if (today >= start) {
-      return (
-        <>
-          <View style={styles.calendarContents}>
-            <Text style={styles.nowUnivContents}>{calData.contents}</Text>
-            <View>
-              <Text style={styles.calDays}>
-                {calData.startDay} ~ {calData.endDay}
-              </Text>
-            </View>
-          </View>
-          <View>
-            <Text style={styles.nowDday}>진행중</Text>
-          </View>
-        </>
-      );
-    } else {
+    let time = new Date();
+    let year = time.getFullYear();
+    let startMonth = Number(popMonth(calData.startDay));
+    let endMonth = Number(popMonth(calData.endDay));
+    let startDate = Number(popDate(calData.startDay));
+    let endDate = Number(popDate(calData.endDay));
+    let startDay = year + "-" + startMonth + "-" + startDate;
+    let endDay = year + "-" + endMonth + "-" + endDate;
+    let startDday = ddayCaculator(startDay);
+    let endDday = ddayCaculator(endDay);
+    if (startDday > 0) {
       return (
         <>
           <View style={styles.calendarContents}>
@@ -111,7 +75,39 @@ const UnivCalendarRoute = ({ calendar, month, onMonthChange }) => {
             </View>
           </View>
           <View>
-            <Text style={styles.beforeDday}>{start - today}일 남음</Text>
+            <Text style={styles.beforeDday}>{startDday}일 남음</Text>
+          </View>
+        </>
+      );
+    } else if (startDday >= 0 && endDday <= 0) {
+      return (
+        <>
+          <View style={styles.calendarContents}>
+            <Text style={styles.nowUnivContents}>{calData.contents}</Text>
+            <View>
+              <Text style={styles.calDays}>
+                {calData.startDay} ~ {calData.endDay}
+              </Text>
+            </View>
+          </View>
+          <View>
+            <Text style={styles.nowDday}>{endDday}일 남음</Text>
+          </View>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <View style={styles.calendarContents}>
+            <Text style={styles.afterUnivContents}>{calData.contents}</Text>
+            <View>
+              <Text style={styles.calDays}>
+                {calData.startDay} ~ {calData.endDay}
+              </Text>
+            </View>
+          </View>
+          <View>
+            <Text style={styles.afterDday}>{-endDday}일 지남</Text>
           </View>
         </>
       );
@@ -174,17 +170,100 @@ const UnivCalendarRoute = ({ calendar, month, onMonthChange }) => {
     </ScrollView>
   );
 };
+// Setting item component
+const DdayItemBig = ({ title, describe }) => {
+  let dday = ddayCaculator(describe);
+  const ddayComponent = () => {
+    if (dday == 0) {
+      return <Text style={styles.ddayText}>D-DAY!</Text>;
+    } else if (dday < 0) {
+      return <Text style={styles.ddayText}>D+{-dday}</Text>;
+    } else {
+      return <Text style={styles.ddayText}>D-{dday}</Text>;
+    }
+  };
+  return (
+    <View style={styles.calendarScheduleContainer}>
+      <>
+        <View style={styles.calendarContents}>
+          <Text style={styles.beforeUnivContents}>{title}</Text>
+          <View>
+            <Text style={styles.calDays}>{describe}</Text>
+          </View>
+        </View>
+        <View>{ddayComponent()}</View>
+      </>
+    </View>
+  );
+};
+
+//날짜 데이터를 보기 좋게 변환, 시간 없애는게 목적임
+const formatDate = dateStr => {
+  const date = new Date(dateStr);
+  let month = "" + (date.getMonth() + 1),
+    day = "" + date.getDate(),
+    year = date.getFullYear();
+
+  //두자리수 맞춰줌
+  if (month.length < 2) month = "0" + month;
+  if (day.length < 2) day = "0" + day;
+
+  return [year, month, day].join("-");
+};
 
 // 디데이 탭 내용
-const DdayCalendarRoute = ({}) => (
-  <ScrollView showsHorizontalScrollIndicator={false}>
-    <View style={styles.pageViewContainer}>
-      <Text>This is Dday Calendar Route</Text>
-    </View>
-  </ScrollView>
-);
+const DdayCalendarRoute = ({ ddays }) => {
+  if (!ddays || ddays.length === 0) {
+    // calendar 데이터가 없거나 빈 경우에 대한 처리
+    return (
+      <View style={styles.pageViewContainer}>
+        <LinearGradient
+          style={styles.DdayTitleContainer}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          colors={["#182A76", "#3C61FF"]}>
+          <Text style={styles.monthText}>D-DAY</Text>
+        </LinearGradient>
+        <View style={styles.calendarViewContaniner}>
+          <View style={styles.calendarNoScheduleContainer}>
+            <Text>설정한 DDAY가 없습니다.</Text>
+          </View>
+        </View>
+      </View>
+    );
+  } else
+    return (
+      <ScrollView showsHorizontalScrollIndicator={false}>
+        <View style={styles.pageViewContainer}>
+          <View style={styles.calendarViewContaniner}>
+            <LinearGradient
+              style={styles.DdayTitleContainer}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              colors={["#182A76", "#3C61FF"]}>
+              <Text style={styles.monthText}>D-DAY</Text>
+            </LinearGradient>
+            {ddays.map(dday => {
+              if (dday) {
+                return (
+                  <DdayItemBig
+                    key={dday.id} //key값도 받음
+                    title={dday.ddayName}
+                    describe={formatDate(dday.ddayDate)}
+                  />
+                );
+              }
+            })}
+          </View>
+        </View>
+      </ScrollView>
+    );
+};
 
 export default function CalendarPage({ navigation }) {
+  console.log(
+    "기종 height/100 : " + HEIGHT / 100 + "\n기종 width/100 : " + WIDTH / 100
+  );
   const [textHeight, setTextHeight] = useState(0);
   const [index, setIndex] = useState(0);
   const [routes] = useState([
@@ -196,10 +275,22 @@ export default function CalendarPage({ navigation }) {
   };
   const [calendar, setCalendar] = useState([]);
   const [month, setMonth] = useState(new Date().getMonth());
+  const [ddays, setDdays] = useState([]);
 
   const getMonthCalendar = async month => {
     let calendar = JSON.parse(JSON.stringify(await getCalendar(month)));
     setCalendar(calendar);
+  };
+  const getDdayData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("ddays");
+      let data = jsonValue != null ? JSON.parse(jsonValue) : [];
+      setDdays(data);
+      console.log("DdaySettingPaged에서 getData함수안");
+      console.log(data);
+    } catch (e) {
+      console.log(e);
+    }
   };
   // 학사일정 부르는 useEffect
   useEffect(() => {
@@ -212,7 +303,7 @@ export default function CalendarPage({ navigation }) {
         setCalendar([]); // 에러 발생 시 빈 배열로 초기화
       }
     };
-
+    getDdayData(); // dday 데이터 불러오기를 실행
     fetchData();
   }, [month]);
 
@@ -225,7 +316,7 @@ export default function CalendarPage({ navigation }) {
         onMonthChange={setMonth}
       />
     ),
-    DdayCalendar: () => <DdayCalendarRoute />,
+    DdayCalendar: () => <DdayCalendarRoute ddays={ddays} />,
   });
 
   // 일정페이지 리턴
@@ -302,7 +393,6 @@ const styles = StyleSheet.create({
     fontSize: WIDTH / 15,
   },
   pageViewContainer: {
-    flex: 1,
     height: (HEIGHT / 100) * 80,
     padding: (WIDTH / 100) * 5,
     backgroundColor: "#F5F5F5",
@@ -317,6 +407,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 10,
   },
+  ddayViewContainer: {
+    width: (WIDTH / 100) * 90,
+    flex: 1,
+    flexDirection: "column",
+    backgroundColor: "#FFFFFF",
+    borderRadius: 10,
+  },
   calendarMonthContainer: {
     // flex: 0.1,
     height: "auto",
@@ -327,6 +424,18 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     width: "100%",
     justifyContent: "space-between",
+    alignItems: "center",
+  },
+  DdayTitleContainer: {
+    // flex: 0.1,
+    height: "auto",
+    minHeight: "10%",
+    flexDirection: "row",
+    backgroundColor: "#F5F5F5",
+    paddingHorizontal: (WIDTH / 100) * 2,
+    borderRadius: 10,
+    width: "100%",
+    justifyContent: "center",
     alignItems: "center",
   },
   calendarScheduleContainer: {
@@ -355,22 +464,51 @@ const styles = StyleSheet.create({
     fontSize: 30,
   },
   calendarContents: { height: "auto" },
-  univContents: { flexWrap: "wrap", maxWidth: "85%" },
+  univContents: { flexWrap: "wrap", maxWidth: (WIDTH / 100) * 70 },
   afterUnivContents: {
     flexWrap: "wrap",
-    maxWidth: "85%",
+    maxWidth: (WIDTH / 100) * 70,
     color: "#8A8A8E",
     fontWeight: "800",
   },
   nowUnivContents: {
     flexWrap: "wrap",
-    maxWidth: "85%",
+    maxWidth: (WIDTH / 100) * 70,
     color: "#182A76",
     fontWeight: "800",
   },
-  beforeUnivContents: { flexWrap: "wrap", maxWidth: "85%", fontWeight: "800" },
+  beforeUnivContents: {
+    flexWrap: "wrap",
+    maxWidth: (WIDTH / 100) * 70,
+    fontWeight: "800",
+  },
   beforeDday: { fontWeight: "800" },
   afterDday: { color: "#8A8A8E" },
   nowDday: { color: "#182A76", fontWeight: "800" },
+  ddayText: { fontSize: 20, color: "#182A76", fontWeight: "800" },
   calDays: { color: "#8A8A8E" },
+  vbox: {
+    height: "auto",
+    flexWrap: "wrap",
+    flexDirection: "column",
+  },
+
+  hbox: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginVertical: 9,
+  },
+
+  itemtitle: {
+    fontSize: 20,
+    fontWeight: "600",
+    marginBottom: 2,
+  },
+
+  itemdescribe: {
+    fontSize: 17,
+    color: "#8A8A8E",
+    fontWeight: "500",
+  },
 });
