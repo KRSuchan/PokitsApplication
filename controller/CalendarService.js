@@ -113,8 +113,15 @@ function hasMonthCalendar(month) {
     return true;
   }
 }
-
-export function ddayCaculator(day) {
+export function dateFormatter(json) {
+  let time = new Date();
+  let year = time.getFullYear();
+  let month = Number(popMonth(json));
+  let date = Number(popDate(json));
+  let day = year + "-" + month + "-" + date;
+  return day;
+}
+export function ddayCalculator(day) {
   const time = new Date();
   const endday = new Date(day);
   const diff = endday - time;
@@ -130,6 +137,65 @@ export async function getCalendar(month) {
     console.log("it's empty so set");
   }
   let cal = JSON.parse(JSON.stringify(getParsedMonthCalendar(month)));
+  return cal;
+}
+function getNotClassDayCalendar(data) {
+  let temp = [];
+  console.log("in get Notclassdaycalendar");
+  for (let i = 0; i < data.length; i++) {
+    if (!data[i].contents.includes("수업일수")) {
+      temp.push(data[i]);
+      console.log(data[i].contents);
+    }
+  }
+  console.log("out get Notclassdaycalendar");
+
+  return temp;
+}
+function popDate(string) {
+  return string.split("(")[0].split(".")[1];
+}
+function popMonth(string) {
+  return string.split(".")[0];
+}
+function popOnly2CalendarDday(data) {
+  let temp = [];
+
+  let year = new Date().getFullYear();
+  let cnt = 0;
+  for (let i = 0; i < data.length; i++) {
+    let startMonth = Number(popMonth(data[i].startDay));
+    let endMonth = Number(popMonth(data[i].endDay));
+    let startDate = Number(popDate(data[i].startDay));
+    let endDate = Number(popDate(data[i].endDay));
+    let startDay = year + "-" + startMonth + "-" + startDate;
+    let endDay = year + "-" + endMonth + "-" + endDate;
+    let startDday = ddayCalculator(startDay);
+    let endDday = ddayCalculator(endDay);
+    if (!(endDday < 0)) {
+      temp.push(data[i]);
+      cnt++;
+    }
+    if (cnt == 2) {
+      break;
+    }
+  }
+  return temp;
+}
+export async function getMainCalendar(month, classMark) {
+  console.log(month);
+  if (hasMonthCalendar(month) == false) {
+    setMonthCalendar(
+      month,
+      JSON.parse(JSON.stringify(await getFbCalendar(months[month])))
+    );
+    console.log("it's empty so set");
+  }
+  let cal = JSON.parse(JSON.stringify(getParsedMonthCalendar(month)));
+  if (classMark) {
+    cal = getNotClassDayCalendar(cal);
+  }
+  cal = popOnly2CalendarDday(cal);
   return cal;
 }
 export async function getThisMonthCalendar() {

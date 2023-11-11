@@ -12,7 +12,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { TabBar, TabView, SceneMap } from "react-native-tab-view";
 import { ScrollView } from "react-native-gesture-handler";
-import { getCalendar, ddayCaculator } from "../controller/CalendarService";
+import { getCalendar, ddayCalculator } from "../controller/CalendarService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 //화면의 높이
@@ -61,8 +61,8 @@ const UnivCalendarRoute = ({ calendar, month, onMonthChange }) => {
     let endDate = Number(popDate(calData.endDay));
     let startDay = year + "-" + startMonth + "-" + startDate;
     let endDay = year + "-" + endMonth + "-" + endDate;
-    let startDday = ddayCaculator(startDay);
-    let endDday = ddayCaculator(endDay);
+    let startDday = ddayCalculator(startDay);
+    let endDday = ddayCalculator(endDay);
     if (startDday > 0) {
       return (
         <>
@@ -91,7 +91,8 @@ const UnivCalendarRoute = ({ calendar, month, onMonthChange }) => {
             </View>
           </View>
           <View>
-            <Text style={styles.nowDday}>{endDday}일 남음</Text>
+            <Text style={styles.nowDday}>진행중!</Text>
+            <Text style={styles.nowDdayDate}>{endDday}일 남음</Text>
           </View>
         </>
       );
@@ -134,45 +135,45 @@ const UnivCalendarRoute = ({ calendar, month, onMonthChange }) => {
     });
   };
   return (
-    <ScrollView showsHorizontalScrollIndicator={false}>
-      <View style={styles.pageViewContainer}>
-        <View style={styles.calendarViewContaniner}>
-          <LinearGradient
-            style={styles.calendarMonthContainer}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            colors={["#182A76", "#3C61FF"]}>
-            {month > 0 ? (
-              <TouchableOpacity onPress={decreaseMonth}>
-                <Image
-                  source={require("../assets/images/Prev_Calendar.png")} // 여기에 실제 이미지 경로 입력
-                  style={{ width: 38, height: 38 }} // 텍스트 높이만큼 이미지 크기 설정
-                />
-              </TouchableOpacity>
-            ) : (
-              <View style={{ width: 38, height: 38 }} />
-            )}
-            <Text style={styles.monthText}>{month + 1}월</Text>
-            {month < 11 ? (
-              <TouchableOpacity onPress={increaseMonth}>
-                <Image
-                  source={require("../assets/images/Next_Calendar.png")} // 여기에 실제 이미지 경로 입력
-                  style={{ width: 38, height: 38 }} // 텍스트 높이만큼 이미지 크기 설정
-                />
-              </TouchableOpacity>
-            ) : (
-              <View style={{ width: 38, height: 38 }} />
-            )}
-          </LinearGradient>
+    <View style={styles.pageViewContainer}>
+      <View style={styles.calendarViewContaniner}>
+        <LinearGradient
+          style={styles.calendarMonthContainer}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          colors={["#182A76", "#3C61FF"]}>
+          {month > 0 ? (
+            <TouchableOpacity onPress={decreaseMonth}>
+              <Image
+                source={require("../assets/images/Prev_Calendar.png")} // 여기에 실제 이미지 경로 입력
+                style={{ width: 38, height: 38 }} // 텍스트 높이만큼 이미지 크기 설정
+              />
+            </TouchableOpacity>
+          ) : (
+            <View style={{ width: 38, height: 38 }} />
+          )}
+          <Text style={styles.monthText}>{month + 1}월</Text>
+          {month < 11 ? (
+            <TouchableOpacity onPress={increaseMonth}>
+              <Image
+                source={require("../assets/images/Next_Calendar.png")} // 여기에 실제 이미지 경로 입력
+                style={{ width: 38, height: 38 }} // 텍스트 높이만큼 이미지 크기 설정
+              />
+            </TouchableOpacity>
+          ) : (
+            <View style={{ width: 38, height: 38 }} />
+          )}
+        </LinearGradient>
+        <ScrollView showsVerticalScrollIndicator={false}>
           {makeScheduleComponents()}
-        </View>
+        </ScrollView>
       </View>
-    </ScrollView>
+    </View>
   );
 };
 // Setting item component
 const DdayItemBig = ({ title, describe }) => {
-  let dday = ddayCaculator(describe);
+  let dday = ddayCalculator(describe);
   const ddayComponent = () => {
     if (dday == 0) {
       return <Text style={styles.ddayText}>D-DAY!</Text>;
@@ -407,6 +408,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 10,
   },
+  contentsBigContainer: {
+    width: (WIDTH / 100) * 90,
+    height: HEIGHT,
+  },
   ddayViewContainer: {
     width: (WIDTH / 100) * 90,
     flex: 1,
@@ -442,7 +447,7 @@ const styles = StyleSheet.create({
     minHeight: "10%",
     flexDirection: "row",
     paddingHorizontal: 20,
-    width: "100%",
+    width: (WIDTH / 100) * 90,
     justifyContent: "space-between",
     alignItems: "center",
     borderColor: "#BABABA",
@@ -464,27 +469,28 @@ const styles = StyleSheet.create({
     fontSize: 30,
   },
   calendarContents: { height: "auto" },
-  univContents: { flexWrap: "wrap", maxWidth: (WIDTH / 100) * 70 },
+  univContents: { flexWrap: "wrap" },
   afterUnivContents: {
     flexWrap: "wrap",
-    maxWidth: (WIDTH / 100) * 70,
+    maxWidth: (WIDTH / 100) * 60,
     color: "#8A8A8E",
     fontWeight: "800",
   },
   nowUnivContents: {
     flexWrap: "wrap",
-    maxWidth: (WIDTH / 100) * 70,
+    maxWidth: (WIDTH / 100) * 60,
     color: "#182A76",
     fontWeight: "800",
   },
   beforeUnivContents: {
     flexWrap: "wrap",
-    maxWidth: (WIDTH / 100) * 70,
+    maxWidth: (WIDTH / 100) * 60,
     fontWeight: "800",
   },
   beforeDday: { fontWeight: "800" },
   afterDday: { color: "#8A8A8E" },
   nowDday: { color: "#182A76", fontWeight: "800" },
+  nowDdayDate: { fontSize: 10, color: "#182A76", fontWeight: "800" },
   ddayText: { fontSize: 20, color: "#182A76", fontWeight: "800" },
   calDays: { color: "#8A8A8E" },
   vbox: {

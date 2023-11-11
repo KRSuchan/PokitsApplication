@@ -5,8 +5,14 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 //노치 침범 방지 패키지
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { LinearGradient } from "expo-linear-gradient";
 import { Dimensions } from "react-native";
 import { getOnlyMenu, menuLiner } from "../controller/CafeteriaService";
+import {
+  getMainCalendar,
+  ddayCalculator,
+  dateFormatter,
+} from "../controller/CalendarService";
 import { Video } from "expo-av";
 
 import { Divider } from "react-native-elements";
@@ -20,10 +26,17 @@ WIDTH = Dimensions.get("window").width;
 
 const menu = ["Loading..."];
 
+const readyCalendar = [
+  { contents: "", startDay: "01.01(일)", endDay: "01.01(일)" },
+  { contents: "", startDay: "01.01(일)", endDay: "01.01(일)" },
+];
 export default function MainPage({ navigation }) {
   const [textHeight, setTextHeight] = useState(0);
   // 설정 불러오기
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [cafeteria, setCafeteria] = useState(null);
+  const [classMark, setClassMark] = useState(true);
+  const [calendar, setCalendar] = useState(readyCalendar);
+  const [ddays, setDdays] = useState([]);
   // 시간 파악
   const [time, setTime] = useState(new Date());
   const navigateToSettings = () => {
@@ -38,61 +51,7 @@ export default function MainPage({ navigation }) {
   const navigateToCalendar = () => {
     navigation.navigate("일정");
   };
-  // 설정에 따른 output component switch 함수
-  function cafeteriaComponent(selectedItem) {
-    switch (selectedItem) {
-      case "학생및교직원":
-        return (
-          <View style={styles.dietMainMenu}>
-            <View style={styles.dietMenuOut}>
-              <Text style={styles.dietCafName}>학생식당</Text>
-              <View style={styles.dietMenu}>
-                <Text style={styles.MenuText}>{studnetCaf}</Text>
-              </View>
-            </View>
-            <View style={styles.dietMenuOut}>
-              <Text style={styles.dietCafName}>교직원식당</Text>
-              <View style={styles.dietMenu}>
-                <Text style={styles.MenuText}>{facultyCaf}</Text>
-              </View>
-            </View>
-          </View>
-        );
-      case "오름관1동":
-        return (
-          <View style={styles.dietMainMenu}>
-            <View style={styles.dietMenuOut}>
-              <Text style={styles.dietCafName}>오름1동</Text>
-              <View style={styles.dietMenu}>
-                <Text style={styles.MenuText}>{oreum1Caf}</Text>
-              </View>
-            </View>
-          </View>
-        );
-      case "오름관3동":
-        return (
-          <View style={styles.dietMainMenu}>
-            <View style={styles.dietMenuOut}>
-              <Text style={styles.dietCafName}>오름3동</Text>
-              <View style={styles.dietMenu}>
-                <Text style={styles.MenuText}>{oreum3Caf}</Text>
-              </View>
-            </View>
-          </View>
-        );
-      case "푸름관":
-        return (
-          <View style={styles.dietMainMenu}>
-            <View style={styles.dietMenuOut}>
-              <Text style={styles.dietCafName}>푸름관</Text>
-              <View style={styles.dietMenu}>
-                <Text style={styles.MenuText}>{puroomCaf}</Text>
-              </View>
-            </View>
-          </View>
-        );
-    }
-  }
+
   // 각 식당 메뉴별 useState
   const [studnetCaf, setStudentCaf] = useState(menu);
   const [facultyCaf, setFacultyCaf] = useState(menu);
@@ -124,6 +83,7 @@ export default function MainPage({ navigation }) {
       setOreum3Caf(menuLiner(menu.oreum3.dinner));
     }
   };
+
   // 1초마다 시간을 업데이트하는 함수
   function updateTime() {
     setTime(new Date());
@@ -133,15 +93,40 @@ export default function MainPage({ navigation }) {
   const [busSetting, setBusSetting] = useState(null);
   const [buses, setBuses] = useState([]);
 
+  // dday데이터 불러오는 함수
+  const getDdayData = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("ddays");
+      let data = jsonValue != null ? JSON.parse(jsonValue) : [];
+      setDdays(data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  const fetchData = async () => {
+    const result = await getMainCalendar(time.getMonth(), classMark);
+
+    if (result && result.length > 0) {
+      setCalendar(result);
+    } else {
+      setCalendar([]);
+    }
+  };
+
   useEffect(() => {
     //설정 불러오기
     const loadSettings = async () => {
       try {
+        const getClassMark = await AsyncStorage.getItem("scheduleViewSetting");
+        // 일정 설정에 따른 조건
+        if (getClassMark !== null || getClassMark == "true") setClassMark(true);
+        else setClassMark(false);
         //세팅을 변수에 담음
-        const savedSetting = await AsyncStorage.getItem("cafeteriaSetting");
-        //비어있지 않다면 state 에 넣을 것임
-        if (savedSetting !== null)
-          setSelectedItem(JSON.parse(JSON.stringify(savedSetting)));
+        const getCafeteriaSetting = await AsyncStorage.getItem(
+          "cafeteriaSetting"
+        );
+        // 식단 설정에 따른 조건
+        if (getCafeteriaSetting !== null) setCafeteria(getCafeteriaSetting);
       } catch (error) {
         console.error(error);
       }
@@ -160,12 +145,13 @@ export default function MainPage({ navigation }) {
         console.error(error);
       }
     };
+    fetchData();
 
     loadBusSettings();
-
     updateTime(); // 초기 시간 설정
     let timer = setInterval(() => {
       updateTime();
+      getDdayData(); // dday 데이터 불러오기를 실행
       // 초기 설정 및 1초마다 시간을 업데이트
       loadSettings();
     }, 1000);
@@ -247,7 +233,181 @@ export default function MainPage({ navigation }) {
       )}
     </View>
   );
+  // 설정에 따른 output component switch 함수
+  function cafeteriaComponent(cafeteria) {
+    switch (cafeteria) {
+      case "학생및교직원":
+        return (
+          <View style={styles.dietMainMenu}>
+            <View style={styles.dietMenuOut}>
+              <Text style={styles.dietCafName}>학생식당</Text>
+              <View style={styles.dietMenu}>
+                <Text style={styles.MenuText}>{studnetCaf}</Text>
+              </View>
+            </View>
+            <View style={styles.dietMenuOut}>
+              <Text style={styles.dietCafName}>교직원식당</Text>
+              <View style={styles.dietMenu}>
+                <Text style={styles.MenuText}>{facultyCaf}</Text>
+              </View>
+            </View>
+          </View>
+        );
+      case "오름관1동":
+        return (
+          <View style={styles.dietMainMenu}>
+            <View style={styles.dietMenuOut}>
+              <Text style={styles.dietCafName}>오름1동</Text>
+              <View style={styles.dietMenu}>
+                <Text style={styles.MenuText}>{oreum1Caf}</Text>
+              </View>
+            </View>
+          </View>
+        );
+      case "오름관3동":
+        return (
+          <View style={styles.dietMainMenu}>
+            <View style={styles.dietMenuOut}>
+              <Text style={styles.dietCafName}>오름3동</Text>
+              <View style={styles.dietMenu}>
+                <Text style={styles.MenuText}>{oreum3Caf}</Text>
+              </View>
+            </View>
+          </View>
+        );
+      case "푸름관":
+        return (
+          <View style={styles.dietMainMenu}>
+            <View style={styles.dietMenuOut}>
+              <Text style={styles.dietCafName}>푸름관</Text>
+              <View style={styles.dietMenu}>
+                <Text style={styles.MenuText}>{puroomCaf}</Text>
+              </View>
+            </View>
+          </View>
+        );
+    }
+  }
 
+  const CalendarBox = ({ calendar }) => {
+    // calendar 데이터를 이용하여 <View> 컴포넌트들을 생성
+    if (calendar == "undefined" || calendar.length == 0) {
+      // calendar 데이터가 없거나 빈 경우에 대한 처리
+      return (
+        <View style={styles.calendarViewContainer}>
+          <View style={styles.calendarContentsAndDday}>
+            <Text style={styles.calendarContents}>이번달 일정 없음!</Text>
+          </View>
+        </View>
+      );
+    }
+    if (calendar.length >= 2) {
+      let startDday = [];
+      startDday.push(ddayCalculator(dateFormatter(calendar[0].startDay)));
+      startDday.push(ddayCalculator(dateFormatter(calendar[1].startDay)));
+      let endDday = [];
+      endDday.push(ddayCalculator(dateFormatter(calendar[0].endDay)));
+      endDday.push(ddayCalculator(dateFormatter(calendar[1].endDay)));
+      let showDday = [];
+      for (let i = 0; i < 2; i++) {
+        if (startDday[i] > 0) {
+          showDday[i] = startDday[i];
+        } else {
+          showDday[i] = endDday[i];
+        }
+      }
+      return (
+        <View style={styles.calendarViewContainer}>
+          <View style={styles.calendarContentsAndDday}>
+            <Text style={styles.calendarContents}>{calendar[0].contents}</Text>
+            <Text style={styles.calendarContentsDday}>
+              ({showDday[0]}일 남음)
+            </Text>
+          </View>
+          <View style={styles.calendarContentsAndDday}>
+            <Text style={styles.calendarContents}>{calendar[1].contents}</Text>
+            <Text style={styles.calendarContentsDday}>
+              ({showDday[1]}일 남음)
+            </Text>
+          </View>
+        </View>
+      );
+    } else {
+      let startDday = [];
+      startDday.push(ddayCalculator(dateFormatter(calendar[0].startDay)));
+      let endDday = [];
+      endDday.push(ddayCalculator(dateFormatter(calendar[0].endDay)));
+      let showDday = [];
+      if (startDday[0] > 0) {
+        showDday[0] = startDday[0];
+      } else {
+        showDday[0] = endDday[0];
+      }
+      return (
+        <View style={styles.calendarViewContainer}>
+          <View style={styles.calendarContentsAndDday}>
+            <Text style={styles.calendarContents}>{calendar[0].contents}</Text>
+            <Text style={styles.calendarContentsDday}>
+              ({showDday[0]}일 남음)
+            </Text>
+          </View>
+        </View>
+      );
+    }
+  };
+  const DdayBox = ({ dday }) => {
+    // dday 데이터를 이용하여 <View> 컴포넌트들을 생성
+    if (dday == "undefined" || dday.length == 0) {
+      // dday 데이터가 없거나 빈 경우에 대한 처리
+      return (
+        <View style={styles.DdayBox}>
+          <Text style={styles.DdayContents}>앞으로 남은 DDAY 없음!</Text>
+        </View>
+      );
+    }
+    let ddays = [];
+    for (let i = 0; i < dday.length; i++) {
+      if (ddayCalculator(dday[i].ddayDate) >= 0) ddays.push(dday[i]);
+    }
+
+    let ddaysByddays = ddays.sort((a, b) => {
+      if (ddayCalculator(a.ddayDate) > ddayCalculator(b.ddayDate)) return 1;
+      if (ddayCalculator(a.ddayDate) < ddayCalculator(b.ddayDate)) return -1;
+      return 0;
+    });
+    if (ddaysByddays.length >= 2) {
+      let dday1 = ddayCalculator(ddaysByddays[0].ddayDate);
+      let dday2 = ddayCalculator(ddaysByddays[1].ddayDate);
+      if (dday1 > 0) dday1 = "-" + dday1;
+      else if (dday1 < 0) dday1 = "+" + -dday1;
+      else dday1 = "-Day";
+      if (dday2 > 0) dday2 = "-" + dday2;
+      else if (dday2 < 0) dday2 = "+" + -dday2;
+      else dday2 = "-Day";
+      return (
+        <View style={styles.DdayBox}>
+          <Text style={styles.DdayContents}>
+            D{dday1} {ddaysByddays[0].ddayName}
+          </Text>
+          <Text style={styles.DdayContents}>
+            {ddaysByddays[1].ddayName} D{dday2}
+          </Text>
+        </View>
+      );
+    } else {
+      let dday1 = ddayCalculator(ddaysByddays[0].ddayDate);
+      if (dday1 > 0) dday1 = "-" + dday1;
+      else if (dday1 < 0) dday1 = "+" + -dday1;
+      else dday1 = "-Day";
+      return (
+        <View style={styles.DdayBox}>
+          <Text style={styles.DdayContents}>
+            D{dday1} {ddaysByddays[0].ddayName}
+          </Text>
+        </View>
+      );
+    }
+  };
   const BusMiniBoxTrue = ({ busNum, leftTime, leftStation }) => (
     <View
       style={{
@@ -364,21 +524,44 @@ export default function MainPage({ navigation }) {
                   />
                   <Text style={styles.componentName}>학식</Text>
                 </View>
-                {cafeteriaComponent(selectedItem)}
+                {cafeteriaComponent(cafeteria)}
               </TouchableOpacity>
             </View>
+            {/* 일정 컴포넌트 */}
+            <TouchableOpacity
+              onPress={() => {
+                console.log("일정 페이지 이동");
+                navigateToCalendar();
+              }}>
+              <View style={styles.componentTitle}>
+                <Image
+                  source={require("../assets/images/Calendar.png")} // 여기에 실제 이미지 경로 입력
+                  style={{ width: 23, height: 26.3 }} // 텍스트 높이만큼 이미지 크기 설정
+                />
+                <Text style={styles.componentName}>일정</Text>
+              </View>
+              <View style={styles.calendarMainMenu}>
+                <LinearGradient
+                  style={styles.calendarComponentTitle}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  colors={["#182A76", "#3C61FF"]}>
+                  <Image
+                    source={require("../assets/images/calendarInsde.png")} // 여기에 실제 이미지 경로 입력
+                    style={{ width: 23, height: 26.3 }} // 텍스트 높이만큼 이미지 크기 설정
+                  />
+                </LinearGradient>
+                <CalendarBox calendar={calendar} />
+                <LinearGradient
+                  style={styles.calendarDdayComponent}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  colors={["#182A76", "#3C61FF"]}>
+                  <DdayBox dday={ddays} />
+                </LinearGradient>
+              </View>
+            </TouchableOpacity>
           </View>
-          {/* 일정 컴포넌트 */}
-          <TouchableOpacity
-            onPress={() => {
-              console.log("일정 페이지 이동");
-              navigateToCalendar();
-            }}>
-            <Image
-              source={require("../assets/images/calendar.jpg")} // 여기에 실제 이미지 경로 입력
-              style={{ width: textHeight - 10, height: textHeight - 10 }} // 텍스트 높이만큼 이미지 크기 설정
-            />
-          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </SafeAreaProvider>
@@ -484,5 +667,55 @@ const styles = StyleSheet.create({
   },
   dividerstyle: {
     marginVertical: 10,
+  },
+  calendarMainMenu: {
+    borderRadius: 10,
+    backgroundColor: "#fff",
+  },
+  calendarComponentTitle: {
+    height: (HEIGHT / 100) * 4,
+    borderRadius: 10,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  calendarDdayComponent: {
+    height: (HEIGHT / 100) * 5,
+    borderRadius: 10,
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  calendarViewContainer: {
+    width: (WIDTH / 100) * 80,
+    height: (HEIGHT / 100) * 10,
+    backgroundColor: "#FFFFFF",
+    justifyContent: "space-evenly",
+    paddingHorizontal: 30,
+    borderRadius: 10,
+  },
+  calendarContentsAndDday: {
+    alignItems: "flex-end",
+    flexDirection: "row",
+  },
+  calendarContents: {
+    fontSize: (HEIGHT / 100) * 1.5,
+    fontWeight: "600",
+    color: "#182A76",
+  },
+  calendarContentsDday: {
+    fontSize: (HEIGHT / 100) * 1.2,
+    color: "#182A76",
+  },
+  DdayContents: {
+    fontSize: (HEIGHT / 100) * 1.2,
+    fontWeight: "800",
+    color: "#fff",
+  },
+  DdayBox: {
+    width: "100%",
+    paddingHorizontal: 20,
+    justifyContent: "space-between",
+    flexDirection: "row",
   },
 });
