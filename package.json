@@ -34,7 +34,7 @@
     "react-native-screens": "~3.22.0",
     "react-native-tab-view": "^3.5.2",
     "react-native-video": "^5.2.1",
-    "react-native-webview": "^13.6.2",
+    "react-native-webview": "^13.2.2",
     "toggle-switch-react-native": "^3.3.0"
   },
   "devDependencies": {

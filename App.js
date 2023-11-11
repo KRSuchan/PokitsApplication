@@ -31,6 +31,7 @@ import TermsPage from "./screens/TermsPage";
 import GuidePage from "./screens/GuidePage";
 import BusPage from "./screens/BusPage";
 import CalendarPage from "./screens/CalendarPage";
+import QuickMenuPage from "./screens/QuickMenuPage";
 
 //네비게이터 사용
 const Stack = createStackNavigator();
@@ -98,6 +99,11 @@ export default function App() {
           <Stack.Screen
             name="일정"
             component={CalendarPage}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="퀵메뉴"
+            component={QuickMenuPage}
             options={{ headerShown: false }}
           />
         </Stack.Navigator>

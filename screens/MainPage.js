@@ -294,14 +294,19 @@ export default function MainPage({ navigation }) {
         <View style={styles.container}>
           <View style={styles.header}>
             <View style={{ flexDirection: "row" }}>
-              <Text
-                style={styles.h1}
-                onLayout={event => {
-                  const { height } = event.nativeEvent.layout;
-                  setTextHeight(height);
-                }}>
-                Pokit's
-              </Text>
+              <TouchableOpacity onPress={()=>{
+                navigation.navigate("퀵메뉴");
+              }}>
+                <Text
+                  style={styles.h1}
+                  onLayout={event => {
+                    const { height } = event.nativeEvent.layout;
+                    setTextHeight(height);
+                  }}>
+                  Pokit's
+                </Text>
+              </TouchableOpacity>
+              
             </View>
 
             <TouchableOpacity
