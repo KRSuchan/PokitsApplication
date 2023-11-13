@@ -17,7 +17,7 @@ import { Video } from "expo-av";
 
 import { Divider } from "react-native-elements";
 import { useFocusEffect } from "@react-navigation/native";
-
+import { FAB, Modal, Portal, Provider } from 'react-native-paper';
 
 
 //화면의 높이
