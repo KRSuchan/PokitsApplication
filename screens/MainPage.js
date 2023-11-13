@@ -582,11 +582,11 @@ export default function MainPage({ navigation }) {
                 console.log("프로필버튼 누름");
                 navigateToSettings();
               }}>
-              {/* <Image
+              <Image
                 source={require("../assets/images/profile.png")} // 여기에 실제 이미지 경로 입력
                 style={{ width: textHeight - 10, height: textHeight - 10 }} // 텍스트 높이만큼 이미지 크기 설정
-              /> */}
-              <Video
+              />
+              {/* <Video
                 ref={videoRef}
                 source={require("../assets/video/logovideo.mp4")}
                 style={{
@@ -601,7 +601,7 @@ export default function MainPage({ navigation }) {
                 shouldPlay
                 isLooping
                 autoPlay
-              />
+              /> */}
             </TouchableOpacity>
           </View>
           {/* 학식 컴포넌트 */}
