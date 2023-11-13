@@ -24,7 +24,7 @@ async function fbValidate(url) {
 
 export async function getFbCalendar(month) {
   try {
-    let url = `https://test-scheduler-c1895-default-rtdb.firebaseio.com/YearSchedule/body/${month}.json`;
+    let url = `https://pokits-scheduler-default-rtdb.firebaseio.com/YearSchedule/body/${month}.json`;
     let response = await fetch(url);
     if (response.ok) {
       // if 모든게 정상이면
@@ -55,14 +55,15 @@ export async function getFbCalendar(month) {
 export function getFbBus() {}
 export async function getFbMenu() {
   try {
-    // let url = `https://pokits-diet-default-rtdb.firebaseio.com/Diet/body.json`;
     let url = `https://pokits-diet-default-rtdb.firebaseio.com/Diet/body.json`;
+    // let url = `https://test-diet-dfb51-default-rtdb.firebaseio.com/Diet/body.json`;
 
     let response = await fetch(url);
     if (response.ok) {
       // if 모든게 정상이면
       let menu = await response.json();
       console.log("get menu from firebase");
+      console.log(menu);
       return menu;
     } else {
       // 네트워크 오류가 있으면

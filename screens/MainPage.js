@@ -27,8 +27,8 @@ WIDTH = Dimensions.get("window").width;
 const menu = ["Loading..."];
 
 const readyCalendar = [
-  { contents: "", startDay: "01.01(일)", endDay: "01.01(일)" },
-  { contents: "", startDay: "01.01(일)", endDay: "01.01(일)" },
+  { contents: "Loading..", startDay: "01.01(일)", endDay: "01.01(일)" },
+  { contents: "Loading..", startDay: "01.01(일)", endDay: "01.01(일)" },
 ];
 export default function MainPage({ navigation }) {
   const [textHeight, setTextHeight] = useState(0);
@@ -53,34 +53,34 @@ export default function MainPage({ navigation }) {
   };
 
   // 각 식당 메뉴별 useState
-  const [studnetCaf, setStudentCaf] = useState(menu);
-  const [facultyCaf, setFacultyCaf] = useState(menu);
-  const [puroomCaf, setPuroomCaf] = useState(menu);
-  const [oreum1Caf, setOreum1Caf] = useState(menu);
-  const [oreum3Caf, setOreum3Caf] = useState(menu);
+  const [studnetCaf, setStudentCaf] = useState([]);
+  const [facultyCaf, setFacultyCaf] = useState([]);
+  const [puroomCaf, setPuroomCaf] = useState([]);
+  const [oreum1Caf, setOreum1Caf] = useState([]);
+  const [oreum3Caf, setOreum3Caf] = useState([]);
 
   // FB로부터 Menu 전체 긁어오기
   const getMenus = async hours => {
     let menu = JSON.parse(JSON.stringify(await getOnlyMenu()));
     // 10시 전 : 아침, 10시 ~ 14시 : 점심, 14시 후 : 저녁
     if (hours < 10) {
-      setStudentCaf(menuLiner(menu.student.breakfast));
-      setFacultyCaf(menuLiner(menu.faculty.breakfast));
-      setPuroomCaf(menuLiner(menu.puroom.breakfast));
-      setOreum1Caf(menuLiner(menu.oreum1.breakfast));
-      setOreum3Caf(menuLiner(menu.oreum3.breakfast));
+      setStudentCaf(menu.student.breakfast);
+      setFacultyCaf(menu.faculty.breakfast);
+      setPuroomCaf(menu.puroom.breakfast);
+      setOreum1Caf(menu.oreum1.breakfast);
+      setOreum3Caf(menu.oreum3.breakfast);
     } else if (hours >= 10 && hours < 14) {
-      setStudentCaf(menuLiner(menu.student.lunch));
-      setFacultyCaf(menuLiner(menu.faculty.lunch));
-      setPuroomCaf(menuLiner(menu.puroom.lunch));
-      setOreum1Caf(menuLiner(menu.oreum1.lunch));
-      setOreum3Caf(menuLiner(menu.oreum3.lunch));
+      setStudentCaf(menu.student.lunch);
+      setFacultyCaf(menu.faculty.lunch);
+      setPuroomCaf(menu.puroom.lunch);
+      setOreum1Caf(menu.oreum1.lunch);
+      setOreum3Caf(menu.oreum3.lunch);
     } else if (hours >= 14) {
-      setStudentCaf(menuLiner(menu.student.dinner));
-      setFacultyCaf(menuLiner(menu.faculty.dinner));
-      setPuroomCaf(menuLiner(menu.puroom.dinner));
-      setOreum1Caf(menuLiner(menu.oreum1.dinner));
-      setOreum3Caf(menuLiner(menu.oreum3.dinner));
+      setStudentCaf(menu.student.dinner);
+      setFacultyCaf(menu.faculty.dinner);
+      setPuroomCaf(menu.puroom.dinner);
+      setOreum1Caf(menu.oreum1.dinner);
+      setOreum3Caf(menu.oreum3.dinner);
     }
   };
 
@@ -146,12 +146,11 @@ export default function MainPage({ navigation }) {
       }
     };
     fetchData();
-
+    getDdayData(); // dday 데이터 불러오기를 실행
     loadBusSettings();
     updateTime(); // 초기 시간 설정
     let timer = setInterval(() => {
       updateTime();
-      getDdayData(); // dday 데이터 불러오기를 실행
       // 초기 설정 및 1초마다 시간을 업데이트
       loadSettings();
     }, 1000);
@@ -171,6 +170,9 @@ export default function MainPage({ navigation }) {
     getMenus(time.getHours());
   }, [time]);
 
+  useEffect(() => {
+    getDdayData();
+  }, [ddays]);
   // 버스 데이터를 불러옴
   const getBusData = async bussetting => {
     let url = "";
@@ -238,54 +240,86 @@ export default function MainPage({ navigation }) {
     switch (cafeteria) {
       case "학생및교직원":
         return (
-          <View style={styles.dietMainMenu}>
-            <View style={styles.dietMenuOut}>
+          <View key="studentFacultyCaf" style={styles.dietMainMenu}>
+            <View key="studentCaf" style={styles.dietMenuOut}>
               <Text style={styles.dietCafName}>학생식당</Text>
               <View style={styles.dietMenu}>
-                <Text style={styles.MenuText}>{studnetCaf}</Text>
+                {studnetCaf.map((studnetCaf, index) => {
+                  return (
+                    <Text key={`studentMenu-${index}`} style={styles.MenuText}>
+                      {studnetCaf}
+                    </Text>
+                  );
+                })}
               </View>
             </View>
-            <View style={styles.dietMenuOut}>
+            <View key="facultyCaf" style={styles.dietMenuOut}>
               <Text style={styles.dietCafName}>교직원식당</Text>
               <View style={styles.dietMenu}>
-                <Text style={styles.MenuText}>{facultyCaf}</Text>
+                {facultyCaf.map((facultyCaf, index) => {
+                  return (
+                    <Text key={`facultyMenu-${index}`} style={styles.MenuText}>
+                      {facultyCaf}
+                    </Text>
+                  );
+                })}
               </View>
             </View>
           </View>
         );
       case "오름관1동":
         return (
-          <View style={styles.dietMainMenu}>
-            <View style={styles.dietMenuOut}>
+          <View key="oreum1Caf" style={styles.dietMainMenu}>
+            <View key="oreum1Menu" style={styles.dietMenuOut}>
               <Text style={styles.dietCafName}>오름1동</Text>
               <View style={styles.dietMenu}>
-                <Text style={styles.MenuText}>{oreum1Caf}</Text>
+                {oreum1Caf.map((oreum1Caf, index) => {
+                  return (
+                    <Text key={`oreum1Menu-${index}`} style={styles.MenuText}>
+                      {oreum1Caf}
+                    </Text>
+                  );
+                })}
               </View>
             </View>
           </View>
         );
       case "오름관3동":
         return (
-          <View style={styles.dietMainMenu}>
-            <View style={styles.dietMenuOut}>
+          <View key="oreum3Caf" style={styles.dietMainMenu}>
+            <View key="oreum3Menu" style={styles.dietMenuOut}>
               <Text style={styles.dietCafName}>오름3동</Text>
               <View style={styles.dietMenu}>
-                <Text style={styles.MenuText}>{oreum3Caf}</Text>
+                {oreum3Caf.map((oreum3Caf, index) => {
+                  return (
+                    <Text key={`oreum3Menu-${index}`} style={styles.MenuText}>
+                      {oreum3Caf}
+                    </Text>
+                  );
+                })}
               </View>
             </View>
           </View>
         );
       case "푸름관":
         return (
-          <View style={styles.dietMainMenu}>
-            <View style={styles.dietMenuOut}>
+          <View key="puroomCaf" style={styles.dietMainMenu}>
+            <View key="puroomMenu" style={styles.dietMenuOut}>
               <Text style={styles.dietCafName}>푸름관</Text>
               <View style={styles.dietMenu}>
-                <Text style={styles.MenuText}>{puroomCaf}</Text>
+                {puroomCaf.map((puroomCaf, index) => {
+                  return (
+                    <Text key={`puroomMenu-${index}`} style={styles.MenuText}>
+                      {puroomCaf}
+                    </Text>
+                  );
+                })}
               </View>
             </View>
           </View>
         );
+      default:
+        return null;
     }
   }
 
@@ -357,7 +391,7 @@ export default function MainPage({ navigation }) {
   };
   const DdayBox = ({ dday }) => {
     // dday 데이터를 이용하여 <View> 컴포넌트들을 생성
-    if (dday == "undefined" || dday.length == 0) {
+    if (!dday || dday.length === 0) {
       // dday 데이터가 없거나 빈 경우에 대한 처리
       return (
         <View style={styles.DdayBox}>
@@ -365,10 +399,7 @@ export default function MainPage({ navigation }) {
         </View>
       );
     }
-    let ddays = [];
-    for (let i = 0; i < dday.length; i++) {
-      if (ddayCalculator(dday[i].ddayDate) >= 0) ddays.push(dday[i]);
-    }
+    let ddays = dday.filter(item => ddayCalculator(item.ddayDate) >= 0);
 
     let ddaysByddays = ddays.sort((a, b) => {
       if (ddayCalculator(a.ddayDate) > ddayCalculator(b.ddayDate)) return 1;
@@ -394,7 +425,7 @@ export default function MainPage({ navigation }) {
           </Text>
         </View>
       );
-    } else {
+    } else if (ddays.length == 1) {
       let dday1 = ddayCalculator(ddaysByddays[0].ddayDate);
       if (dday1 > 0) dday1 = "-" + dday1;
       else if (dday1 < 0) dday1 = "+" + -dday1;
@@ -404,6 +435,12 @@ export default function MainPage({ navigation }) {
           <Text style={styles.DdayContents}>
             D{dday1} {ddaysByddays[0].ddayName}
           </Text>
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.DdayBox}>
+          <Text style={styles.DdayContents}>앞으로 남은 DDAY 없음!</Text>
         </View>
       );
     }
@@ -454,9 +491,10 @@ export default function MainPage({ navigation }) {
         <View style={styles.container}>
           <View style={styles.header}>
             <View style={{ flexDirection: "row" }}>
-              <TouchableOpacity onPress={()=>{
-                navigation.navigate("퀵메뉴");
-              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("퀵메뉴");
+                }}>
                 <Text
                   style={styles.h1}
                   onLayout={event => {
@@ -466,7 +504,6 @@ export default function MainPage({ navigation }) {
                   Pokit's
                 </Text>
               </TouchableOpacity>
-              
             </View>
 
             <TouchableOpacity
