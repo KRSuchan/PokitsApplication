@@ -448,6 +448,25 @@ export default function MainPage({ navigation }) {
     }, [])
   );
 
+  const QuickMenuBox = ({}) => {
+    <View style ={styles.quickMenuBoxStyle}>
+      <QuickMenuMiniBox/>
+      <QuickMenuMiniBox/>
+      <QuickMenuMiniBox/>
+      <QuickMenuMiniBox/>
+    </View>
+  }
+
+  const QuickMenuMiniBox = ({}) => {
+    <View style = {styles.quickMiniBoxStyle}>
+      <View>
+        <Text>
+          안녕
+        </Text>
+      </View>
+    </View>
+  }
+
   return (
     <SafeAreaProvider style={{ backgroundColor: "#F5F5F5" }}>
       <SafeAreaView style={{ flex: 1 }}>
@@ -532,6 +551,14 @@ export default function MainPage({ navigation }) {
                 {cafeteriaComponent(cafeteria)}
               </TouchableOpacity>
             </View>
+            <View style={styles.componentTitle}>
+                <Image
+                  source={require("../assets/images/quickMenu.png")} // 여기에 실제 이미지 경로 입력
+                  style={{ width: 20, height: 23 }} // 텍스트 높이만큼 이미지 크기 설정
+                />
+                <Text style={styles.componentName}>바로가기</Text>
+                <QuickMenuBox></QuickMenuBox>
+              </View>
             {/* 일정 컴포넌트 */}
             <TouchableOpacity
               onPress={() => {
@@ -722,5 +749,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     justifyContent: "space-between",
     flexDirection: "row",
+  },
+  quickMenuBoxStyle: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  quickMiniBoxStyle:{
+    flex: 1,
+    height: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
