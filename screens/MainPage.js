@@ -13,7 +13,7 @@ import {
   ddayCalculator,
   dateFormatter,
 } from "../controller/CalendarService";
-import { Video } from "expo-av";
+
 
 import { Divider } from "react-native-elements";
 import { useFocusEffect } from "@react-navigation/native";
@@ -546,7 +546,7 @@ export default function MainPage({ navigation }) {
     }
   };
 
-  const videoRef = useRef(null);
+
 
   // useFocusEffect(
   //   //사용자가 이 페이지를 주목할때 실행하는 모든 것들.
@@ -560,12 +560,36 @@ export default function MainPage({ navigation }) {
   // );
 
   
-
+  const [visible, setVisible] = useState(false);
 
   return (
-    <SafeAreaProvider style={{ backgroundColor: "#F5F5F5" }}>
+    <Provider>
+      <SafeAreaProvider style={{ backgroundColor: "#F5F5F5" }}>
       <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.container}>
+        <Portal>
+              <TouchableOpacity
+                style={{
+                  position: 'absolute',
+                  margin: 16,
+                  right: 0,
+                  bottom: 0,
+                }}
+                onPress={() => setVisible(!visible)}
+              >
+                {visible?<Image
+                  source={require("../assets/images/highQualityImg/003.gif")}
+                  style={{ width: 80, height: 80 }}
+                />:<Image
+                  source={require("../assets/images/highQualityImg/001.gif")}
+                  style={{ width: 80, height: 80 }}
+                />}
+                
+              </TouchableOpacity>
+              <Modal visible={visible} onDismiss={() => setVisible(false)}>
+                  <Text>메모</Text>
+              </Modal>
+            </Portal>
           <View style={styles.header}>
             <View style={{ flexDirection: "row" }}>
               <TouchableOpacity
@@ -592,22 +616,7 @@ export default function MainPage({ navigation }) {
                 source={require("../assets/images/profile.png")} // 여기에 실제 이미지 경로 입력
                 style={{ width: textHeight - 10, height: textHeight - 10 }} // 텍스트 높이만큼 이미지 크기 설정
               />
-              {/* <Video
-                ref={videoRef}
-                source={require("../assets/video/logovideo.mp4")}
-                style={{
-                  height: textHeight,
-                  width: textHeight,
-                  marginRight: 5,
-                }}
-                rate={1.0}
-                volume={1.0}
-                isMuted={true}
-                resizeMode="cover"
-                shouldPlay
-                isLooping
-                autoPlay
-              /> */}
+              
             </TouchableOpacity>
           </View>
           {/* 학식 컴포넌트 */}
@@ -693,6 +702,8 @@ export default function MainPage({ navigation }) {
         </View>
       </SafeAreaView>
     </SafeAreaProvider>
+    </Provider>
+    
   );
 }
 
