@@ -189,7 +189,7 @@ export default function MainPage({ navigation }) {
         //비어있지 않다면 state 에 넣을 것임
         if (savedBusSetting !== null)
           setBusSetting(JSON.parse(JSON.stringify(savedBusSetting)));
-        getBusData(JSON.parse(JSON.stringify(savedBusSetting)));
+          getBusData(JSON.parse(JSON.stringify(savedBusSetting)));
       } catch (error) {
         console.error(error);
       }
@@ -522,19 +522,39 @@ export default function MainPage({ navigation }) {
     </View>
   );
 
+  const loadBusSettingsChange = async () => { //버스세팅이 변경되었을때
+    //이 코드는 화면 주시할때마다 실행됨
+    try {
+      //세팅을 변수에 담음
+      const savedBusSetting = await AsyncStorage.getItem("busSetting");
+      console.log(savedBusSetting);
+      //비어있지 않다면 state 에 넣을 것임
+      if (savedBusSetting !== null)
+        if(savedBusSetting !== busSetting){ //기존 버스세팅과 다르다면
+          setBusSetting(JSON.parse(JSON.stringify(savedBusSetting)));
+          getBusData(JSON.parse(JSON.stringify(savedBusSetting)));
+        }
+        
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const videoRef = useRef(null);
 
-  useFocusEffect(
-    //사용자가 이 페이지를 주목할때 실행하는 모든 것들.
-    React.useCallback(() => {
-      if (videoRef.current) {
-        //일단 비디오부터 재생되게 할거임. 로고부분임
-        videoRef.current.playAsync();
-      }
-    }, [])
-  );
+  // useFocusEffect(
+  //   //사용자가 이 페이지를 주목할때 실행하는 모든 것들.
+  //   React.useCallback(() => {
+  //     if (videoRef.current) {
+  //       //일단 비디오부터 재생되게 할거임. 로고부분임
+  //       videoRef.current.playAsync();
+  //       loadBusSettingsChange();
+  //     }
+  //   }, [])
+  // );
 
   
+
 
   return (
     <SafeAreaProvider style={{ backgroundColor: "#F5F5F5" }}>
