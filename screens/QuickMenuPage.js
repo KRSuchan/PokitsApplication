@@ -40,8 +40,8 @@ const LogoGradient = ({navigation}) => (
     </LinearGradient>
 );
 
-const TabMyTab1 = ({settingurl}) => (
-    <Tab.Navigator
+const TabMyTab1 = ({settingurl,initialTab}) => (
+    <Tab.Navigator initialRouteName={initialTab}
       tabBar={(props) => ( //커스텀 탭바 = props
         <LinearGradient colors={['#00A0D2', '#6ED8FA']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={{ flexDirection: 'row',paddingLeft: 20,paddingTop: 10}}>
           {props.state.routes.map((route, index) => ( //각 탭을 흩뿌리기
@@ -70,7 +70,7 @@ const TabMyTab1 = ({settingurl}) => (
   
 
 
-export default function QuickMenuPage({navigation}){
+export default function QuickMenuPage({navigation,route}){
 
     const insets = useSafeAreaInsets(); //어디까지 안전해?
 
@@ -78,6 +78,7 @@ export default function QuickMenuPage({navigation}){
 
     const [loading, setLoading] = useState(true); // 데이터 로딩 상태
 
+    const initialTab = route.params?.initialTab ?? '학사'; //
 
     useEffect(() => {
         const loadSettings = async() => {
@@ -114,7 +115,7 @@ export default function QuickMenuPage({navigation}){
                 <View style={styles.fullcontainer}> 
                     <LogoGradient navigation={navigation}></LogoGradient>
                         <View style={{flex: 1}}>
-                            <TabMyTab1 settingurl = {selectedItem}>
+                            <TabMyTab1 settingurl = {selectedItem} initialTab={initialTab}>
                             </TabMyTab1>
                         </View>
                 </View>

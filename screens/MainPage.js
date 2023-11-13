@@ -18,6 +18,8 @@ import { Video } from "expo-av";
 import { Divider } from "react-native-elements";
 import { useFocusEffect } from "@react-navigation/native";
 
+
+
 //화면의 높이
 HEIGHT = Dimensions.get("window").height;
 
@@ -30,6 +32,53 @@ const readyCalendar = [
   { contents: "", startDay: "01.01(일)", endDay: "01.01(일)" },
   { contents: "", startDay: "01.01(일)", endDay: "01.01(일)" },
 ];
+
+const images = {
+  home: require('../assets/images/quickMenuImg/home.png'),
+  pen: require('../assets/images/quickMenuImg/pen.png'),
+  event: require('../assets/images/quickMenuImg/event.png'),
+  alarm: require('../assets/images/quickMenuImg/alarm.png'),
+};
+
+const QuickMenuBox = ({navigation}) => {
+  return(<View style ={styles.quickMenuBoxStyle}>
+    <QuickMenuMiniBox1 navigation={navigation} title="내학과" iconName = "home" onPress={() => navigation.navigate('퀵메뉴', { initialTab: '학과' })}/>
+    <QuickMenuMiniBox navigation={navigation} title="학사" iconName = "pen" onPress={() => navigation.navigate('퀵메뉴', { initialTab: '학사' })}/>
+    <QuickMenuMiniBox navigation={navigation} title="행사" iconName = "event" onPress={() => navigation.navigate('퀵메뉴', { initialTab: '행사' })}/>
+    <QuickMenuMiniBox navigation={navigation} title="소식" iconName = "alarm" onPress={() => navigation.navigate('퀵메뉴', { initialTab: '소식' })} />
+  </View>)
+  
+}
+
+const QuickMenuMiniBox = ({navigation,title,onPress,iconName}) => {
+  return(
+  <TouchableOpacity style = {styles.quickMiniBoxStyle} onPress = {onPress}>
+        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+        <Image source={images[iconName]} style={{ width: 25, height: 25, resizeMode: "contain" }}/>
+          <Text style={{paddingTop:7, fontFamily:"NotoSansB",color:"#00A0D2"}}>
+            {title}
+          </Text>
+        </View>
+      </TouchableOpacity>
+  )
+  
+}
+
+const QuickMenuMiniBox1 = ({navigation,title,onPress,iconName}) => {
+  return(
+    // 여러 스타일 적용할 때 아래와 같이
+  <TouchableOpacity style = {[styles.quickMiniBoxStyle,{backgroundColor:"#00A0D2"}]} onPress = {onPress}> 
+        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+        <Image source={images[iconName]} style={{ width: 25, height: 25, resizeMode: "contain"}}/>
+          <Text style={{paddingTop:7, fontFamily:"NotoSansB",color:"#fff"}}>
+            {title}
+          </Text>
+        </View>
+      </TouchableOpacity>
+  )
+  
+}
+
 export default function MainPage({ navigation }) {
   const [textHeight, setTextHeight] = useState(0);
   // 설정 불러오기
@@ -448,24 +497,7 @@ export default function MainPage({ navigation }) {
     }, [])
   );
 
-  const QuickMenuBox = ({}) => {
-    <View style ={styles.quickMenuBoxStyle}>
-      <QuickMenuMiniBox/>
-      <QuickMenuMiniBox/>
-      <QuickMenuMiniBox/>
-      <QuickMenuMiniBox/>
-    </View>
-  }
-
-  const QuickMenuMiniBox = ({}) => {
-    <View style = {styles.quickMiniBoxStyle}>
-      <View>
-        <Text>
-          안녕
-        </Text>
-      </View>
-    </View>
-  }
+  
 
   return (
     <SafeAreaProvider style={{ backgroundColor: "#F5F5F5" }}>
@@ -552,13 +584,13 @@ export default function MainPage({ navigation }) {
               </TouchableOpacity>
             </View>
             <View style={styles.componentTitle}>
-                <Image
-                  source={require("../assets/images/quickMenu.png")} // 여기에 실제 이미지 경로 입력
-                  style={{ width: 20, height: 23 }} // 텍스트 높이만큼 이미지 크기 설정
-                />
-                <Text style={styles.componentName}>바로가기</Text>
-                <QuickMenuBox></QuickMenuBox>
-              </View>
+              <Image
+                source={require("../assets/images/quickMenu.png")} // 여기에 실제 이미지 경로 입력
+                style={{ width: 20, height: 23 }} // 텍스트 높이만큼 이미지 크기 설정
+              />
+              <Text style={styles.componentName}>바로가기</Text>
+            </View>
+              <QuickMenuBox navigation={navigation}></QuickMenuBox>
             {/* 일정 컴포넌트 */}
             <TouchableOpacity
               onPress={() => {
@@ -752,12 +784,18 @@ const styles = StyleSheet.create({
   },
   quickMenuBoxStyle: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
   },
   quickMiniBoxStyle:{
     flex: 1,
-    height: 30,
+    height: 90,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: "#fff",
+    borderRadius: 15,
+    marginHorizontal: 5, //flex 1이라도 가능,
+    fontFamily:"NotoSansBlack",
+    fontWeight:"500",
+    textAlign: "center",
   },
 });
