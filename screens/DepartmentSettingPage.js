@@ -56,7 +56,7 @@ export default function DepartmentSettingPage({navigation}) {
     //설정 저장하기
     const saveSetting = async(setting) => {
         try{
-            await AsyncStorage.setItem('departmentSetting',JSON.stringify(setting));
+            await AsyncStorage.setItem('departmentSetting',setting);
             setSelectedItem(JSON.stringify(setting)); //저장후 바로 state에 넣을 것임
         } catch(error){
             console.error(error);
