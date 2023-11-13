@@ -12,7 +12,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { TabBar, TabView, SceneMap } from "react-native-tab-view";
 import { ScrollView } from "react-native-gesture-handler";
-import { getCtrlMenu, menuLiner } from "../controller/CafeteriaService";
+import { getCtrlMenu } from "../controller/CafeteriaService";
 
 //화면의 높이
 HEIGHT = Dimensions.get("window").height;
@@ -57,10 +57,26 @@ const UnivCafeteriaRoute = ({
           pagingEnabled={true}
           showsHorizontalScrollIndicator={true}>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text style={styles.cafeteriaMenuText}>{studentBf}</Text>
+            {studentBf.map((studentBf, index) => {
+              return (
+                <Text
+                  key={`studentBf-${index}`}
+                  style={styles.cafeteriaMenuText}>
+                  {studentBf}
+                </Text>
+              );
+            })}
           </View>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text style={styles.cafeteriaMenuText}>{studentLunch}</Text>
+            {studentLunch.map((studentLunch, index) => {
+              return (
+                <Text
+                  key={`studentLunch-${index}`}
+                  style={styles.cafeteriaMenuText}>
+                  {studentLunch}
+                </Text>
+              );
+            })}
           </View>
         </ScrollView>
       </View>
@@ -79,10 +95,26 @@ const UnivCafeteriaRoute = ({
           pagingEnabled={true}
           showsHorizontalScrollIndicator={true}>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text style={styles.cafeteriaMenuText}>{facultyLunch}</Text>
+            {facultyLunch.map((facultyLunch, index) => {
+              return (
+                <Text
+                  key={`facultyLunch-${index}`}
+                  style={styles.cafeteriaMenuText}>
+                  {facultyLunch}
+                </Text>
+              );
+            })}
           </View>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text style={styles.cafeteriaMenuText}>{facultyDinner}</Text>
+            {facultyDinner.map((facultyDinner, index) => {
+              return (
+                <Text
+                  key={`facultyDinner-${index}`}
+                  style={styles.cafeteriaMenuText}>
+                  {facultyDinner}
+                </Text>
+              );
+            })}
           </View>
         </ScrollView>
       </View>
@@ -101,7 +133,15 @@ const UnivCafeteriaRoute = ({
           pagingEnabled={true}
           showsHorizontalScrollIndicator={true}>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text style={styles.cafeteriaMenuText}>{snackbarMenu}</Text>
+            {snackbarMenu.map((snackbarMenu, index) => {
+              return (
+                <Text
+                  key={`snackbarMenu-${index}`}
+                  style={styles.cafeteriaMenuText}>
+                  {snackbarMenu}
+                </Text>
+              );
+            })}
           </View>
         </ScrollView>
       </View>
@@ -134,10 +174,26 @@ const DormiCafeteriaRoute = ({
           pagingEnabled={true}
           showsHorizontalScrollIndicator={true}>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text style={styles.cafeteriaMenuText}>{puroomLunch}</Text>
+            {puroomLunch.map((puroomLunch, index) => {
+              return (
+                <Text
+                  key={`puroomLunch-${index}`}
+                  style={styles.cafeteriaMenuText}>
+                  {puroomLunch}
+                </Text>
+              );
+            })}
           </View>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text style={styles.cafeteriaMenuText}>{puroomDinner}</Text>
+            {puroomDinner.map((puroomDinner, index) => {
+              return (
+                <Text
+                  key={`puroomDinner-${index}`}
+                  style={styles.cafeteriaMenuText}>
+                  {puroomDinner}
+                </Text>
+              );
+            })}
           </View>
         </ScrollView>
       </View>
@@ -155,10 +211,26 @@ const DormiCafeteriaRoute = ({
           pagingEnabled={true}
           showsHorizontalScrollIndicator={true}>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text style={styles.cafeteriaMenuText}>{oreum1Lunch}</Text>
+            {oreum1Lunch.map((oreum1Lunch, index) => {
+              return (
+                <Text
+                  key={`oreum1Lunch-${index}`}
+                  style={styles.cafeteriaMenuText}>
+                  {oreum1Lunch}
+                </Text>
+              );
+            })}
           </View>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text style={styles.cafeteriaMenuText}>{oreum1Dinner}</Text>
+            {oreum1Dinner.map((oreum1Dinner, index) => {
+              return (
+                <Text
+                  key={`oreum1Dinner-${index}`}
+                  style={styles.cafeteriaMenuText}>
+                  {oreum1Dinner}
+                </Text>
+              );
+            })}
           </View>
         </ScrollView>
       </View>
@@ -176,10 +248,26 @@ const DormiCafeteriaRoute = ({
           pagingEnabled={true}
           showsHorizontalScrollIndicator={true}>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text style={styles.cafeteriaMenuText}>{oreum3Lunch}</Text>
+            {oreum3Lunch.map((oreum3Lunch, index) => {
+              return (
+                <Text
+                  key={`oreum3Lunch-${index}`}
+                  style={styles.cafeteriaMenuText}>
+                  {oreum3Lunch}
+                </Text>
+              );
+            })}
           </View>
           <View style={styles.cafeteriaMenuComponent}>
-            <Text style={styles.cafeteriaMenuText}>{oreum3Dinner}</Text>
+            {oreum3Dinner.map((oreum3Dinner, index) => {
+              return (
+                <Text
+                  key={`oreum3Dinner-${index}`}
+                  style={styles.cafeteriaMenuText}>
+                  {oreum3Dinner}
+                </Text>
+              );
+            })}
           </View>
         </ScrollView>
       </View>
@@ -215,17 +303,17 @@ export default function SettingListPage({ navigation }) {
   // FB로부터 Menu 전체 긁어오기
   const getMenus = async () => {
     let menu = JSON.parse(JSON.stringify(await getCtrlMenu()));
-    setStudentBf(menuLiner(menu.student.breakfast));
-    setStudentLunch(menuLiner(menu.student.lunch));
-    setFacultyLunch(menuLiner(menu.faculty.lunch));
-    setFacultyDinner(menuLiner(menu.faculty.dinner));
-    setSnackbarMenu(menuLiner(menu.snackbar.breakfast));
-    setPuroomLunch(menuLiner(menu.puroom.lunch));
-    setPuroomDinner(menuLiner(menu.puroom.dinner));
-    setOreum1Lunch(menuLiner(menu.oreum1.lunch));
-    setOreum1Dinner(menuLiner(menu.oreum1.dinner));
-    setOreum3Lunch(menuLiner(menu.oreum3.lunch));
-    setOreum3Dinner(menuLiner(menu.oreum3.dinner));
+    setStudentBf(menu.student.breakfast);
+    setStudentLunch(menu.student.lunch);
+    setFacultyLunch(menu.faculty.lunch);
+    setFacultyDinner(menu.faculty.dinner);
+    setSnackbarMenu(menu.snackBar.breakfast);
+    setPuroomLunch(menu.puroom.lunch);
+    setPuroomDinner(menu.puroom.dinner);
+    setOreum1Lunch(menu.oreum1.lunch);
+    setOreum1Dinner(menu.oreum1.dinner);
+    setOreum3Lunch(menu.oreum3.lunch);
+    setOreum3Dinner(menu.oreum3.dinner);
   };
   // menu 불러오는거에 대한 useEffect
   useEffect(() => {
