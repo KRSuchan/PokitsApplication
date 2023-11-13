@@ -56,7 +56,7 @@ export function getFbBus() {}
 export async function getFbMenu() {
   try {
     // let url = `https://pokits-diet-default-rtdb.firebaseio.com/Diet/body.json`;
-    let url = `https://test-diet-dfb51-default-rtdb.firebaseio.com/Diet/body.json`;
+    let url = `https://pokits-diet-default-rtdb.firebaseio.com/Diet/body.json`;
 
     let response = await fetch(url);
     if (response.ok) {
