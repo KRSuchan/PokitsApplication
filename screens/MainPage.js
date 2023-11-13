@@ -246,12 +246,12 @@ export default function MainPage({ navigation }) {
       if (
         data &&
         data.Bus &&
-        data.Bus.Body &&
-        data.Bus.Body.items &&
-        data.Bus.Body.items.bus
+        data.Bus.b &&
+        data.Bus.b.is &&
+        data.Bus.b.is.bus
       ) {
-        data.Bus.Body.items.bus.sort((a, b) => a.leftSecs - b.leftSecs); //버스 시간순 정렬
-        setBuses(data.Bus.Body.items.bus);
+        data.Bus.b.is.bus.sort((a, b) => a.ls - b.ls); //버스 시간순 정렬
+        setBuses(data.Bus.b.is.bus);
         console.log("버스데이터 정상적으로 불러옴");
       } else {
         console.log("버스데이터에 Body가 없음 " + url);
@@ -264,21 +264,27 @@ export default function MainPage({ navigation }) {
 
   const BusBox = ({ buses }) => (
     <View style={styles.busboxstyle}>
-      {buses.length === 0 && <Text styles={styles.itemtitle}>버스 없음</Text>}
+      {buses.length === 0 && 
+  <>
+    <View style={{height: 12}} /> 
+    <Text styles={styles.itemtitle}>버스 없음</Text>
+    <View style={{height: 12}} /> 
+  </>
+}
       {buses.length > 0 && (
         <BusMiniBoxTrue
-          busNum={buses[0].busNum}
-          leftTime={buses[0].leftSecs}
-          leftStation={buses[0].prevStationCnt}
+          busNum={buses[0].n}
+          leftTime={buses[0].ls}
+          leftStation={buses[0].psc}
         />
       )}
       {buses.length > 1 && (
         <View>
           <Divider style={styles.dividerstyle} orientation="horizontal" />
           <BusMiniBoxTrue
-            busNum={buses[1].busNum}
-            leftTime={buses[1].leftSecs}
-            leftStation={buses[1].prevStationCnt}
+            busNum={buses[1].n}
+            leftTime={buses[1].ls}
+            leftStation={buses[1].psc}
           />
         </View>
       )}
@@ -608,19 +614,20 @@ export default function MainPage({ navigation }) {
           <View style={styles.componentAria}>
             {/* 입벌려, 버스 들어간다 */}
             <View style={styles.busMainAria}>
-              <View style={styles.componentTitle}>
-                <Image
-                  source={require("../assets/images/busBlack.png")} // 여기에 실제 이미지 경로 입력
-                  style={{ width: 20, height: 23 }} // 텍스트 높이만큼 이미지 크기 설정
-                />
-                <Text style={styles.componentName}>버스</Text>
-              </View>
+              
 
               <TouchableOpacity
                 onPress={() => {
                   console.log("버스사진 누름");
                   navigateToBus();
                 }}>
+                  <View style={styles.componentTitle}>
+                <Image
+                  source={require("../assets/images/busBlack.png")} // 여기에 실제 이미지 경로 입력
+                  style={{ width: 20, height: 23 }} // 텍스트 높이만큼 이미지 크기 설정
+                />
+                <Text style={styles.componentName}>버스</Text>
+              </View>
                 <BusBox buses={buses} />
               </TouchableOpacity>
             </View>
@@ -720,6 +727,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingLeft: 10,
+    marginTop: 5,
   },
   componentName: {
     fontSize: 20,

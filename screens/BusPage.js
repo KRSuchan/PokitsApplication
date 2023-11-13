@@ -124,17 +124,17 @@ const BusItem = ({bus}) => (
   <View style={styles.hbox}>
     <View style={styles.busitemhbox2}>
       <Text style={styles.busitemlefttext}>
-        {bus.busType === "좌석버스"? "🚎 " + bus.busNum : "🚌 " + bus.busNum}
+        {bus.t === "좌석버스"? "🚎 " + bus.n : "🚌 " + bus.n}
       </Text>
     </View>
      <View style={styles.busitemhbox}>
       <Text style={styles.busitemtext}>
-        {bus.prevStationCnt>1?Math.floor(bus.leftSecs/60)+" 🕑":""}
+        {bus.psc>1?Math.floor(bus.ls/60)+" 🕑":""}
       </Text>
     </View> 
     <View style={styles.busitemhbox}>
       <Text style={styles.busitemtext}>
-        {bus.prevStationCnt>1?bus.prevStationCnt+" 📍":"곧도착 📍"}
+        {bus.psc>1?bus.psc+" 📍":"곧도착 📍"}
       </Text>
     </View>
   </View>
@@ -159,9 +159,10 @@ export default function BusPage({navigation}){
             try{
                 const response = await fetch('https://pokits-bus-default-rtdb.firebaseio.com/'+url+'/.json');
                 const data = await response.json();
-                if (data && data.Bus && data.Bus.Body && data.Bus.Body.items && data.Bus.Body.items.bus) {
-                  data.Bus.Body.items.bus.sort((a, b) => a.leftSecs - b.leftSecs); //버스 시간순 정렬
-                  setBuses(prevBuses => ({ ...prevBuses, [key]: data.Bus.Body.items.bus }));
+                console.log(data)
+                if (data && data.Bus && data.Bus.b && data.Bus.b.is && data.Bus.b.is.bus) {
+                  data.Bus.b.is.bus.sort((a, b) => a.leftSecs - b.leftSecs); //버스 시간순 정렬
+                  setBuses(prevBuses => ({ ...prevBuses, [key]: data.Bus.b.is.bus }));
                   console.log("버스데이터 정상적으로 불러옴");
               } else {
                   console.log('버스데이터에 Body가 없음 '+url);
