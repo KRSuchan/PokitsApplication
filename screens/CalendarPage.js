@@ -218,6 +218,11 @@ const UnivCalendarRoute = ({
           {makeScheduleComponents()}
         </ScrollView>
       </View>
+      <View>
+        <Text style={{ fontSize: 15 }}>
+          ※ 디데이에 넣고 싶은 학사 일정을 꾹 눌러보세요!
+        </Text>
+      </View>
     </View>
   );
 };
