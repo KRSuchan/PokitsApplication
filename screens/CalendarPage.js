@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
+  Alert,
   StyleSheet,
   View,
   Text,
   TouchableOpacity,
   Image,
   Dimensions,
+  TouchableHighlight,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
@@ -20,6 +22,16 @@ HEIGHT = Dimensions.get("window").height;
 // expo start --tunnel
 //화면의 너비
 WIDTH = Dimensions.get("window").width;
+
+// Dday 클래스 정의
+class Dday {
+  constructor(id, ddayName, ddayDate) {
+    this.id = id;
+    this.ddayName = ddayName;
+    this.ddayDate = ddayDate;
+  }
+}
+
 // 학사일정, 디데이 탭 타이틀
 const renderTabBar = props => (
   <TabBar
@@ -34,7 +46,13 @@ const renderTabBar = props => (
 );
 
 // 학사일정 탭 내용
-const UnivCalendarRoute = ({ calendar, month, onMonthChange }) => {
+const UnivCalendarRoute = ({
+  calendar,
+  month,
+  ddays,
+  onMonthChange,
+  setDdays,
+}) => {
   let time = new Date();
   let today = time.getDate();
   let thisMonth = time.getMonth();
@@ -63,42 +81,72 @@ const UnivCalendarRoute = ({ calendar, month, onMonthChange }) => {
     let endDay = year + "-" + endMonth + "-" + endDate;
     let startDday = ddayCalculator(startDay);
     let endDday = ddayCalculator(endDay);
+    const _onLongPressButton = async (contents, date) => {
+      // 난수를 36진수로 변환후 앞2글자 삭제 (기존 dday 설정)
+      let id = Math.random().toString(36).substring(2);
+
+      const newDday = new Dday(id, `${contents}`, `${date}`);
+
+      try {
+        ddays.push(newDday);
+        await AsyncStorage.setItem("ddays", JSON.stringify(ddays));
+        setDdays([...ddays]);
+        Alert.alert("DDAY에 추가되었습니다!");
+      } catch (e) {
+        console.log(e);
+        Alert.alert("오류로 인해 DDAY에 정상적으로 추가되지 않았습니다.\n");
+      }
+    };
     if (startDday > 0) {
       return (
-        <>
-          <View style={styles.calendarContents}>
-            <Text style={styles.beforeUnivContents}>{calData.contents}</Text>
+        <TouchableHighlight
+          onLongPress={() =>
+            _onLongPressButton(calData.contents + " 시작", startDay)
+          }
+          underlayColor="gray">
+          <View style={styles.calendarComponent}>
+            <View style={styles.calendarContents}>
+              <Text style={styles.beforeUnivContents}>{calData.contents}</Text>
+              <View>
+                <Text style={styles.calDays}>
+                  {calData.startDay} ~ {calData.endDay}
+                </Text>
+              </View>
+            </View>
             <View>
-              <Text style={styles.calDays}>
-                {calData.startDay} ~ {calData.endDay}
+              <Text style={styles.beforeDday}>
+                {startDday}일{"\n"}남음
               </Text>
             </View>
           </View>
-          <View>
-            <Text style={styles.beforeDday}>{startDday}일 남음</Text>
-          </View>
-        </>
+        </TouchableHighlight>
       );
-    } else if (startDday >= 0 && endDday <= 0) {
+    } else if (startDday <= 0 && endDday >= 0) {
       return (
-        <>
-          <View style={styles.calendarContents}>
-            <Text style={styles.nowUnivContents}>{calData.contents}</Text>
+        <TouchableHighlight
+          onLongPress={() =>
+            _onLongPressButton(calData.contents + " 끝", endDay)
+          }
+          underlayColor="gray">
+          <View style={styles.calendarComponent}>
+            <View style={styles.calendarContents}>
+              <Text style={styles.nowUnivContents}>{calData.contents}</Text>
+              <View>
+                <Text style={styles.calDays}>
+                  {calData.startDay} ~ {calData.endDay}
+                </Text>
+              </View>
+            </View>
             <View>
-              <Text style={styles.calDays}>
-                {calData.startDay} ~ {calData.endDay}
-              </Text>
+              <Text style={styles.nowDday}>진행중!</Text>
+              <Text style={styles.nowDdayDate}>{endDday}일 남음</Text>
             </View>
           </View>
-          <View>
-            <Text style={styles.nowDday}>진행중!</Text>
-            <Text style={styles.nowDdayDate}>{endDday}일 남음</Text>
-          </View>
-        </>
+        </TouchableHighlight>
       );
     } else {
       return (
-        <>
+        <View style={styles.calendarComponent}>
           <View style={styles.calendarContents}>
             <Text style={styles.afterUnivContents}>{calData.contents}</Text>
             <View>
@@ -108,9 +156,11 @@ const UnivCalendarRoute = ({ calendar, month, onMonthChange }) => {
             </View>
           </View>
           <View>
-            <Text style={styles.afterDday}>{-endDday}일 지남</Text>
+            <Text style={styles.afterDday}>
+              {-endDday}일{"\n"}지남
+            </Text>
           </View>
-        </>
+        </View>
       );
     }
   }
@@ -185,15 +235,13 @@ const DdayItemBig = ({ title, describe }) => {
   };
   return (
     <View style={styles.calendarScheduleContainer}>
-      <>
-        <View style={styles.calendarContents}>
-          <Text style={styles.beforeUnivContents}>{title}</Text>
-          <View>
-            <Text style={styles.calDays}>{describe}</Text>
-          </View>
+      <View style={styles.calendarContents}>
+        <Text style={styles.beforeUnivContents}>{title}</Text>
+        <View>
+          <Text style={styles.calDays}>{describe}</Text>
         </View>
-        <View>{ddayComponent()}</View>
-      </>
+      </View>
+      <View>{ddayComponent()}</View>
     </View>
   );
 };
@@ -232,7 +280,7 @@ const DdayCalendarRoute = ({ ddays }) => {
         </View>
       </View>
     );
-  } else
+  } else {
     return (
       <ScrollView showsHorizontalScrollIndicator={false}>
         <View style={styles.pageViewContainer}>
@@ -247,11 +295,12 @@ const DdayCalendarRoute = ({ ddays }) => {
             {ddays.map(dday => {
               if (dday) {
                 return (
-                  <DdayItemBig
-                    key={dday.id} //key값도 받음
-                    title={dday.ddayName}
-                    describe={formatDate(dday.ddayDate)}
-                  />
+                  <View key={dday.id}>
+                    <DdayItemBig
+                      title={dday.ddayName}
+                      describe={formatDate(dday.ddayDate)}
+                    />
+                  </View>
                 );
               }
             })}
@@ -259,6 +308,7 @@ const DdayCalendarRoute = ({ ddays }) => {
         </View>
       </ScrollView>
     );
+  }
 };
 
 export default function CalendarPage({ navigation }) {
@@ -315,6 +365,8 @@ export default function CalendarPage({ navigation }) {
         calendar={JSON.parse(JSON.stringify(calendar))}
         month={month}
         onMonthChange={setMonth}
+        ddays={ddays}
+        setDdays={setDdays}
       />
     ),
     DdayCalendar: () => <DdayCalendarRoute ddays={ddays} />,
@@ -468,28 +520,39 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontSize: 30,
   },
+  calendarComponent: {
+    width: (WIDTH / 100) * 80,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   calendarContents: { height: "auto" },
   univContents: { flexWrap: "wrap" },
   afterUnivContents: {
-    flexWrap: "wrap",
     maxWidth: (WIDTH / 100) * 60,
     color: "#8A8A8E",
     fontWeight: "800",
   },
   nowUnivContents: {
-    flexWrap: "wrap",
     maxWidth: (WIDTH / 100) * 60,
     color: "#182A76",
     fontWeight: "800",
   },
   beforeUnivContents: {
-    flexWrap: "wrap",
     maxWidth: (WIDTH / 100) * 60,
     fontWeight: "800",
   },
-  beforeDday: { fontWeight: "800" },
-  afterDday: { color: "#8A8A8E" },
-  nowDday: { color: "#182A76", fontWeight: "800" },
+  beforeDday: { fontWeight: "800", textAlign: "center" },
+  afterDday: {
+    color: "#8A8A8E",
+    textAlign: "center",
+  },
+  nowDday: {
+    color: "#182A76",
+    fontWeight: "800",
+    textAlign: "center",
+  },
   nowDdayDate: { fontSize: 10, color: "#182A76", fontWeight: "800" },
   ddayText: { fontSize: 20, color: "#182A76", fontWeight: "800" },
   calDays: { color: "#8A8A8E" },
