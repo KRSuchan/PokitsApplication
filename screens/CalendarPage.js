@@ -219,7 +219,7 @@ const UnivCalendarRoute = ({
         </ScrollView>
       </View>
       <View>
-        <Text style={{ fontSize: 15 }}>
+        <Text style={{ fontSize: 10, width: "100%" }}>
           ※ 디데이에 넣고 싶은 학사 일정을 꾹 눌러보세요!
         </Text>
       </View>
