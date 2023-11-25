@@ -6,7 +6,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from "expo-linear-gradient";
-import { Dimensions } from "react-native";
+import { Dimensions,ScrollView } from "react-native";
 import { getOnlyMenu, menuLiner } from "../controller/CafeteriaService";
 import {
   getMainCalendar,
@@ -297,7 +297,7 @@ export default function MainPage({ navigation }) {
         return (
           <View key="studentFacultyCaf" style={styles.dietMainMenu}>
             <View key="studentCaf" style={styles.dietMenuOut}>
-              <Text style={styles.dietCafName}>학생식당</Text>
+              <Text style={styles.cafeteriaNameStyle}>학생식당</Text>
               <View style={styles.dietMenu}>
                 {studnetCaf.map((studnetCaf, index) => {
                   return (
@@ -309,7 +309,7 @@ export default function MainPage({ navigation }) {
               </View>
             </View>
             <View key="facultyCaf" style={styles.dietMenuOut}>
-              <Text style={styles.dietCafName}>교직원식당</Text>
+              <Text style={styles.cafeteriaNameStyle}>교직원식당</Text>
               <View style={styles.dietMenu}>
                 {facultyCaf.map((facultyCaf, index) => {
                   return (
@@ -326,7 +326,7 @@ export default function MainPage({ navigation }) {
         return (
           <View key="oreum1Caf" style={styles.dietMainMenu}>
             <View key="oreum1Menu" style={styles.dietMenuOut}>
-              <Text style={styles.dietCafName}>오름1동</Text>
+              <Text style={styles.cafeteriaNameStyle}>오름1동</Text>
               <View style={styles.dietMenu}>
                 {oreum1Caf.map((oreum1Caf, index) => {
                   return (
@@ -343,7 +343,7 @@ export default function MainPage({ navigation }) {
         return (
           <View key="oreum3Caf" style={styles.dietMainMenu}>
             <View key="oreum3Menu" style={styles.dietMenuOut}>
-              <Text style={styles.dietCafName}>오름3동</Text>
+              <Text style={styles.cafeteriaNameStyle}>오름3동</Text>
               <View style={styles.dietMenu}>
                 {oreum3Caf.map((oreum3Caf, index) => {
                   return (
@@ -360,7 +360,7 @@ export default function MainPage({ navigation }) {
         return (
           <View key="puroomCaf" style={styles.dietMainMenu}>
             <View key="puroomMenu" style={styles.dietMenuOut}>
-              <Text style={styles.dietCafName}>푸름관</Text>
+            <Text style={styles.cafeteriaNameStyle}>푸름관</Text>
               <View style={styles.dietMenu}>
                 {puroomCaf.map((puroomCaf, index) => {
                   return (
@@ -566,6 +566,7 @@ export default function MainPage({ navigation }) {
     <Provider>
       <SafeAreaProvider style={{ backgroundColor: "#F5F5F5" }}>
       <SafeAreaView style={{ flex: 1 }}>
+      <ScrollView style={styles.scrollbox}>
         <View style={styles.container}>
         <Portal>
               <TouchableOpacity
@@ -700,6 +701,7 @@ export default function MainPage({ navigation }) {
             </TouchableOpacity>
           </View>
         </View>
+        </ScrollView>
       </SafeAreaView>
     </SafeAreaProvider>
     </Provider>
@@ -772,7 +774,7 @@ const styles = StyleSheet.create({
   },
   dietMenu: {
     flex: 1,
-    padding: 5,
+    padding: 20,
     justifyContent: "center",
     backgroundColor: "#fff",
     borderBottomRightRadius: 10,
@@ -780,9 +782,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   MenuText: {
-    fontSize: (HEIGHT / 1000) * 13,
-    fontWeight: "500",
+    // fontSize: (HEIGHT / 1000) * 13,
+    // fontWeight: "500",
     color: "#B8131C",
+    fontSize: 14,
+    fontWeight: "500",
+    fontFamily: "NotoSansB",
   },
   busMainAria: {
     width: "100%",
@@ -813,7 +818,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   calendarComponentTitle: {
-    height: (HEIGHT / 100) * 4,
+    padding: 10,
     borderRadius: 10,
     width: "100%",
     justifyContent: "center",
@@ -874,4 +879,15 @@ const styles = StyleSheet.create({
     fontWeight:"500",
     textAlign: "center",
   },
+  scrollbox:{
+    flex:1,
+    width:'100%',
+},
+  cafeteriaNameStyle:{
+    paddingTop:7, fontFamily:"NotoSansB",color:"#fff",
+    fontSize:18,
+    paddingLeft:20,
+    paddingHorizontal:10,
+    marginBottom: 5,
+  }
 });
