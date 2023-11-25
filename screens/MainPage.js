@@ -579,10 +579,10 @@ export default function MainPage({ navigation }) {
                 onPress={() => setVisible(!visible)}
               >
                 {visible?<Image
-                  source={require("../assets/images/highQualityImg/003.gif")}
+                  source={require("../assets/images/highQualityImg/OIG1.png")}
                   style={{ width: 80, height: 80 }}
                 />:<Image
-                  source={require("../assets/images/highQualityImg/001.gif")}
+                  source={require("../assets/images/highQualityImg/OIG1.png")}
                   style={{ width: 80, height: 80 }}
                 />}
                 
@@ -732,7 +732,7 @@ const styles = StyleSheet.create({
   },
   componentAria: {
     flex: 1,
-    marginTop: (WIDTH / 100) * 5,
+    marginTop: 10,
     backgroundColor: "#F5F5F5",
     width: "100%",
   },
@@ -740,7 +740,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingLeft: 10,
-    marginTop: 5,
+    marginTop: 12.5,
   },
   componentName: {
     fontSize: 20,
@@ -749,13 +749,13 @@ const styles = StyleSheet.create({
     fontFamily: "NotoSansBlack",
   },
   dietMainAria: {
-    height: (HEIGHT / 100) * 25,
+    // height: (HEIGHT / 100) * 25,
     width: "100%",
     alignItems: "center",
   },
   dietMainMenu: {
     flexDirection: "row",
-    height: "80%",
+    // height: "80%",
     justifyContent: "center",
     width: "100%",
   },
@@ -773,8 +773,9 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   dietMenu: {
-    flex: 1,
-    padding: 20,
+    // flexGrow: 1,
+    padding: 10,
+    paddingHorizontal: 20,
     justifyContent: "center",
     backgroundColor: "#fff",
     borderBottomRightRadius: 10,
