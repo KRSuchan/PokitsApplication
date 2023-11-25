@@ -55,7 +55,7 @@ const QuickMenuMiniBox = ({navigation,title,onPress,iconName}) => {
   <TouchableOpacity style = {styles.quickMiniBoxStyle} onPress = {onPress}>
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
         <Image source={images[iconName]} style={{ width: 25, height: 25, resizeMode: "contain" }}/>
-          <Text style={{paddingTop:7, fontFamily:"NotoSansB",color:"#00A0D2"}}>
+          <Text style={{paddingTop:7, fontFamily:"NotoSansB",color:"#00A0D2", fontSize:15, lineHeight:20}}>
             {title}
           </Text>
         </View>
@@ -70,7 +70,7 @@ const QuickMenuMiniBox1 = ({navigation,title,onPress,iconName}) => {
   <TouchableOpacity style = {[styles.quickMiniBoxStyle,{backgroundColor:"#00A0D2"}]} onPress = {onPress}> 
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
         <Image source={images[iconName]} style={{ width: 25, height: 25, resizeMode: "contain"}}/>
-          <Text style={{paddingTop:7, fontFamily:"NotoSansB",color:"#fff"}}>
+          <Text style={{paddingTop:7, fontFamily:"NotoSansB",color:"#fff", fontSize:15, lineHeight:20}}>
             {title}
           </Text>
         </View>
@@ -580,10 +580,10 @@ export default function MainPage({ navigation }) {
                 onPress={() => setVisible(!visible)}
               >
                 {visible?<Image
-                  source={require("../assets/images/highQualityImg/OIG1.png")}
+                  source={require("../assets/images/highQualityImg/OIG2.png")}
                   style={{ width: 80, height: 80 }}
                 />:<Image
-                  source={require("../assets/images/highQualityImg/OIG1.png")}
+                  source={require("../assets/images/highQualityImg/OIG2.png")}
                   style={{ width: 80, height: 80 }}
                 />}
                 
@@ -787,6 +787,7 @@ const styles = StyleSheet.create({
     // fontSize: (HEIGHT / 1000) * 13,
     // fontWeight: "500",
     color: "#B8131C",
+    lineHeight: 20,
     fontSize: 14,
     fontWeight: "500",
     fontFamily: "NotoSansB",
@@ -802,12 +803,15 @@ const styles = StyleSheet.create({
   },
   itemtitle: {
     fontSize: 16,
+    lineHeight: 20,
     fontWeight: "600",
     fontFamily: "NotoSansBlack",
   },
 
   itemtitle2: {
     fontSize: 17,
+    lineHeight: 21,
+    marginTop: 5,
     fontWeight: "600",
     color: "#7D7D7D",
     fontFamily: "NotoSansBlack",
