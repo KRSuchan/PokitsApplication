@@ -104,6 +104,9 @@ export default function MainPage({ navigation }) {
   const navigateToCalendar = () => {
     navigation.navigate("일정");
   };
+  const navigateToCalendar2 = () => {
+    navigation.navigate("일정2");
+  };
 
   // 각 식당 메뉴별 useState
   const [studnetCaf, setStudentCaf] = useState([]);
@@ -606,7 +609,7 @@ export default function MainPage({ navigation }) {
                 <TouchableOpacity
                   onPress={() => {
                     console.log("프로필버튼 누름");
-                    navigateToCafeteria2();
+                    navigateToCalendar2();
                   }}>
                   <Text
                     style={styles.h1}
