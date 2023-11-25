@@ -8,20 +8,38 @@
 // import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 // import { WebView } from 'react-native-webview';
 // import AsyncStorage from "@react-native-async-storage/async-storage";
-// import { ActivityIndicator } from 'react-native';
+// import { ActivityIndicator,Dimensions } from 'react-native';
+
+// //기존식당 임포트
+// import { StatusBar } from "expo-status-bar";
+// import { getCtrlMenu } from "../controller/CafeteriaService";
+
+
+// //화면의 높이
+// HEIGHT = Dimensions.get("window").height;
+
+// //화면의 너비
+// WIDTH = Dimensions.get("window").width;
+
+
+
 
 // const Tab = createMaterialTopTabNavigator();
 
 // const FirstRoute = () => (
-//     <WebView source={{ uri: 'https://www.kumoh.ac.kr/ko/sub06_01_01_01.do' }} style={styles.scrollbox} />
-//   );
+//     <View>
+
+//     </View>
+// );
   
 // const SecondRoute = () => (
-//     <WebView source={{ uri: 'https://www.kumoh.ac.kr/ko/sub06_01_01_02.do' }} style={styles.scrollbox} />
+//     <View>
+
+//     </View>
 // );
 
 // const LogoGradient = ({navigation}) => (
-//     <LinearGradient colors={['#00A0D2', '#6ED8FA']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.topView}>
+//     <LinearGradient colors={['#DA121D', '#FF6725']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.topView}>
 //       <TouchableOpacity onPress={()=> navigation.navigate("메인화면")} >
 //         <Text style={styles.h1}>
 //             Pokit's
@@ -30,10 +48,10 @@
 //     </LinearGradient>
 // );
 
-// const TabMyTab1 = ({initialTab}) => (
-//     <Tab.Navigator initialRouteName={initialTab}
+// const TabMyTab1 = () => (
+//     <Tab.Navigator 
 //       tabBar={(props) => ( //커스텀 탭바 = props
-//         <LinearGradient colors={['#00A0D2', '#6ED8FA']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={{ flexDirection: 'row',paddingLeft: 20,paddingTop: 10}}>
+//         <LinearGradient colors={['#DA121D', '#FF6725']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={{ flexDirection: 'row',paddingLeft: 20,paddingTop: 10}}>
 //           {props.state.routes.map((route, index) => ( //각 탭을 흩뿌리기
 //             <TouchableOpacity
 //               key={route.key} //탭에 고유한 id
@@ -60,11 +78,9 @@
 
 //     const insets = useSafeAreaInsets(); //어디까지 안전해?
 
-//     const [selectedItem, setSelectedItem] = useState("http://se.kumoh.ac.kr/"); //학과 설정 저장되는 곳
-
 //     const [loading, setLoading] = useState(false); // 데이터 로딩 상태
 
-//     const initialTab = route.params?.initialTab ?? '학사'; //
+//     const initialTab = route.params?.initialTab ?? '교내식당'; //
 
 //     useEffect(() => {
 //         const loadSettings = async() => {
@@ -85,14 +101,14 @@
 //         return(
 //             <View style={styles.fullcontainer}>
 //                 <LinearGradient
-//                     colors={['#00A0D2', '#6ED8FA']}
+//                     colors={['#DA121D', '#FF6725']}
 //                     style={{ height: insets.top }}
 //                     start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}  
 //                 />
 //                 <View style={styles.fullcontainer}> 
 //                     <LogoGradient navigation={navigation}></LogoGradient>
 //                         <View style={{flex: 1}}>
-//                             <TabMyTab1 settingurl = {selectedItem} initialTab={initialTab}>
+//                             <TabMyTab1>
 //                             </TabMyTab1>
 //                         </View>
 //                 </View>
@@ -247,5 +263,3 @@
       
       
 // })
-
-//이 페이지는 그라데이션 기본 컴포넌트를 포함하고 있으므로 어디서든 재사용이 가능함. 

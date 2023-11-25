@@ -92,7 +92,7 @@ export default function MainPage({ navigation }) {
     navigation.navigate("설정");
   };
   const navigateToCafeteria = () => {
-    navigation.navigate("식당");
+    navigation.navigate("식당2");
   };
   const navigateToCafeteria2 = () => {
     navigation.navigate('식당2', { initialTab: '교내식당' });
