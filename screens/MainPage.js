@@ -102,7 +102,7 @@ export default function MainPage({ navigation }) {
     navigation.navigate("버스");
   };
   const navigateToCalendar = () => {
-    navigation.navigate("일정");
+    navigation.navigate("일정2");
   };
   const navigateToCalendar2 = () => {
     navigation.navigate("일정2");
@@ -395,7 +395,7 @@ export default function MainPage({ navigation }) {
     if (calendar == "undefined" || calendar.length == 0) {
       // calendar 데이터가 없거나 빈 경우에 대한 처리
       return (
-        <View style={styles.calendarViewContainer}>
+        <View style={styles.calendarViewContainer} pointerEvents='none'>
           <View style={styles.calendarContentsAndDday}>
             <Text style={styles.calendarContents}>이번달 일정 없음!</Text>
           </View>
