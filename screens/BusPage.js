@@ -34,9 +34,6 @@ const FirstRoute = ({buses}) => (
   
 );
 
-const SecondRoute = () => (
-  <View style={[styles.scene, { backgroundColor: '#673ab7' }]} />
-);
 
 const LogoGradient = ({navigation}) => (
     <LinearGradient colors={['#018242', '#00D26A']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.topView}>
@@ -62,7 +59,7 @@ const TabMyTab = ({}) => ( //탭바 함수 내부에서 탭바 컴포넌트 사�
         <Tab.Screen name="전체 정류장">
           {props => <FirstRoute {...props} buses={buses} />}
         </Tab.Screen>
-        <Tab.Screen name="옥계 정류장" component={SecondRoute} />
+        
     </Tab.Navigator>
 );
 
@@ -87,7 +84,7 @@ const TabMyTab1 = ({buses}) => (
         <Tab.Screen name="전체 정류장">
           {props => <FirstRoute {...props} buses = {buses}/>}
         </Tab.Screen>
-      <Tab.Screen name="옥계 정류장" component={SecondRoute} />
+
     </Tab.Navigator>
   );
   
