@@ -163,22 +163,26 @@ export default function MainPage({ navigation }) {
     }
   };
 
+  const loadSettings = async () => {
+    try {
+      const getClassMark = await AsyncStorage.getItem("scheduleViewSetting");
+      if (getClassMark !== null || getClassMark == "true") setClassMark(true);
+      else setClassMark(false);
+  
+      const getCafeteriaSetting = await AsyncStorage.getItem("cafeteriaSetting");
+      if (getCafeteriaSetting !== null && getCafeteriaSetting !== cafeteria) {
+        setCafeteria(getCafeteriaSetting);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  }; //cafeteria 상태와 다를 때만 setCafeteria 를 호출함. 
+
   useEffect(() => {
     //설정 불러오기
-    const loadSettings = async () => {
-      try {
-        const getClassMark = await AsyncStorage.getItem("scheduleViewSetting");
-        if (getClassMark !== null || getClassMark == "true") setClassMark(true);
-        else setClassMark(false);
+
+    const unsubscribe = navigation.addListener('focus', loadSettings);
     
-        const getCafeteriaSetting = await AsyncStorage.getItem("cafeteriaSetting");
-        if (getCafeteriaSetting !== null && getCafeteriaSetting !== cafeteria) {
-          setCafeteria(getCafeteriaSetting);
-        }
-      } catch (error) {
-        console.error(error);
-      }
-    }; //cafeteria 상태와 다를 때만 setCafeteria 를 호출함. 
 
     const loadBusSettings = async () => {
       try {
@@ -197,10 +201,11 @@ export default function MainPage({ navigation }) {
     getDdayData(); // dday 데이터 불러오기를 실행
     loadBusSettings();
     updateTime(); // 초기 시간 설정
+
     let timer = setInterval(() => {
       updateTime();
       // 초기 설정 및 1초마다 시간을 업데이트
-      loadSettings();
+      // loadSettings();
     }, 1000);
 
     let timer2 = setInterval(() => {
@@ -210,8 +215,10 @@ export default function MainPage({ navigation }) {
     return () => {
       clearInterval(timer);
       clearInterval(timer2); // 두 번째 타이머도 해제
+      unsubscribe();
+
     };
-  }, []);
+  }, [navigation, cafeteria]);
 
   useEffect(() => {
     // 시간이 변경될 때마다 메뉴 갱신
