@@ -108,6 +108,10 @@ export default function MainPage({ navigation }) {
     navigation.navigate("일정2");
   };
 
+  const navigateToTip = () => {
+    navigation.navigate("팁");
+  };
+  
   // 각 식당 메뉴별 useState
   const [studnetCaf, setStudentCaf] = useState([]);
   const [facultyCaf, setFacultyCaf] = useState([]);
@@ -588,7 +592,7 @@ export default function MainPage({ navigation }) {
                   right: 0,
                   bottom: 0,
                 }}
-                onPress={() => setVisible(!visible)}
+                onPress={() => navigateToTip()}
               >
                 {visible?<Image
                   source={require("../assets/images/highQualityImg/OIG2.png")}

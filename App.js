@@ -34,6 +34,7 @@ import BusPage from "./screens/BusPage";
 import CalendarPage from "./screens/CalendarPage";
 import CalendarPage2 from "./screens/CalendarPage2";
 import QuickMenuPage from "./screens/QuickMenuPage";
+import TipPage from "./screens/TipPage";
 
 //네비게이터 사용
 const Stack = createStackNavigator();
@@ -119,6 +120,13 @@ export default function App() {
             component={QuickMenuPage}
             options={{ headerShown: false }}
           />
+
+          <Stack.Screen
+            name="팁"
+            component={TipPage}
+            options={{ headerShown: false }}
+          />
+          
         </Stack.Navigator>
       </NavigationContainer>
       <StatusBar style="auto" />
