@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ScrollView, StyleSheet, View, Text, Button, StyleSheetm, TouchableOpacity, Image } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { Divider } from 'react-native-elements';
@@ -40,65 +40,62 @@ const LogoGradient = ({navigation}) => (
 );
 
 
-
-const TabMyTab1 = ({TipText}) => (
+// 탭 내부의 컴포넌트를 정의함. 팁 텍스트들과 팁을 추가하는 함수, 스크롤 뷰에 대한 참조를 prop으로 받음
+const TabMyTab1 = ({tipTexts, addTip,scrollRef}) => (
     <View style={styles.container}>
-        <ScrollView style={{flex:5}}>
+        <ScrollView 
+        ref={scrollRef} // scrollRef를 통해 ScrollView 컴포넌트를 제어함 
+
+        style={{flex:1,width:"100%"}} >
             <Text style={styles.MenuTextTitle}>
                 삼색냥
             </Text>
-            <View style={{ width:"100%" ,backgroundColor:"#FFA462",marginTop:5, borderRadius: 10, padding:20, marginBottom:20, }}>
-                <Text style={styles.MenuText}>
-                    {TipText}
-                </Text>
-            </View>
+            {tipTexts.map((tipText, index) => (
+                <View key={index} style={{ width:"100%" ,backgroundColor:"#FFA462",marginTop:5, borderRadius: 10, padding:20, marginBottom:20, }}>
+                    <Text style={styles.MenuText}>
+                        {tipText}
+                    </Text>
+                </View>
+            ))}
         </ScrollView>
         
-        <Image
-                  source={require("../assets/images/highQualityImg/OIG1.png")}
-                  style={{resizeMode:"contain", height:"25%",width:"100%"}}
-                />
-        
+        <TouchableOpacity onPress={addTip} style={{height:"20%",width:"100%",padding:10}}>
+            <Image
+                source={require("../assets/images/highQualityImg/OIG1.png")}
+                style={{resizeMode:"contain",height:"100%",width:"100%"}}
+            />
+        </TouchableOpacity>
     </View>
-  );
-  
+);
 
 
 export default function TipPage({navigation,route}){
 
-    const [tipText, setTipText] = useState(''); // Tip text를 저장할 state 추가
+    const scrollRef = useRef(); // ScrollView 컴포넌트를 제어하기 위한 ref를 생성함
+
+    const [tipTexts, setTipTexts] = useState([]); // Tip texts를 저장할 state 추가
 
     const insets = useSafeAreaInsets(); //어디까지 안전해?
 
     const [loading, setLoading] = useState(false); // 데이터 로딩 상태
 
-    const initialTab = route.params?.initialTab ?? '교내식당'; //
 
+    // 팁을 추가하는 함수를 정의함
+    const addTip = () => {
+        const tips = tipsjson; 
+        const keys = Object.keys(tips); 
+        const randomKey = keys[Math.floor(Math.random() * keys.length)]; //랜덤으로 숫자 하나 뽑음( 범위 내에서)
+        setTipTexts([...tipTexts, tips[randomKey]]); //팁을 하나 추가함, 기존의 ...팁 에 새로 뽑은 팁까지
+        scrollRef.current?.scrollToEnd({animated: true}); // 팁이 추가될 때마다 스크롤을 가장 아래로 내림
+    };
     
 
     useEffect(() => {
-        const loadSettings = async () => {
-            try {
-
-              const tips = tipsjson;
-          
-              // tips에서 랜덤한 키를 선택
-              const keys = Object.keys(tips);
-              const randomKey = keys[Math.floor(Math.random() * keys.length)];
-          
-              // 선택된 키에 해당하는 tip을 state에 저장
-              setTipText(tips[randomKey]);
-            } catch (error) {
-              console.error(error);
-            }
-          };
-
-        loadSettings(); //이걸 해줘야 실제로 작동한다.
+        addTip(); // 컴포넌트가 마운트될 때 첫 번째 팁을 추가함
     }, []);
 
     if (loading) { // 데이터가 아직 로드되지 않은 경우 로딩 인디케이터를 표시합니다.
-        return <ActivityIndicator />;
-        
+        return <ActivityIndicator />;        
     }else{
         return(
             <View style={styles.fullcontainer}>
@@ -110,13 +107,13 @@ export default function TipPage({navigation,route}){
                 <View style={styles.fullcontainer}> 
                     <LogoGradient navigation={navigation}></LogoGradient>
                         <View style={{flex: 1}}>
-                            <TabMyTab1 TipText={tipText}>
-                            </TabMyTab1>
+                            <TabMyTab1 tipTexts={tipTexts} addTip={addTip} scrollRef={scrollRef} />
                         </View>
                 </View>
             </View>
         );
-    }
+    }  
+
 
     
 }
