@@ -168,19 +168,17 @@ export default function MainPage({ navigation }) {
     const loadSettings = async () => {
       try {
         const getClassMark = await AsyncStorage.getItem("scheduleViewSetting");
-        // 일정 설정에 따른 조건
         if (getClassMark !== null || getClassMark == "true") setClassMark(true);
         else setClassMark(false);
-        //세팅을 변수에 담음
-        const getCafeteriaSetting = await AsyncStorage.getItem(
-          "cafeteriaSetting"
-        );
-        // 식단 설정에 따른 조건
-        if (getCafeteriaSetting !== null) setCafeteria(getCafeteriaSetting);
+    
+        const getCafeteriaSetting = await AsyncStorage.getItem("cafeteriaSetting");
+        if (getCafeteriaSetting !== null && getCafeteriaSetting !== cafeteria) {
+          setCafeteria(getCafeteriaSetting);
+        }
       } catch (error) {
         console.error(error);
       }
-    };
+    }; //cafeteria 상태와 다를 때만 setCafeteria 를 호출함. 
 
     const loadBusSettings = async () => {
       try {
