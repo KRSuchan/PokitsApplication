@@ -1,0 +1,251 @@
+// import React, { useState, useEffect } from 'react';
+// import { ScrollView, StyleSheet, View, Text, Button, StyleSheetm, TouchableOpacity, Image } from 'react-native';
+// import { createStackNavigator } from '@react-navigation/stack';
+// import { Divider } from 'react-native-elements';
+// import { LinearGradient } from "expo-linear-gradient";
+// import { TabView, SceneMap, TabBar } from 'react-native-tab-view';
+// import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+// import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+// import { WebView } from 'react-native-webview';
+// import AsyncStorage from "@react-native-async-storage/async-storage";
+// import { ActivityIndicator } from 'react-native';
+
+// const Tab = createMaterialTopTabNavigator();
+
+// const FirstRoute = () => (
+//     <WebView source={{ uri: 'https://www.kumoh.ac.kr/ko/sub06_01_01_01.do' }} style={styles.scrollbox} />
+//   );
+  
+// const SecondRoute = () => (
+//     <WebView source={{ uri: 'https://www.kumoh.ac.kr/ko/sub06_01_01_02.do' }} style={styles.scrollbox} />
+// );
+
+// const LogoGradient = ({navigation}) => (
+//     <LinearGradient colors={['#00A0D2', '#6ED8FA']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.topView}>
+//       <TouchableOpacity onPress={()=> navigation.navigate("메인화면")} >
+//         <Text style={styles.h1}>
+//             Pokit's
+//         </Text>
+//       </TouchableOpacity>
+//     </LinearGradient>
+// );
+
+// const TabMyTab1 = ({initialTab}) => (
+//     <Tab.Navigator initialRouteName={initialTab}
+//       tabBar={(props) => ( //커스텀 탭바 = props
+//         <LinearGradient colors={['#00A0D2', '#6ED8FA']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={{ flexDirection: 'row',paddingLeft: 20,paddingTop: 10}}>
+//           {props.state.routes.map((route, index) => ( //각 탭을 흩뿌리기
+//             <TouchableOpacity
+//               key={route.key} //탭에 고유한 id
+//               onPress={() => props.navigation.navigate(route.name)} //클릭시 이동
+//               style={{ alignItems: 'center', paddingRight: 15 }}
+//             >
+//               <Text style={{ color: 'white',fontSize: 22, fontWeight: 'bold' ,paddingBottom:10}}>{route.name}</Text>
+//               {/* 텍스트 뿌리고 인디케이터 뿌릴게 */}
+//               {props.state.index === index && <View style={{ width: '100%', height: 4, backgroundColor: 'white' }} />} 
+//             </TouchableOpacity>
+//           ))}
+//         </LinearGradient>
+//       )}
+//     >
+//         <Tab.Screen name="교내식당" component={FirstRoute}>
+//         </Tab.Screen>
+//       <Tab.Screen name="기숙사식당" component={SecondRoute} />
+//     </Tab.Navigator>
+//   );
+  
+
+
+// export default function CafeteriaPage2({navigation,route}){
+
+//     const insets = useSafeAreaInsets(); //어디까지 안전해?
+
+//     const [selectedItem, setSelectedItem] = useState("http://se.kumoh.ac.kr/"); //학과 설정 저장되는 곳
+
+//     const [loading, setLoading] = useState(false); // 데이터 로딩 상태
+
+//     const initialTab = route.params?.initialTab ?? '학사'; //
+
+//     useEffect(() => {
+//         const loadSettings = async() => {
+//             try{
+                
+//             } catch (error) {
+//                 console.error(error);
+//             }
+//         }
+
+//         loadSettings(); //이걸 해줘야 실제로 작동한다.
+//     }, []);
+
+//     if (loading) { // 데이터가 아직 로드되지 않은 경우 로딩 인디케이터를 표시합니다.
+//         return <ActivityIndicator />;
+        
+//     }else{
+//         return(
+//             <View style={styles.fullcontainer}>
+//                 <LinearGradient
+//                     colors={['#00A0D2', '#6ED8FA']}
+//                     style={{ height: insets.top }}
+//                     start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}  
+//                 />
+//                 <View style={styles.fullcontainer}> 
+//                     <LogoGradient navigation={navigation}></LogoGradient>
+//                         <View style={{flex: 1}}>
+//                             <TabMyTab1 settingurl = {selectedItem} initialTab={initialTab}>
+//                             </TabMyTab1>
+//                         </View>
+//                 </View>
+//             </View>
+//         );
+
+//     }
+
+    
+// }
+
+// const styles = StyleSheet.create({
+//     container: {
+//     //   flex: 1,
+//       backgroundColor: '#fff',
+//       alignItems: 'flex-start',
+//       justifyContent: 'flex-start', 
+//       padding: 20,
+//     },
+//     topView:{
+//         // flex: 1,
+//         paddingTop: 0,
+//         paddingHorizontal: 20,
+//     },
+//     fullcontainer:{
+//         flex: 1, //화면 꽉채워줭, 
+//         backgroundColor: '#fff',
+//     },
+//     h1: {
+//         fontFamily: "Lobster",
+//         fontSize: 40,
+//         color: "#fff",
+//       },
+//       scene: {
+//         padding:20,
+//         flex:1,
+//         backgroundColor: '#F5F5F5',
+//       },
+//       vbox: {
+//         flexDirection: "column",
+//       },
+//       hbox: {
+//         flexDirection: "row",
+//         justifyContent: "space-evenly",
+//         alignItems: "center",
+//         marginVertical: 3,
+//       },
+//       busitemhbox: {
+//         flex:1,
+//       },
+//       busitemhbox2: {
+//         flex:2,
+//       },
+//       tabbarmystyle: {
+//         backgroundColor: 'transparent',
+//       },
+//       busboxstyle:{
+//         width: "100%",
+//         backgroundColor: '#fff',
+//         padding: 10,
+//         marginBottom: 20,
+//         borderRadius: 10,
+//       },
+//       busboxtitle:{
+//         width: "100%",
+//         borderRadius: 7,
+//         padding: 15,
+//         backgroundColor: '#018242',
+//         alignItems: "center",
+//         marginBottom: 15,
+//       },
+//       busitemtext:{
+//         fontSize:18,
+//         fontWeight:'800',
+//         color:"black",
+//         textAlign:"right",
+//       },
+//       busitemlefttext:{
+//         fontSize:18,
+//         fontWeight:'800',
+//         color:"black",
+        
+//       },
+
+//       outerGrad: {
+//         flex: 1,
+//         width: "100%",
+//         justifyContent: "space-between",
+//       },
+//       header: {
+//         flex: HEIGHT / 15000,
+//         backgroundColor: "rgba(0,0,0,0)",
+//         paddingLeft: WIDTH / 50,
+//         width: "100%",
+//         flexDirection: "row",
+//         alignItems: "center",
+//         justifyContent: "space-between",
+//       },
+//       tabView: {
+//         width: "100%",
+//       },
+//       hPokits: {
+//         fontFamily: "Lobster",
+//         color: "#FFFFFF",
+//         alignContent: "center",
+//         fontSize: WIDTH / 15,
+//       },
+//       pageViewContainer: {
+//         flex: 1,
+//         padding: (WIDTH / 100) * 10,
+//         backgroundColor: "#F5F5F5",
+//         justifyContent: "space-between",
+//         alignItems: "center",
+//       },
+//       cafeteriaContainer: {
+//         marginBottom: 20,
+//         height: 250,
+//         flexDirection: "row",
+//         backgroundColor: "#FFFFFF",
+//         borderRadius: 10,
+//       },
+//       cafeteriaType: {
+//         width: "30%",
+//         backgroundColor: "#DB141E",
+//         justifyContent: "center",
+//         alignItems: "center",
+//         borderRadius: 10,
+//       },
+//       cafeteriaMenuContainer: {
+//         width: "70%",
+//       },
+//       cafeteriaName: {
+//         color: "#fff",
+//         fontSize: WIDTH / 30,
+//         margin: 5,
+//         fontWeight: "700",
+//       },
+//       cafeteriaMenuComponent: {
+//         height: "100%",
+//         width: (WIDTH / 100) * 56,
+//         justifyContent: "center",
+//         alignItems: "center",
+//       },
+//       cafeteriaMenu: {
+//         fontWeight: "600",
+//         textAlign: "center",
+//       },
+//       cafeteriaMenuText: {
+//         fontWeight: "500",
+//         textAlign: "center",
+//       },
+      
+      
+// })
+
+//이 페이지는 그라데이션 기본 컴포넌트를 포함하고 있으므로 어디서든 재사용이 가능함. 

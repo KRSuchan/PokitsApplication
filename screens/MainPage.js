@@ -94,6 +94,9 @@ export default function MainPage({ navigation }) {
   const navigateToCafeteria = () => {
     navigation.navigate("식당");
   };
+  const navigateToCafeteria2 = () => {
+    navigation.navigate('식당2', { initialTab: '교내식당' });
+  };
   const navigateToBus = () => {
     console.log('navigateToBus was called!');
     navigation.navigate("버스");
@@ -600,14 +603,20 @@ export default function MainPage({ navigation }) {
           <View style={styles.header}>
             <View style={{ flexDirection: "row" }}>
               
-                <Text
-                  style={styles.h1}
-                  onLayout={event => {
-                    const { height } = event.nativeEvent.layout;
-                    setTextHeight(height);
+                <TouchableOpacity
+                  onPress={() => {
+                    console.log("프로필버튼 누름");
+                    navigateToCafeteria2();
                   }}>
-                  Pokit's
-                </Text>
+                  <Text
+                    style={styles.h1}
+                    onLayout={event => {
+                      const { height } = event.nativeEvent.layout;
+                      setTextHeight(height);
+                    }}>
+                    Pokit's
+                  </Text>
+                </TouchableOpacity>
               
             </View>
 

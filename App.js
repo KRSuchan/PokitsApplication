@@ -22,6 +22,7 @@ import SettingListPage from "./screens/SettingListPage";
 import BusSettingPage from "./screens/BusSettingPage";
 import CafeteriaSettingPage from "./screens/CafeteriaSettingPage";
 import CafeteriaPage from "./screens/CafeteriaPage";
+import CafeteriaPage2 from "./screens/CafeteriaPage2";
 import ScheduleSettingPage from "./screens/ScheduleSettingPage";
 import DdaySettingPage from "./screens/DdaySettingPage";
 import DdayEditPage from "./screens/DdayEditPage";
@@ -94,6 +95,11 @@ export default function App() {
           <Stack.Screen
             name="식당"
             component={CafeteriaPage}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="식당2"
+            component={CafeteriaPage2}
             options={{ headerShown: false }}
           />
           <Stack.Screen
