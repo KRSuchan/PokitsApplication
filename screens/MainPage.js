@@ -1,6 +1,6 @@
 // Homepage.js
 import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity,TouchableWithoutFeedback } from "react-native";
 
 //노치 침범 방지 패키지
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
@@ -95,6 +95,7 @@ export default function MainPage({ navigation }) {
     navigation.navigate("식당");
   };
   const navigateToBus = () => {
+    console.log('navigateToBus was called!');
     navigation.navigate("버스");
   };
   const navigateToCalendar = () => {
@@ -263,7 +264,7 @@ export default function MainPage({ navigation }) {
   };
 
   const BusBox = ({ buses }) => (
-    <View style={styles.busboxstyle}>
+    <View style={styles.busboxstyle} pointerEvents='none' > 
       {buses.length === 0 && 
   <>
     <View style={{height: 12}} /> 
@@ -587,16 +588,13 @@ export default function MainPage({ navigation }) {
                 />}
                 
               </TouchableOpacity>
-              <Modal visible={visible} onDismiss={() => setVisible(false)}>
+              {/* <Modal visible={visible} onDismiss={() => setVisible(false)}>
                   <Text>메모</Text>
-              </Modal>
+              </Modal> */}
             </Portal>
           <View style={styles.header}>
             <View style={{ flexDirection: "row" }}>
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("퀵메뉴");
-                }}>
+              
                 <Text
                   style={styles.h1}
                   onLayout={event => {
@@ -605,7 +603,7 @@ export default function MainPage({ navigation }) {
                   }}>
                   Pokit's
                 </Text>
-              </TouchableOpacity>
+              
             </View>
 
             <TouchableOpacity
@@ -623,37 +621,40 @@ export default function MainPage({ navigation }) {
           {/* 학식 컴포넌트 */}
           <View style={styles.componentAria}>
             {/* 입벌려, 버스 들어간다 */}
+          
             <View style={styles.busMainAria}>
-              
-
-              <TouchableOpacity
-                onPress={() => {
-                  console.log("버스사진 누름");
-                  navigateToBus();
-                }}>
-                  <View style={styles.componentTitle}>
+            <TouchableOpacity
+              onPress={() => {
+                console.log("버스사진 누름");
+                navigateToBus();
+              }}>
+              <View style={styles.componentTitle}>
                 <Image
                   source={require("../assets/images/busBlack.png")} // 여기에 실제 이미지 경로 입력
                   style={{ width: 20, height: 23 }} // 텍스트 높이만큼 이미지 크기 설정
                 />
                 <Text style={styles.componentName}>버스</Text>
               </View>
+              
                 <BusBox buses={buses} />
               </TouchableOpacity>
             </View>
-            <View style={styles.dietMainAria}>
-              <TouchableOpacity
-                onPress={() => {
-                  console.log("식당 페이지 이동");
-                  navigateToCafeteria();
-                }}>
-                <View style={styles.componentTitle}>
+            
+            <View style={styles.componentTitle}>
                   <Image
                     source={require("../assets/images/haksicBlack.png")} // 여기에 실제 이미지 경로 입력
                     style={{ width: 23, height: 26.3 }} // 텍스트 높이만큼 이미지 크기 설정
                   />
                   <Text style={styles.componentName}>학식</Text>
                 </View>
+            <View style={styles.dietMainAria}>
+              
+              <TouchableOpacity
+                onPress={() => {
+                  console.log("식당 페이지 이동");
+                  navigateToCafeteria();
+                }}>
+                
                 {cafeteriaComponent(cafeteria)}
               </TouchableOpacity>
             </View>
@@ -744,7 +745,7 @@ const styles = StyleSheet.create({
   },
   componentName: {
     fontSize: 20,
-    fontWeight: "800",
+    fontWeight: "600",
     margin: 5,
     fontFamily: "NotoSansBlack",
   },
@@ -800,13 +801,13 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   itemtitle: {
-    fontSize: 18,
-    fontWeight: "800",
+    fontSize: 16,
+    fontWeight: "600",
     fontFamily: "NotoSansBlack",
   },
 
   itemtitle2: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: "600",
     color: "#7D7D7D",
     fontFamily: "NotoSansBlack",
@@ -845,18 +846,24 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   calendarContents: {
-    fontSize: (HEIGHT / 100) * 1.5,
-    fontWeight: "600",
+    // fontSize: (HEIGHT / 100) * 1.5,
+    // fontWeight: "600",
     color: "#182A76",
+    fontSize: 15,
+    fontWeight: "500",
+    fontFamily: "NotoSansB",
   },
   calendarContentsDday: {
     fontSize: (HEIGHT / 100) * 1.2,
     color: "#182A76",
   },
   DdayContents: {
-    fontSize: (HEIGHT / 100) * 1.2,
-    fontWeight: "800",
+    // fontSize: (HEIGHT / 100) * 1.2,
+    // fontWeight: "800",
     color: "#fff",
+    fontSize: 13,
+    fontWeight: "500",
+    fontFamily: "NotoSansB",
   },
   DdayBox: {
     width: "100%",
@@ -890,5 +897,6 @@ const styles = StyleSheet.create({
     paddingLeft:20,
     paddingHorizontal:10,
     marginBottom: 5,
-  }
+  },
+  
 });
