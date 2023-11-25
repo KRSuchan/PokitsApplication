@@ -1,5 +1,6 @@
 //설정 조회를 위해 필요함
 import React, { useState, useEffect } from "react";
+import { Dimensions,ScrollView } from "react-native";
 //설정 저장을 위해 필요함
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from "@react-native-community/datetimepicker";
@@ -107,6 +108,9 @@ export default function DdayEditPage({route, navigation}){
 
     return(
         <View style={styles.container}>
+          <ScrollView style={styles.scrollbox}>
+
+          
             <Text style={styles.h1}>디데이 수정</Text>
             <View style={styles.inputbox}>
                 <TextInput 
@@ -136,6 +140,7 @@ export default function DdayEditPage({route, navigation}){
                 <Button title="삭제" onPress={()=>deleteDdays()}/>
                 <Button title="저장" onPress={()=>saveDdays()}/>
             </View>
+            </ScrollView>
         </View>
     )
 }
@@ -198,6 +203,10 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "#ECEDEE",
     borderRadius: 15,
-  }
+  },
+  scrollbox:{
+    flex:1,
+    width:'100%',
+},
 
 });

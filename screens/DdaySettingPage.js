@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 //설정 저장을 위해 필요함
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { StyleSheet, View, Text, Button, StyleSheetm, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, View, Text, Button, StyleSheetm, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { Divider } from 'react-native-elements';
 
 import { useFocusEffect } from '@react-navigation/native';
@@ -113,6 +113,8 @@ export default function DdaySettingPage({navigation}){
 
     return(
         <View style={styles.container}>
+          <ScrollView style={styles.scrollbox}>
+
             <Text style={styles.h1}>디데이 설정</Text>
             <DdayItemBig
                 title="디데이 추가"
@@ -132,6 +134,7 @@ export default function DdaySettingPage({navigation}){
                 }
                 })}
             <Button title="초기화" onPress={reset}/>
+            </ScrollView>
         </View>
     )
 }
@@ -172,5 +175,9 @@ const styles = StyleSheet.create({
         fontSize: 17,
         color:"#8A8A8E",
         fontWeight:'500',
+    },
+    scrollbox:{
+        flex:1,
+        width:'100%',
     },
 })
