@@ -8,7 +8,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { SafeAreaProvider, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { ActivityIndicator,Dimensions,TouchableHighlight } from 'react-native';
+import { ActivityIndicator,Dimensions,TouchableHighlight,Alert } from 'react-native';
 import { getCalendar, ddayCalculator } from "../controller/CalendarService";
 
 //기존식당 임포트
@@ -22,7 +22,14 @@ HEIGHT = Dimensions.get("window").height;
 //화면의 너비
 WIDTH = Dimensions.get("window").width;
 
-
+// Dday 클래스 정의
+class Dday {
+  constructor(id, ddayName, ddayDate) {
+    this.id = id;
+    this.ddayName = ddayName;
+    this.ddayDate = ddayDate;
+  }
+}
 
 
 const Tab = createMaterialTopTabNavigator();
@@ -178,22 +185,22 @@ const UnivCalendarRoute = ({
                 <TouchableOpacity onPress={decreaseMonth}>
                   <Image
                     source={require("../assets/images/Prev_Calendar.png")} // 여기에 실제 이미지 경로 입력
-                    style={{ width: 38, height: 38 }} // 텍스트 높이만큼 이미지 크기 설정
+                    style={{ width: 28, height: 28 }} // 텍스트 높이만큼 이미지 크기 설정
                   />
                 </TouchableOpacity>
               ) : (
-                <View style={{ width: 38, height: 38 }} />
+                <View style={{ width: 28, height: 28 }} />
               )}
               <Text style={styles.monthText}>{month + 1}월</Text>
               {month < 11 ? (
                 <TouchableOpacity onPress={increaseMonth}>
                   <Image
                     source={require("../assets/images/Next_Calendar.png")} // 여기에 실제 이미지 경로 입력
-                    style={{ width: 38, height: 38 }} // 텍스트 높이만큼 이미지 크기 설정
+                    style={{ width: 28, height: 28 }} // 텍스트 높이만큼 이미지 크기 설정
                   />
                 </TouchableOpacity>
               ) : (
-                <View style={{ width: 38, height: 38 }} />
+                <View style={{ width: 28, height: 28 }} />
               )}
             </LinearGradient>
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -201,7 +208,7 @@ const UnivCalendarRoute = ({
             </ScrollView>
           </View>
           <View>
-            <Text style={{ fontSize: 10, width: "100%" }}>
+            <Text style={{ fontSize: 13, width: "100%", fontWeight:"500"}}>
               ※ 디데이에 넣고 싶은 학사 일정을 꾹 눌러보세요!
             </Text>
           </View>
@@ -502,7 +509,7 @@ const styles = StyleSheet.create({
       },
       pageViewContainer: {
         flex: 1,
-        padding: (WIDTH / 100) * 10,
+        padding: 10,
         backgroundColor: "#F5F5F5",
         justifyContent: "space-between",
         alignItems: "center",
@@ -621,6 +628,7 @@ const styles = StyleSheet.create({
         minHeight: "10%",
         flexDirection: "row",
         paddingHorizontal: 20,
+        paddingVertical: 10,
         width: (WIDTH / 100) * 90,
         justifyContent: "space-between",
         alignItems: "center",
@@ -639,8 +647,10 @@ const styles = StyleSheet.create({
       },
       monthText: {
         color: "#FFF",
-        fontWeight: "700",
-        fontSize: 30,
+        fontWeight: "600",
+        fontFamily: "NotoSansBlack",
+        fontSize: 22,
+        paddingVertical:10,
       },
       calendarComponent: {
         width: (WIDTH / 100) * 80,
@@ -675,8 +685,12 @@ const styles = StyleSheet.create({
         fontWeight: "800",
         textAlign: "center",
       },
-      nowDdayDate: { fontSize: 10, color: "#182A76", fontWeight: "800" },
-      ddayText: { fontSize: 20, color: "#182A76", fontWeight: "800" },
+      nowDdayDate: { 
+        fontSize: 10, color: "#182A76", fontWeight: "800" 
+      },
+      ddayText: { 
+        fontSize: 20, color: "#182A76", fontWeight: "800" 
+      },
       calDays: { color: "#8A8A8E" },
       vbox: {
         height: "auto",
