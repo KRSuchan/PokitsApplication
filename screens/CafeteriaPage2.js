@@ -48,8 +48,8 @@ const LogoGradient = ({navigation}) => (
     </LinearGradient>
 );
 
-const TabMyTab1 = ({initialTab}) => (
-    <Tab.Navigator initialRouteName={initialTab}
+const TabMyTab1 = () => (
+    <Tab.Navigator 
       tabBar={(props) => ( //커스텀 탭바 = props
         <LinearGradient colors={['#DA121D', '#FF6725']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={{ flexDirection: 'row',paddingLeft: 20,paddingTop: 10}}>
           {props.state.routes.map((route, index) => ( //각 탭을 흩뿌리기
@@ -108,7 +108,7 @@ export default function CafeteriaPage2({navigation,route}){
                 <View style={styles.fullcontainer}> 
                     <LogoGradient navigation={navigation}></LogoGradient>
                         <View style={{flex: 1}}>
-                            <TabMyTab1 settingurl = {selectedItem} initialTab={initialTab}>
+                            <TabMyTab1>
                             </TabMyTab1>
                         </View>
                 </View>
