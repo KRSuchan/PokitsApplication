@@ -768,6 +768,7 @@ const styles = StyleSheet.create({
   },
   componentName: {
     fontSize: 20,
+    lineHeight: 24,
     fontWeight: "600",
     margin: 5,
     fontFamily: "NotoSansBlack",
@@ -921,6 +922,7 @@ const styles = StyleSheet.create({
   cafeteriaNameStyle:{
     paddingTop:3, fontFamily:"NotoSansB",color:"#fff",
     fontSize:18,
+    lineHeight:22,
     paddingLeft:20,
     paddingHorizontal:10,
     marginBottom: 3,
