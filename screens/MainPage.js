@@ -795,7 +795,7 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   dietMenu: {
-    // flexGrow: 1,
+    flexGrow: 1,
     padding: 10,
     paddingHorizontal: 20,
     justifyContent: "center",
@@ -917,10 +917,10 @@ const styles = StyleSheet.create({
     width:'100%',
 },
   cafeteriaNameStyle:{
-    paddingTop:7, fontFamily:"NotoSansB",color:"#fff",
+    paddingTop:3, fontFamily:"NotoSansB",color:"#fff",
     fontSize:18,
     paddingLeft:20,
     paddingHorizontal:10,
-    marginBottom: 5,
+    marginBottom: 3,
   },
 });
