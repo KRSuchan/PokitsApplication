@@ -12,7 +12,6 @@ import { ActivityIndicator,Dimensions } from 'react-native';
 
 //기존식당 임포트
 import { StatusBar } from "expo-status-bar";
-import { getCtrlMenu } from "../controller/CafeteriaService";
 import tipsjson from '../assets/data/tips.json';
 
 
