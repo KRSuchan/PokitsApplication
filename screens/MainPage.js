@@ -613,7 +613,6 @@ export default function MainPage({ navigation }) {
                 <TouchableOpacity
                   onPress={() => {
                     console.log("프로필버튼 누름");
-                    navigateToCalendar2();
                   }}>
                   <Text
                     style={styles.h1}
@@ -751,18 +750,21 @@ const styles = StyleSheet.create({
     fontFamily: "Lobster",
     //fontSize: "50%",
     fontSize: Dimensions.get("window").width > 500 ? 55 : 45,
+    lineHeight: Dimensions.get("window").width > 500 ? 59 : 49,
   },
   componentAria: {
     flex: 1,
-    marginTop: 10,
+    marginTop: 5,
     backgroundColor: "#F5F5F5",
     width: "100%",
+    marginBottom: 50,
   },
   componentTitle: {
     flexDirection: "row",
     alignItems: "center",
     paddingLeft: 10,
-    marginTop: 12.5,
+    marginTop: 8,
+    marginBottom: 5,
   },
   componentName: {
     fontSize: 20,
