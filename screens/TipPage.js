@@ -14,19 +14,13 @@ import { ActivityIndicator,Dimensions } from 'react-native';
 import { StatusBar } from "expo-status-bar";
 import tipsjson from '../assets/data/tips.json';
 
-
 //화면의 높이
 HEIGHT = Dimensions.get("window").height;
 
 //화면의 너비
 WIDTH = Dimensions.get("window").width;
 
-
-
-
 const Tab = createMaterialTopTabNavigator();
-
-
 
 const LogoGradient = ({navigation}) => (
     <LinearGradient colors={['#FFA462', '#BA4E00']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.topView}>
@@ -87,10 +81,32 @@ export default function TipPage({navigation,route}){
         setTipTexts([...tipTexts, tips[randomKey]]); //팁을 하나 추가함, 기존의 ...팁 에 새로 뽑은 팁까지
         scrollRef.current?.scrollToEnd({animated: true}); // 팁이 추가될 때마다 스크롤을 가장 아래로 내림
     };
+
+    const addGpt = async () => {
+      try {
+        const response = await fetch('https://pokits-chat-default-rtdb.firebaseio.com/base/body.json');
+        const data = await response.json();
+        // console.log(data);
+        const contents = data.content;
+    
+        const randomKey = Math.floor(Math.random() * contents.length);
+        const randomTip = contents[randomKey].summary;
+    
+        setTipTexts([...tipTexts, randomTip]);
+        scrollRef.current?.scrollToEnd({animated: true});
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
+      }
+    };
     
 
     useEffect(() => {
-        addTip(); // 컴포넌트가 마운트될 때 첫 번째 팁을 추가함
+      const fetchData = async () => {
+        await addGpt(); // 컴포넌트가 마운트될 때 첫 번째 팁을 추가함
+        addTip(); // 그 다음 두 번째 팁을 추가함
+      }
+      fetchData();
     }, []);
 
     if (loading) { // 데이터가 아직 로드되지 않은 경우 로딩 인디케이터를 표시합니다.
