@@ -45,7 +45,7 @@ const QuickMenuBox = ({navigation}) => {
     <QuickMenuMiniBox1 navigation={navigation} title="내학과" iconName = "home" onPress={() => navigation.navigate('퀵메뉴', { initialTab: '학과' })}/>
     <QuickMenuMiniBox navigation={navigation} title="학사" iconName = "pen" onPress={() => navigation.navigate('퀵메뉴', { initialTab: '학사' })}/>
     <QuickMenuMiniBox navigation={navigation} title="행사" iconName = "event" onPress={() => navigation.navigate('퀵메뉴', { initialTab: '행사' })}/>
-    <QuickMenuMiniBox navigation={navigation} title="소식" iconName = "alarm" onPress={() => navigation.navigate('퀵메뉴', { initialTab: '소식' })} />
+    <QuickMenuMiniBox navigation={navigation} title="소식" iconName = "alarm" onPress={() => navigation.navigate('퀵메뉴', { initialTab: '일반' })} />
   </View>)
   
 }
