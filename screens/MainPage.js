@@ -216,7 +216,7 @@ export default function MainPage({ navigation }) {
       updateTime();
       // 초기 설정 및 1초마다 시간을 업데이트
       // loadSettings();
-    }, 5);
+    }, 5); //최적화1 실행
 
     let timer2 = setInterval(() => {
       loadBusSettings();
