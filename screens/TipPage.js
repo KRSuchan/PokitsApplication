@@ -36,7 +36,7 @@ const LogoGradient = ({navigation}) => (
 // 탭 내부의 컴포넌트를 정의함. 팁 텍스트들과 팁을 추가하는 함수, 스크롤 뷰에 대한 참조를 prop으로 받음
 const TabMyTab1 = ({tipTexts, addTip,scrollRef}) => (
     <View style={styles.container}>
-        <ScrollView 
+             <ScrollView 
         ref={scrollRef} // scrollRef를 통해 ScrollView 컴포넌트를 제어함 
 
         style={{flex:1,width:"100%"}} >
@@ -44,10 +44,14 @@ const TabMyTab1 = ({tipTexts, addTip,scrollRef}) => (
                 삼색냥
             </Text>
             {tipTexts.map((tipText, index) => (
-                <View key={index} style={{ width:"100%" ,backgroundColor:"#FFA462",marginTop:5, borderRadius: 10, padding:20, marginBottom:20, }}>
-                    <Text style={styles.MenuText}>
+                <View key={index} style={{ width:"100%" ,backgroundColor: index === 0 ? "#3B313C" : "#FFA462",marginTop:5, borderRadius: 10, padding:20, marginBottom:20, }}>
+                    <Text style={{color: index === 0 ? "white" : "black", fontSize: 16, fontWeight: "600", fontFamily: "NotoSansBlack"}}>
                         {tipText}
                     </Text>
+                    {index === 0 && 
+                    <Text style={{marginTop:10,color: "white", fontSize: 12, fontWeight: "500", fontFamily: "NotoSansBlack", textAlign: "right"}}>
+                        포킷츠GPT가 요약한, 최근 가장 인기있던 공지예요!
+                    </Text>}
                 </View>
             ))}
         </ScrollView>
@@ -73,32 +77,28 @@ export default function TipPage({navigation,route}){
     const [loading, setLoading] = useState(false); // 데이터 로딩 상태
 
 
-    // 팁을 추가하는 함수를 정의함
     const addTip = () => {
-        const tips = tipsjson; 
-        const keys = Object.keys(tips); 
-        const randomKey = keys[Math.floor(Math.random() * keys.length)]; //랜덤으로 숫자 하나 뽑음( 범위 내에서)
-        setTipTexts([...tipTexts, tips[randomKey]]); //팁을 하나 추가함, 기존의 ...팁 에 새로 뽑은 팁까지
-        scrollRef.current?.scrollToEnd({animated: true}); // 팁이 추가될 때마다 스크롤을 가장 아래로 내림
-    };
-
-    const addGpt = async () => {
-      try {
-        const response = await fetch('https://pokits-chat-default-rtdb.firebaseio.com/base/body.json');
-        const data = await response.json();
-        // console.log(data);
-        const contents = data.content;
-    
-        const randomKey = Math.floor(Math.random() * contents.length);
-        const randomTip = contents[randomKey].summary;
-    
-        setTipTexts([...tipTexts, randomTip]);
-        scrollRef.current?.scrollToEnd({animated: true});
-        setLoading(false);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+      const tips = tipsjson; 
+      const keys = Object.keys(tips); 
+      const randomKey = keys[Math.floor(Math.random() * keys.length)];
+      setTipTexts(prevTipTexts => [...prevTipTexts, tips[randomKey]]);
+      scrollRef.current?.scrollToEnd({animated: true});
+  };
+  
+  const addGpt = async () => {
+    try {
+      const response = await fetch('https://pokits-chat-default-rtdb.firebaseio.com/base/body.json');
+      const data = await response.json();
+      const contents = data.content;
+      const randomKey = Math.floor(Math.random() * contents.length);
+      const randomTip = contents[randomKey].summary;
+      setTipTexts(prevTipTexts => [...prevTipTexts, randomTip]);
+      scrollRef.current?.scrollToEnd({animated: true});
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
     
 
     useEffect(() => {
