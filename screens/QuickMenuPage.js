@@ -74,7 +74,7 @@ export default function QuickMenuPage({navigation,route}){
 
     const insets = useSafeAreaInsets(); //어디까지 안전해?
 
-    const [selectedItem, setSelectedItem] = useState("http://se.kumoh.ac.kr/"); //학과 설정 저장되는 곳
+    const [selectedItem, setSelectedItem] = useState("https://see.kumoh.ac.kr/see/sub060101.do"); //학과 설정 저장되는 곳
 
     const [loading, setLoading] = useState(true); // 데이터 로딩 상태
 
@@ -84,6 +84,9 @@ export default function QuickMenuPage({navigation,route}){
         const loadSettings = async() => {
             try{
                 let savedSetting = await AsyncStorage.getItem('departmentSetting');
+                if(savedSetting == null){
+                  savedSetting = "전자공학부"
+                }
                 console.log('Saved Setting:', savedSetting); // savedSetting 값을 출력합니다.
                 savedSetting = savedSetting.replace(/"/g, ''); // 따옴표를 제거합니다.
                 const departmentUrl = departments[savedSetting];

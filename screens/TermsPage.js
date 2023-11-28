@@ -9,7 +9,7 @@ export default function TermsPage ({navigation}) {
 
     return(
                 <WebView style={styles.container}
-                    source={require('../assets/data/terms.html')}
+                    source={{ uri : "https://sites.google.com/view/dolce-lab/product/pokits" }}
                     />
     )
 }

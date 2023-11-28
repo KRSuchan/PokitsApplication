@@ -45,7 +45,7 @@ const QuickMenuBox = ({navigation}) => {
     <QuickMenuMiniBox1 navigation={navigation} title="내학과" iconName = "home" onPress={() => navigation.navigate('퀵메뉴', { initialTab: '학과' })}/>
     <QuickMenuMiniBox navigation={navigation} title="학사" iconName = "pen" onPress={() => navigation.navigate('퀵메뉴', { initialTab: '학사' })}/>
     <QuickMenuMiniBox navigation={navigation} title="행사" iconName = "event" onPress={() => navigation.navigate('퀵메뉴', { initialTab: '행사' })}/>
-    <QuickMenuMiniBox navigation={navigation} title="소식" iconName = "alarm" onPress={() => navigation.navigate('퀵메뉴', { initialTab: '소식' })} />
+    <QuickMenuMiniBox navigation={navigation} title="소식" iconName = "alarm" onPress={() => navigation.navigate('퀵메뉴', { initialTab: '일반' })} />
   </View>)
   
 }
@@ -795,7 +795,7 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   dietMenu: {
-    // flexGrow: 1,
+    flexGrow: 1,
     padding: 10,
     paddingHorizontal: 20,
     justifyContent: "center",
@@ -917,10 +917,10 @@ const styles = StyleSheet.create({
     width:'100%',
 },
   cafeteriaNameStyle:{
-    paddingTop:7, fontFamily:"NotoSansB",color:"#fff",
+    paddingTop:3, fontFamily:"NotoSansB",color:"#fff",
     fontSize:18,
     paddingLeft:20,
     paddingHorizontal:10,
-    marginBottom: 5,
+    marginBottom: 3,
   },
 });
