@@ -44,7 +44,7 @@ const TabMyTab1 = ({tipTexts, addTip,scrollRef}) => (
                 삼색냥
             </Text>
             {tipTexts.map((tipText, index) => (
-                <View key={index} style={{ width:"100%" ,backgroundColor: index === 0 ? "#3B313C" : "#FFA462",marginTop:5, borderRadius: 10, padding:20, marginBottom:20, }}>
+                <View key={index} style={{ width:"100%" ,backgroundColor: index === 0 ? "#BA4E00" : "#FFA462",marginTop:5, borderRadius: 10, padding:20, marginBottom:20, }}>
                     <Text style={{color: index === 0 ? "white" : "black", fontSize: 16, fontWeight: "600", fontFamily: "NotoSansBlack"}}>
                         {tipText}
                     </Text>
