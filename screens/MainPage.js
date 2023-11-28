@@ -920,11 +920,11 @@ const styles = StyleSheet.create({
     width:'100%',
 },
   cafeteriaNameStyle:{
-    paddingTop:3, fontFamily:"NotoSansB",color:"#fff",
+    paddingTop:6, fontFamily:"NotoSansB",color:"#fff",
     fontSize:18,
     lineHeight:22,
     paddingLeft:20,
     paddingHorizontal:10,
-    marginBottom: 3,
+    marginBottom: 4,
   },
 });
