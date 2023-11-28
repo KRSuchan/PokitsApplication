@@ -757,7 +757,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     backgroundColor: "#F5F5F5",
     width: "100%",
-    marginBottom: 50,
+    marginBottom: 100,
   },
   componentTitle: {
     flexDirection: "row",
