@@ -144,10 +144,10 @@ export default function MainPage({ navigation }) {
     }
   };
 
-  // useCallback을 사용해 함수 재생성 최소화 - 최적화1작업
-  const updateTime = useCallback(() => {
+  // 1초마다 시간을 업데이트하는 함수
+  function updateTime() {
     setTime(new Date());
-  }, []);
+  }
 
   // 버스 설정 상태
   const [busSetting, setBusSetting] = useState(null);
@@ -216,7 +216,7 @@ export default function MainPage({ navigation }) {
       updateTime();
       // 초기 설정 및 1초마다 시간을 업데이트
       // loadSettings();
-    }, 5); //최적화1 실행
+    }, 5000); //최적화1 실행
 
     let timer2 = setInterval(() => {
       loadBusSettings();
@@ -228,7 +228,7 @@ export default function MainPage({ navigation }) {
       unsubscribe();
 
     };
-  }, [loadSettings, updateTime]); //최적화1실행
+  }, [navigation, cafeteria]); //최적화1실행
 
   useEffect(() => {
     // 시간이 변경될 때마다 메뉴 갱신
