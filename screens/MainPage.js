@@ -920,7 +920,7 @@ const styles = StyleSheet.create({
     width:'100%',
 },
   cafeteriaNameStyle:{
-    paddingTop:6, fontFamily:"NotoSansB",color:"#fff",
+    paddingTop:8, fontFamily:"NotoSansB",color:"#fff",
     fontSize:18,
     lineHeight:22,
     paddingLeft:20,
