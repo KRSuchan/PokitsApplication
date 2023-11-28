@@ -9,7 +9,7 @@ import "react-native-gesture-handler";
 //import { SafeAreaProvider,SafeAreaView } from 'react-native-safe-area-context';
 
 //폰트 사용을 위한 패키지들
-import { useFonts } from "expo-font";
+import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
 //다른 페이지로 이동하는 패키지
@@ -43,13 +43,30 @@ const Stack = createStackNavigator();
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
+
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  useEffect(() => {
+    async function loadFonts() {
+      await Font.loadAsync({
+        Lobster: require("./assets/fonts/Lobster-Regular.ttf"),
+        NotoSansB: require("./assets/fonts/NotoSansKR-Bold.ttf"),
+        NotoSansR: require("./assets/fonts/NotoSansKR-Regular.ttf"),
+        NotoSansBlack: require("./assets/fonts/NotoSansKR-Black.ttf"),
+      });
+      setFontsLoaded(true);
+    }
+
+    loadFonts();
+  }, []);
+
   // Lobster 폰트를 로드하고 로드 완료 여부를 fontsLoaded 상태에 저장
-  const [fontsLoaded] = useFonts({
-    Lobster: require("./assets/fonts/Lobster-Regular.ttf"),
-    NotoSansB: require("./assets/fonts/NotoSansKR-Bold.ttf"),
-    NotoSansR: require("./assets/fonts/NotoSansKR-Regular.ttf"),
-    NotoSansBlack: require("./assets/fonts/NotoSansKR-Black.ttf"),
-  });
+  // const [fontsLoaded] = useFonts({
+  //   Lobster: require("./assets/fonts/Lobster-Regular.ttf"),
+  //   NotoSansB: require("./assets/fonts/NotoSansKR-Bold.ttf"),
+  //   NotoSansR: require("./assets/fonts/NotoSansKR-Regular.ttf"),
+  //   NotoSansBlack: require("./assets/fonts/NotoSansKR-Black.ttf"),
+  // });
 
   // 폰트가 로드된 후에 스플래시 화면을 숨기는 함수입니다.
   // 이 함수는 fontsLoaded 값에 의존하므로 fontsLoaded 값이 변경될 때마다 새로 생성됩니다.
@@ -72,7 +89,7 @@ export default function App() {
   return (
     <View style={{ flex: 1 }}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Main">
+        <Stack.Navigator initialRouteName="메인화면">
           <Stack.Screen
             name="메인화면"
             component={MainPage}

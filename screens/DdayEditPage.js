@@ -5,8 +5,6 @@ import { Dimensions,ScrollView } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from "@react-native-community/datetimepicker";
 //datepicker은 expo 에서 지원하지 않으므로, datetimepicker 을 사용할 것임
-import DateTimePickerModal from "react-native-modal-datetime-picker";
-
 
 import {
   StyleSheet,
