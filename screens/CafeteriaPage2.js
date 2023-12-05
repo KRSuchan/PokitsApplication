@@ -147,7 +147,7 @@ const LogoGradient = ({ navigation }) => (
     end={{ x: 1, y: 0 }}
     style={styles.topView}>
     <TouchableOpacity onPress={() => navigation.navigate("메인화면")}>
-      <Text style={styles.h1}>Pokit's</Text>
+      <Text style={styles.h1}>❮Pokit's</Text>
     </TouchableOpacity>
   </LinearGradient>
 );

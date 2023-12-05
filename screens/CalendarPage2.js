@@ -312,7 +312,7 @@ const LogoGradient = ({navigation}) => (
     <LinearGradient colors={['#182A76', '#3C61FF']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.topView}>
       <TouchableOpacity onPress={()=> navigation.navigate("메인화면")} >
         <Text style={styles.h1}>
-            Pokit's
+        ❮Pokit's
         </Text>
       </TouchableOpacity>
     </LinearGradient>
