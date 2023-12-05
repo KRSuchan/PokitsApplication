@@ -111,6 +111,10 @@ export default function MainPage({ navigation }) {
   const navigateToTip = () => {
     navigation.navigate("팁");
   };
+
+  const navigateToFirstSetting = () => {
+    navigation.navigate("초기설정");
+  };
   
   // 각 식당 메뉴별 useState
   const [studnetCaf, setStudentCaf] = useState([]);
@@ -613,6 +617,7 @@ export default function MainPage({ navigation }) {
                 <TouchableOpacity
                   onPress={() => {
                     console.log("프로필버튼 누름");
+                    navigateToFirstSetting();
                   }}>
                   <Text
                     style={styles.h1}

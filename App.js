@@ -35,6 +35,7 @@ import CalendarPage from "./screens/CalendarPage";
 import CalendarPage2 from "./screens/CalendarPage2";
 import QuickMenuPage from "./screens/QuickMenuPage";
 import TipPage from "./screens/TipPage";
+import FirstSettingPage from "./screens/FirstSettingPage";
 
 //네비게이터 사용
 const Stack = createStackNavigator();
@@ -97,6 +98,11 @@ export default function App() {
           />
           {/* 이 페이지만 상단 헤더가 안보이게 설정 */}
           <Stack.Screen name="설정" component={SettingListPage} />
+          <Stack.Screen
+            name="초기설정"
+            component={FirstSettingPage}
+            options={{ headerShown: false }}
+          />
           <Stack.Screen name="선호 정류장" component={BusSettingPage} />
           <Stack.Screen name="선호 식당" component={CafeteriaSettingPage} />
           <Stack.Screen name="일정 설정" component={ScheduleSettingPage} />
